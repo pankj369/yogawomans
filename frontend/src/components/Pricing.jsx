@@ -133,10 +133,10 @@ if (!document.head.querySelector("[data-pricing]")) {
     .pr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; }
 
     .pr-card {
-      background: rgba(255,255,255,0.85); border: 1.5px solid rgba(46,125,50,0.12);
-      border-radius: 28px; padding: 36px 28px;
-      backdrop-filter: blur(16px); box-shadow: 0 8px 32px rgba(46,125,50,0.06);
-      transition: transform 0.32s ease, box-shadow 0.32s ease;
+      background: rgba(255,255,255,0.7); border: 1px solid rgba(210,190,165,0.3);
+      border-radius: 24px; padding: 36px 28px;
+      backdrop-filter: blur(24px); box-shadow: 0 14px 35px rgba(0,0,0,0.03);
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
       animation: pr-up 0.6s ease both;
       position: relative; overflow: hidden;
     }
@@ -144,12 +144,13 @@ if (!document.head.querySelector("[data-pricing]")) {
     .pr-card:nth-child(2) { animation-delay: 0.2s; }
     .pr-card:nth-child(3) { animation-delay: 0.3s; }
     .pr-card.popular {
-      border-color: #E8651A;
-      box-shadow: 0 20px 60px rgba(232,101,26,0.18);
-      transform: scale(1.04);
+      border-color: rgba(226,114,41,0.4);
+      box-shadow: 0 20px 60px rgba(226,114,41,0.08);
+      transform: scale(1.03);
+      background: rgba(255,255,255,0.85);
     }
-    .pr-card.popular:hover { transform: scale(1.04) translateY(-6px); }
-    .pr-card:not(.popular):hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(46,125,50,0.12); }
+    .pr-card.popular:hover { transform: scale(1.03) translateY(-4px); box-shadow: 0 30px 70px rgba(226,114,41,0.12); }
+    .pr-card:not(.popular):hover { transform: translateY(-4px); box-shadow: 0 24px 50px rgba(0,0,0,0.05); }
 
     .pr-popular-ribbon {
       position: absolute; top: 18px; right: -28px;
@@ -182,16 +183,16 @@ if (!document.head.querySelector("[data-pricing]")) {
       transition: transform 0.28s ease, box-shadow 0.28s ease;
     }
     .pr-cta-btn.primary {
-      background: linear-gradient(135deg, #E8651A, #d45c17);
+      background: linear-gradient(135deg, #E27229, #d5631c);
       color: #fff;
-      box-shadow: 0 12px 32px rgba(232,101,26,0.28);
+      box-shadow: 0 16px 35px rgba(226,114,41,0.15);
     }
     .pr-cta-btn.secondary {
-      background: rgba(46,125,50,0.08);
-      color: #2E7D32;
-      border: 1.5px solid rgba(46,125,50,0.2);
+      background: rgba(255,255,255,0.5);
+      color: #1A2E1A;
+      border: 1px solid rgba(210,190,165,0.4);
     }
-    .pr-cta-btn:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(232,101,26,0.22); }
+    .pr-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
 
     .pr-footer-note {
       text-align: center; margin-top: 40px;

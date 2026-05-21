@@ -130,18 +130,18 @@ if (!document.head.querySelector("[data-yoga-classes]")) {
 
     .yc-card{
       background:#fff;
-      border:1.5px solid rgba(46,125,50,0.13);
-      border-radius:22px;
+      border:1px solid rgba(210,190,165,0.25);
+      border-radius:24px;
       overflow:hidden;
-      transition:all 0.28s;
+      transition:all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
       cursor:pointer;
       animation:yc-cardIn 0.5s ease both;
     }
 
     .yc-card:hover{
-      transform:translateY(-7px);
-      box-shadow:0 20px 48px rgba(46,125,50,0.14);
-      border-color:#2E7D32;
+      transform:translateY(-4px);
+      box-shadow:0 24px 50px rgba(0,0,0,0.04);
+      border-color:rgba(210,190,165,0.5);
     }
 
     /* UPDATED HEADER */
@@ -243,7 +243,7 @@ if (!document.head.querySelector("[data-yoga-classes]")) {
       display:inline-flex;
       align-items:center;
       gap:10px;
-      background:#E8651A;
+      background:linear-gradient(135deg, #E27229 0%, #d5631c 100%);
       color:#fff;
       font-family:'Poppins',sans-serif;
       font-size:15px;
@@ -254,13 +254,13 @@ if (!document.head.querySelector("[data-yoga-classes]")) {
       cursor:pointer;
       text-transform:uppercase;
       letter-spacing:0.06em;
-      transition:all 0.28s;
+      transition:all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow:0 16px 35px rgba(226, 114, 41, 0.12);
     }
 
     .yc-cta-btn:hover{
-      background:#d45a14;
-      transform:translateY(-3px);
-      box-shadow:0 12px 30px rgba(232,101,26,0.32);
+      transform:translateY(-2px);
+      box-shadow:0 20px 40px rgba(226,114,41,0.2);
     }
 
     @media(max-width:900px){

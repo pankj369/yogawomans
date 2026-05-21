@@ -1,16 +1,17 @@
 import express from "express";
-import authMiddleware from "../middleware/authMiddleware.js";
-
+import { requireAuth } from "../middleware/authMiddleware.js";
 import {
-  createWellnessLog,
+  logSession,
+  getStats,
+  getActivityHistory,
 } from "../controllers/wellnessController.js";
 
 const router = express.Router();
 
-router.post(
-  "/create",
-  authMiddleware,
-  createWellnessLog
-);
+router.use(requireAuth); // Protect all wellness routes
+
+router.post("/log", logSession);
+router.get("/stats", getStats);
+router.get("/activity", getActivityHistory);
 
 export default router;

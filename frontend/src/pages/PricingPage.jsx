@@ -23,7 +23,7 @@ export default function PricingPage() {
           <h1 className="mt-2 text-4xl font-heading font-extrabold">Choose your premium wellness plan</h1>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-3">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-3">
           {pricingPlans.map((plan) => (
             <motion.article
               key={plan.id}
@@ -44,17 +44,19 @@ export default function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <button
-                type="button"
-                onClick={() => selectPlan(plan)}
-                className={`mt-6 w-full rounded-full px-5 py-3.5 text-sm font-semibold text-white ${
-                  plan.highlighted
-                    ? "bg-gradient-to-r from-[#E8651A] to-[#2E7D32]"
-                    : "bg-[#2E7D32]"
-                }`}
-              >
-                {plan.highlighted ? "Upgrade Premium" : "Choose Plan"}
-              </button>
+              <motion.div whileTap={{ scale: 0.96 }} className="mt-8">
+                <button
+                  type="button"
+                  onClick={() => selectPlan(plan)}
+                  className={`w-full rounded-full py-4 text-sm font-bold shadow-sm transition ${
+                    plan.highlighted
+                      ? "bg-gradient-to-r from-[#E8651A] to-[#2E7D32] text-white"
+                      : "bg-[#2E7D32] text-white"
+                  }`}
+                >
+                  {plan.highlighted ? "Upgrade Premium" : "Choose Plan"}
+                </button>
+              </motion.div>
             </motion.article>
           ))}
         </div>

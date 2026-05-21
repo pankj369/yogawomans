@@ -35,7 +35,7 @@ export default function ContinueWatchingCard({ item }) {
       variants={hoverLift}
       whileHover="hover"
       initial="rest"
-      className="relative cursor-pointer group flex-shrink-0 w-72 sm:w-80 rounded-3xl overflow-hidden border border-white/40 bg-white/10 backdrop-blur-md shadow-card transition-all hover:border-white/60"
+      className="relative cursor-pointer group flex-shrink-0 w-72 sm:w-80 rounded-3xl overflow-hidden border border-white/40 bg-white/10 backdrop-blur-md shadow-card transition-all hover:border-white/60 snap-start"
       onClick={handlePlay}
     >
       {/* Thumbnail Image */}
@@ -43,6 +43,7 @@ export default function ContinueWatchingCard({ item }) {
         <img
           src={item.image}
           alt={item.title}
+          loading="lazy"
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {/* Dark overlay */}

@@ -40,24 +40,14 @@ function Navbar() {
         className="
         mx-auto
         max-w-[1450px]
-
         rounded-[32px]
-
-        border border-[#d8ccb8]
-
-        bg-[#f7f1e8]/95
-        backdrop-blur-xl
-
-        shadow-[0_10px_40px_rgba(0,0,0,0.08)]
-
-        px-6
-        lg:px-10
-
+        border border-wellness-border
+        glass-navbar
+        shadow-glass
+        px-6 lg:px-10
         h-[88px]
-
-        flex
-        items-center
-        justify-between
+        flex items-center justify-between
+        transition-all duration-300
         "
       >
 
@@ -106,41 +96,26 @@ function Navbar() {
               <Link
               to={link.href}
               className="
-              flex
-              items-center
-              gap-2
-
-              text-[17px]
-              font-medium
-              text-[#4d3928]
-
-              transition-all
-              duration-300
-
-              hover:text-[#6f8b4e]
+              relative
+              flex items-center gap-2
+              px-3 py-2
+              text-[16px] font-semibold text-wellness-muted
+              transition-colors duration-300
+              hover:text-wellness-dark
               "
                 >
-
                 <span className="text-[18px]">
                   {link.icon}
                 </span>
-
                 {link.label}
-
               </Link>
 
               {index === 0 && (
                 <div
                   className="
-                  absolute
-                  left-0
-                  -bottom-3
-
-                  h-[3px]
-                  w-full
-
-                  rounded-full
-                  bg-[#7a684f]
+                  absolute left-1/2 -bottom-2
+                  h-[4px] w-6 -translate-x-1/2
+                  rounded-full bg-wellness-orange
                   "
                 />
               )}
@@ -153,57 +128,19 @@ function Navbar() {
 
         {/* RIGHT BUTTONS */}
         <div className="hidden lg:flex items-center gap-4">
-
           <Link
             to="/login"
-            className="
-            rounded-full
-
-            border
-            border-[#9e987f]
-
-            px-7
-            py-3
-
-            text-[17px]
-            font-medium
-            text-[#3d3125]
-
-            transition-all
-            duration-300
-
-            hover:bg-[#ebe2d5]
-            "
+            className="text-sm font-bold uppercase tracking-widest text-wellness-muted hover:text-wellness-dark transition duration-200 px-4"
           >
             Login
           </Link>
 
           <Link
             to="/auth"
-            className="
-            rounded-full
-
-            bg-[#667f42]
-
-            px-8
-            py-3
-
-            text-[17px]
-            font-semibold
-            text-white
-
-            shadow-lg
-
-            transition-all
-            duration-300
-
-            hover:scale-105
-            hover:bg-[#587037]
-            "
+            className="btn-wellness-primary"
           >
             Upgrade
           </Link>
-
         </div>
 
         {/* MOBILE BUTTON */}
@@ -236,19 +173,10 @@ function Navbar() {
 
         <div
           className="
-          lg:hidden
-
-          mt-4
-
-          rounded-[28px]
-
-          border border-[#d9ccb8]
-
-          bg-[#f7f1e8]
-
-          shadow-2xl
-
-          p-6
+          lg:hidden mt-4
+          rounded-3xl border border-wellness-border
+          glass-navbar shadow-glass
+          p-6 max-h-[80vh] overflow-y-auto
           "
         >
 
@@ -286,44 +214,19 @@ function Navbar() {
 
           </ul>
 
-          <div className="mt-8 flex gap-3">
-
-            <Link
-              to="/login"
-              className="
-              flex-1
-
-              rounded-full
-
-              border border-[#a69b86]
-
-              py-3
-
-              text-center
-              text-[#3d3125]
-              "
-            >
-              Login
-            </Link>
-
+          <div className="mt-8 flex flex-col gap-3">
             <Link
               to="/auth"
-              className="
-              flex-1
-
-              rounded-full
-
-              bg-[#667f42]
-
-              py-3
-
-              text-center
-              text-white
-              "
+              className="btn-wellness-primary w-full"
             >
               Upgrade
             </Link>
-
+            <Link
+              to="/login"
+              className="btn-wellness-secondary w-full"
+            >
+              Login
+            </Link>
           </div>
 
         </div>

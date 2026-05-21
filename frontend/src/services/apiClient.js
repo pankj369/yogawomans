@@ -1,14 +1,5 @@
 import axios from "axios";
-import { readStorage } from "../utils/storage";
-
-const AUTH_TOKEN_KEY = "yogawomans_auth_token";
-
-// Get stored token
-const getStoredToken = () => {
-  if (typeof window === "undefined") return null;
-  return readStorage(window.localStorage, AUTH_TOKEN_KEY, null) ||
-         readStorage(window.sessionStorage, AUTH_TOKEN_KEY, null);
-};
+import { auth } from "../config/firebase";
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
@@ -17,57 +8,40 @@ const apiClient = axios.create({
   },
 });
 
-// Request interceptor - add auth token to headers
+// Request Interceptor: Attach Firebase ID Token
 apiClient.interceptors.request.use(
-  (config) => {
-    const token = getStoredToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  async (config) => {
+    // Attempt to get the current Firebase user's ID token
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        const token = await user.getIdToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+      } catch (error) {
+        console.error("Error fetching Firebase ID token:", error);
+      }
     }
     return config;
   },
-  (error) => Promise.reject(error)
-);
-
-// Response interceptor - handle errors globally
-apiClient.interceptors.response.use(
-  (response) => response,
   (error) => {
-    if (error.response) {
-      const { status, data } = error.response;
-
-      // Handle 401 Unauthorized - token expired/invalid
-      if (status === 401) {
-        // Don't redirect on auth endpoints
-        const isAuthEndpoint = error.config?.url?.includes('/auth/');
-        if (!isAuthEndpoint) {
-          // Trigger logout by dispatching event
-          window.dispatchEvent(new CustomEvent('auth:logout', { detail: { reason: 'token_expired' }}));
-        }
-      }
-
-      console.error("API Error:", data?.message || "Server error");
-    } else if (error.request) {
-      console.error("Network Error:", error.message);
-    } else {
-      console.error("Error:", error.message);
-    }
     return Promise.reject(error);
   }
 );
 
-// Token management functions
-export const setAuthToken = (token) => {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(token));
-};
-
-export const removeAuthToken = () => {
-  if (typeof window === "undefined") return;
-  window.localStorage.removeItem(AUTH_TOKEN_KEY);
-  window.sessionStorage.removeItem(AUTH_TOKEN_KEY);
-};
-
-export const getAuthToken = getStoredToken;
+// Response Interceptor: Handle Global Errors (like 401 Unauthorized)
+apiClient.interceptors.response.use(
+  (response) => {
+    return response.data; // Standardize response format (since our backend wraps with { success, data })
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      console.warn("⚠️ Unauthorized! Token may be expired.");
+      // Optional: Trigger a custom event to force global logout from AuthContext if desired
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default apiClient;

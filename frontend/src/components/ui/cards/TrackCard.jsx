@@ -44,6 +44,7 @@ export default function TrackCard({ track }) {
           <img
             src={track.image}
             alt={track.title}
+            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-black/25 opacity-40 group-hover:opacity-60 transition-opacity" />

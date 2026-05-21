@@ -1,6 +1,6 @@
 import { useMemo, useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, Award } from "lucide-react";
+import { Menu, Award, Flame, Play } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useDashboard } from "../../context/DashboardContext";
 import SearchBar from "../ui/navigation/SearchBar";
@@ -11,7 +11,7 @@ import PremiumButton from "../ui/buttons/PremiumButton";
 export default function TopNavbar({ onMenuClick, query, onQueryChange, title }) {
   const navigate = useNavigate();
   const auth = useAuth();
-  const { notifications, markNotificationRead, state } = useDashboard();
+  const { notifications, markNotificationRead, state, isReturningUser } = useDashboard();
   
   const [activePanel, setActivePanel] = useState(null);
   const panelRef = useRef(null);
@@ -23,6 +23,18 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title }) 
   const userName = auth.user?.name || "Member";
   const userEmail = auth.user?.email || "";
   const isPro = state?.activePlan === "Pro";
+  const streakDays = state?.streakDays || 0;
+
+  const dynamicGreeting = useMemo(() => {
+    const hour = new Date().getHours();
+    const firstName = userName.split(" ")[0] || "Yogi";
+    
+    if (isReturningUser && hour >= 5 && hour < 10) return `Welcome back, ${firstName} 🌅`;
+    if (hour >= 5 && hour < 12) return `Good morning, ${firstName} 🌅`;
+    if (hour >= 12 && hour < 17) return `Good afternoon, ${firstName} ☀️`;
+    if (hour >= 17 && hour < 22) return `Good evening, ${firstName} 🌙`;
+    return `Time to wind down, ${firstName} 🌌`;
+  }, [userName, isReturningUser]);
 
   const handleLogout = () => {
     auth.logout();
@@ -60,11 +72,18 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title }) 
           </button>
 
           <div className="hidden sm:block">
-            <p className="text-[0.6rem] font-bold uppercase tracking-[0.32em] text-wellness-gold">
-              YogaWomans
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-[0.6rem] font-bold uppercase tracking-[0.32em] text-wellness-gold">
+                YogaWomans
+              </p>
+              {streakDays > 0 && (
+                <span className="flex items-center gap-1 rounded-full bg-wellness-orange/10 px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-wellness-orange">
+                  <Flame size={10} /> {streakDays} Day Streak
+                </span>
+              )}
+            </div>
             <p className="text-sm font-bold text-wellness-dark leading-tight mt-0.5">
-              {title || "Today feels lighter already"}
+              {title || dynamicGreeting}
             </p>
           </div>
         </div>
@@ -89,6 +108,18 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title }) 
                 Upgrade
               </PremiumButton>
             </div>
+          )}
+
+          {/* Mobile Resume Journey shortcut */}
+          {state?.lastSessionId && (
+            <button
+              type="button"
+              onClick={() => navigate("/dashboard")}
+              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-wellness-dark text-white shadow-liftSm transition hover:-translate-y-0.5 hover:bg-black hover:shadow-card md:hidden"
+              aria-label="Resume Journey"
+            >
+              <Play fill="currentColor" size={14} className="ml-0.5" />
+            </button>
           )}
 
           {/* Notifications */}

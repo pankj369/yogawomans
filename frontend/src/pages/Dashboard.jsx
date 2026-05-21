@@ -15,6 +15,7 @@ import Footer from "../components/dashboard/Footer";
 
 // New Content Sections
 import ContinueWatchingSection from "../components/dashboard/ContinueWatchingSection";
+import RecentlyPlayedSection from "../components/dashboard/RecentlyPlayedSection";
 import FeaturedProgramsSection from "../components/dashboard/FeaturedProgramsSection";
 import FocusMusicSection from "../components/dashboard/FocusMusicSection";
 import BreathingExercisesSection from "../components/dashboard/BreathingExercisesSection";
@@ -29,6 +30,8 @@ import LiveClassesSection from "../components/dashboard/LiveClassesSection";
 import KidsYogaSection from "../components/dashboard/KidsYogaSection";
 import JournalSection from "../components/dashboard/JournalSection";
 import AICoachSection from "../components/dashboard/AICoachSection";
+import EmptyState from "../components/ui/states/EmptyState";
+import { Search } from "lucide-react";
 
 
 import { useAuth } from "../context/AuthContext";
@@ -180,6 +183,9 @@ export default function Dashboard() {
   const { playTrack, playVideo } = useMedia();
   
   const [query, setQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const DASHBOARD_CATEGORIES = ["All", "Meditation", "Yoga", "Sleep", "Breathwork", "Music"];
   
   if (auth.profileLoading) {
     return (
@@ -189,9 +195,8 @@ export default function Dashboard() {
     );
   }
   
-  const profile = auth.profile;
-  const userName = profile?.full_name || "Yogi";
-  const hasProPlan = state.activePlan === "Pro";
+  const userName = auth.user?.name || "Yogi";
+  const hasProPlan = auth.isPremium || state.activePlan === "Pro";
   const activeSection = sectionMeta[section] || sectionMeta.home;
 
   const handleSessionOpen = (session) => {
@@ -207,13 +212,15 @@ export default function Dashboard() {
     toast.showToast({ title: "Starting Session", message: `Loading ${session.title}...` });
   };
 
-  const filteredResults = query.trim()
-    ? sessionCatalog.filter((session) =>
-        [session.title, session.instructor, session.category, ...(session.tags || [])]
+  const filteredResults = (query.trim() || selectedCategory !== "All")
+    ? sessionCatalog.filter((session) => {
+        const matchesQuery = query.trim() === "" || [session.title, session.instructor, session.category, ...(session.tags || [])]
           .join(" ")
           .toLowerCase()
-          .includes(query.trim().toLowerCase())
-      )
+          .includes(query.trim().toLowerCase());
+        const matchesCategory = selectedCategory === "All" || session.category?.toLowerCase().includes(selectedCategory.toLowerCase());
+        return matchesQuery && matchesCategory;
+      })
     : [];
 
   const getVideoSrc = (sec) => {
@@ -236,7 +243,23 @@ export default function Dashboard() {
           videoSrc={getVideoSrc(section)}
         />
 
-        {query.trim() && (
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide px-2">
+          {DASHBOARD_CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`whitespace-nowrap rounded-full px-5 py-2 text-sm font-bold shadow-sm transition-all duration-300 ${
+                selectedCategory === cat 
+                  ? "bg-wellness-dark text-white hover:bg-black" 
+                  : "bg-white/60 border border-white/50 text-wellness-muted hover:bg-white hover:text-wellness-dark"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {(query.trim() || selectedCategory !== "All") && (
           <section className="bg-white/40 p-6 rounded-3xl border border-white/50 backdrop-blur-sm">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="font-heading text-2xl font-extrabold text-wellness-dark">Search results</h2>
@@ -260,7 +283,14 @@ export default function Dashboard() {
                 </button>
               ))}
               {!filteredResults.length && (
-                <p className="py-4 text-sm font-medium text-wellness-muted">No sessions found. Try another keyword.</p>
+                <div className="col-span-full">
+                  <EmptyState 
+                    icon={Search} 
+                    title="No matches found" 
+                    description={`We couldn't find any sessions matching "${query}". Try adjusting your search keywords.`} 
+                    className="mt-2"
+                  />
+                </div>
               )}
             </div>
           </section>
@@ -284,8 +314,10 @@ export default function Dashboard() {
 
         {section === "home" && (
           <>
-            {/* 1. Continue Watching */}
             {lastSession && <ContinueWatchingSection onResume={handleSessionOpen} />}
+
+            {/* 1.5 Recently Played (Session History) */}
+            <RecentlyPlayedSection onOpenSession={handleSessionOpen} />
             
             {/* 2. Recommended Sessions */}
             <RecommendedSection items={recommendations} onOpenDetails={handleSessionOpen} />

@@ -127,7 +127,7 @@ if (!document.head.querySelector("[data-yoga-why]")) {
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(232, 101, 26, 0.3);
+      box-shadow: 0 16px 35px rgba(226, 114, 41, 0.12);
     }
     .yw-heading {
       font-size: 42px;
@@ -195,8 +195,8 @@ if (!document.head.querySelector("[data-yoga-why]")) {
       border-radius: 24px;
       padding: 24px 20px;
       backdrop-filter: blur(20px);
-      box-shadow: 0 8px 32px rgba(46,125,50,0.08);
-      transition: all 0.3s ease;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
       position: relative;
       overflow: hidden;
       cursor: default;
@@ -211,9 +211,9 @@ if (!document.head.querySelector("[data-yoga-why]")) {
       border-radius: 24px;
     }
     .yw-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 16px 48px rgba(46,125,50,0.12);
-      border-color: rgba(232,101,26,0.3);
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 24px 50px rgba(0,0,0,0.05);
+      border-color: rgba(210,190,165,0.4);
     }
     .yw-card:hover::before {
       opacity: 1;
@@ -233,10 +233,10 @@ if (!document.head.querySelector("[data-yoga-why]")) {
       transition: all 0.3s ease;
     }
     .yw-card:hover .yw-icon-wrap {
-      background: rgba(232,101,26,0.15);
-      border-color: rgba(232,101,26,0.3);
-      color: #E8651A;
-      transform: scale(1.08);
+      background: rgba(226,114,41,0.1);
+      border-color: rgba(226,114,41,0.2);
+      color: #E27229;
+      transform: scale(1.04);
     }
 
     .yw-card-title {

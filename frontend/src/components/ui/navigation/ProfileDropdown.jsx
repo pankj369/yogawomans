@@ -22,7 +22,7 @@ export default function ProfileDropdown({
       <button
         type="button"
         onClick={onToggle}
-        className="flex items-center gap-2.5 rounded-full border border-white/50 bg-white/70 pl-2 pr-3 py-1.5 shadow-liftSm transition hover:-translate-y-0.5 hover:bg-white hover:shadow-card"
+        className="flex items-center gap-2.5 rounded-full border border-white/40 bg-white/50 pl-2 pr-3 py-1.5 shadow-liftSm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-white/80 hover:shadow-card"
       >
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-wellness-orange/80 to-wellness-green text-xs font-bold text-white">
           {userInitials}
@@ -49,7 +49,7 @@ export default function ProfileDropdown({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute right-0 top-[calc(100%+8px)] z-50 w-72 rounded-3xl border border-wellness-softcream bg-white p-4 shadow-heroCard"
+            className="absolute right-0 top-[calc(100%+8px)] z-50 w-72 rounded-3xl border border-wellness-border bg-white/90 backdrop-blur-2xl p-4 shadow-glass"
           >
             {/* User header */}
             <div className="mb-3 flex items-center gap-3 rounded-2xl bg-wellness-cream px-3 py-3">

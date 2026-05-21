@@ -1,104 +1,73 @@
-import supabase from "../config/supabaseClient.js";
-
-
+import { db } from "../config/firebaseAdmin.js";
+import asyncHandler from "express-async-handler";
 
 // GET CURRENT USER PROFILE
-export const getMyProfile = async (req, res) => {
-  try {
-    const userId = req.user.id;
+export const getMyProfile = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
 
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
+  const userDoc = await db.collection("users").doc(userId).get();
 
-    if (error) {
-      return res.status(404).json({
-        success: false,
-        message: "Profile not found",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      profile: data,
-    });
-
-  } catch (error) {
-    console.error("Get profile error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch profile",
-    });
+  if (!userDoc.exists) {
+    res.status(404);
+    throw new Error("Profile not found");
   }
-};
 
-
+  return res.status(200).json({
+    success: true,
+    profile: { id: userDoc.id, ...userDoc.data() },
+  });
+});
 
 // UPDATE USER PROFILE
-export const updateProfile = async (req, res) => {
-  try {
-    const userId = req.user.id;
+export const updateProfile = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
 
-    const {
-      full_name,
-      phone,
-      age,
-      gender,
-      height,
-      weight,
-      wellness_goal,
-      experience_level,
-      preferred_yoga_style,
-      onboarding_completed,
-    } = req.body;
+  const {
+    full_name,
+    username,
+    avatar,
+    phone,
+    age,
+    gender,
+    height,
+    weight,
+    wellness_goal,
+    experience_level,
+    preferred_yoga_style,
+    onboarding_completed,
+    isPremium, // Optional explicit triggers
+  } = req.body;
 
-    const updateData = {
-      user_id: userId,
-      full_name,
-      phone,
-      age,
-      gender,
-      height,
-      weight,
-      wellness_goal,
-      experience_level,
-      preferred_yoga_style,
-      onboarding_completed,
-      updated_at: new Date(),
-    };
+  const updateData = {
+    full_name,
+    username,
+    avatar,
+    phone,
+    age,
+    gender,
+    height,
+    weight,
+    wellness_goal,
+    experience_level,
+    preferred_yoga_style,
+    onboarding_completed,
+    isPremium,
+    updated_at: new Date().toISOString(),
+  };
 
-    const { data, error } = await supabase
-      .from("profiles")
-      .upsert(updateData, {
-        onConflict: "user_id",
-      })
-      .select()
-      .single();
+  // Remove undefined values
+  Object.keys(updateData).forEach(key => {
+    if (updateData[key] === undefined) delete updateData[key];
+  });
 
-    if (error) {
-      console.error("Supabase profile update error:", error);
+  const userRef = db.collection("users").doc(userId);
+  await userRef.set(updateData, { merge: true });
 
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
+  const updatedDoc = await userRef.get();
 
-    return res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      profile: data,
-    });
-
-  } catch (error) {
-    console.error("Update profile error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to update profile",
-    });
-  }
-};
+  return res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+    profile: { id: updatedDoc.id, ...updatedDoc.data() },
+  });
+});

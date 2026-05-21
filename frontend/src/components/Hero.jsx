@@ -33,22 +33,21 @@ function Hero() {
               transition={{ duration: 0.8 }}
               className="
                 font-sans 
-                font-black 
+                font-sans 
+                font-extrabold 
                 tracking-tight 
-                leading-[1.05] 
-                [paint-order:stroke_fill] 
-                [-webkit-text-stroke:1.5px_rgba(255,255,255,0.7)] 
-                drop-shadow-[0_5px_15px_rgba(0,0,0,0.35)] 
-                text-[4.5rem] lg:text-[5.5rem] xl:text-[6rem]
+                leading-[1.1] 
+                drop-shadow-[0_8px_24px_rgba(0,0,0,0.15)] 
+                text-5xl md:text-6xl lg:text-[5.5rem] xl:text-[6rem]
               "
             >
-              <span className="block text-[#E25C1D]">
+              <span className="block text-wellness-orange">
                 Find Balance.
               </span>
               <span className="block text-[#FAF8F5]">
                 Inner Peace.
               </span>
-              <span className="block text-[#237A3B]">
+              <span className="block text-wellness-green">
                 Better You.
               </span>
             </motion.h1>
@@ -58,7 +57,7 @@ function Hero() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="mt-6 max-w-xl text-lg leading-relaxed text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.35)]"
+              className="mt-6 max-w-xl text-lg leading-relaxed text-white/90 drop-shadow-md"
             >
               Yoga and meditation for a healthier body, calmer mind, and happier life.
             </motion.p>
@@ -70,19 +69,23 @@ function Hero() {
               transition={{ duration: 0.8, delay: 0.35 }}
               className="mt-8 flex items-center gap-4"
             >
-              <Link
-                to="/physicalHealth"
-                className="rounded-full bg-[#E25C1D] px-8 py-4 font-sans text-sm font-bold text-white shadow-lg transition duration-300 hover:-translate-y-1 active:scale-95"
-              >
-                Physical Health
-              </Link>
+              <motion.div whileTap={{ scale: 0.95 }}>
+                <Link
+                  to="/physicalHealth"
+                  className="btn-wellness-primary shadow-2xl"
+                >
+                  Physical Health
+                </Link>
+              </motion.div>
 
-              <Link
-                to="/mentalHealth"
-                className="rounded-full border-2 border-[#237A3B] px-7 py-4 font-sans text-sm font-bold text-white bg-[#237A3B]/20 backdrop-blur-sm transition duration-300 hover:bg-[#237A3B] active:scale-95"
-              >
-                Mental Health
-              </Link>
+              <motion.div whileTap={{ scale: 0.95 }}>
+                <Link
+                  to="/mentalHealth"
+                  className="btn-wellness-secondary border-none bg-white/10 text-white backdrop-blur-md hover:bg-white hover:text-wellness-dark shadow-2xl"
+                >
+                  Mental Health
+                </Link>
+              </motion.div>
             </motion.div>
           </div>
 
@@ -149,22 +152,20 @@ function Hero() {
               className="
                 mt-4 
                 font-sans 
-                text-[3.2rem] 
-                font-black 
+                text-4xl sm:text-[3.2rem] 
+                font-extrabold 
                 tracking-tight 
-                leading-[1.05] 
-                [paint-order:stroke_fill] 
-                [-webkit-text-stroke:1px_rgba(255,255,255,0.6)]
-                drop-shadow-[0_4px_12px_rgba(0,0,0,0.3)]
+                leading-[1.1] 
+                drop-shadow-[0_6px_20px_rgba(0,0,0,0.15)]
               "
             >
-              <span className="block text-[#E25C1D]">
+              <span className="block text-wellness-orange">
                 Find Balance.
               </span>
               <span className="block text-[#FAF8F5]">
                 Inner Peace.
               </span>
-              <span className="block text-[#237A3B]">
+              <span className="block text-wellness-green">
                 Better You.
               </span>
             </motion.h1>
@@ -200,32 +201,36 @@ function Hero() {
             className="my-auto flex w-full flex-col gap-3 pt-8"
           >
             {/* PHYSICAL HEALTH BUTTON */}
-            <Link
-              to="/physicalHealth"
-              className="group flex w-full items-center justify-between rounded-full border border-orange-400/30 bg-gradient-to-r from-[#E25C1D]/80 to-amber-600/70 p-1.5 pr-6 font-sans text-sm font-semibold text-white shadow-[0_8px_32px_rgba(226,92,29,0.2)] backdrop-blur-md transition-all duration-300 active:scale-95"
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#E25C1D] shadow-inner">
-                  <Sparkles size={18} />
+            <motion.div whileTap={{ scale: 0.95 }}>
+              <Link
+                to="/physicalHealth"
+                className="group flex w-full items-center justify-between rounded-full border border-orange-400/30 bg-gradient-to-r from-[#E25C1D]/80 to-amber-600/70 p-1.5 pr-6 font-sans text-sm font-semibold text-white shadow-[0_8px_32px_rgba(226,92,29,0.2)] backdrop-blur-md transition-all duration-300 active:scale-95"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#E25C1D] shadow-inner">
+                    <Sparkles size={18} />
+                  </div>
+                  <span className="tracking-wide">Physical Health</span>
                 </div>
-                <span className="tracking-wide">Physical Health</span>
-              </div>
-              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-            </Link>
+                <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+              </Link>
+            </motion.div>
 
             {/* MENTAL HEALTH BUTTON */}
-            <Link
-              to="/mentalHealth"
-              className="group flex w-full items-center justify-between rounded-full border border-emerald-500/30 bg-gradient-to-r from-[#237A3B]/70 to-teal-800/60 p-1.5 pr-6 font-sans text-sm font-semibold text-white shadow-[0_8px_32px_rgba(35,122,59,0.15)] backdrop-blur-md transition-all duration-300 active:scale-95"
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#237A3B] shadow-inner">
-                  <Smile size={18} />
+            <motion.div whileTap={{ scale: 0.95 }}>
+              <Link
+                to="/mentalHealth"
+                className="group flex w-full items-center justify-between rounded-full border border-emerald-500/30 bg-gradient-to-r from-[#237A3B]/70 to-teal-800/60 p-1.5 pr-6 font-sans text-sm font-semibold text-white shadow-[0_8px_32px_rgba(35,122,59,0.15)] backdrop-blur-md transition-all duration-300 active:scale-95"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#237A3B] shadow-inner">
+                    <Smile size={18} />
+                  </div>
+                  <span className="tracking-wide">Mental Health</span>
                 </div>
-                <span className="tracking-wide">Mental Health</span>
-              </div>
-              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-            </Link>
+                <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+              </Link>
+            </motion.div>
           </motion.div>
 
           {/* BOTTOM GLASS PANEL FEATURES */}

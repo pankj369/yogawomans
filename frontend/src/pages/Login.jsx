@@ -66,11 +66,19 @@ function LoginForm({ onForgot, onSuccess }) {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setApiError(
-        error.response?.data?.message ||
-        error.message ||
-        "Unable to connect to server. Please try again."
-      );
+      
+      let errorMsg = "Unable to connect to server. Please try again.";
+      if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+        errorMsg = "Invalid email or password.";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMsg = "Too many failed attempts. Please try again later or reset your password.";
+      } else if (error?.response?.data?.message) {
+        errorMsg = error.response.data.message;
+      } else if (error.message) {
+        errorMsg = error.message;
+      }
+
+      setApiError(errorMsg);
     } finally {
       setLoading(false);
     }

@@ -1,161 +1,68 @@
-import supabase from "../config/supabaseClient.js";
-
-
+import { db } from "../config/firebaseAdmin.js";
+import asyncHandler from "express-async-handler";
 
 // GET WISHLIST
-export const getWishlistItems = async (
-  req,
-  res
-) => {
+export const getWishlistItems = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
 
-  try {
+  const snapshot = await db
+    .collection("wishlists")
+    .where("userId", "==", userId)
+    .get();
 
-    const userId = req.user.id;
+  const wishlist = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
 
-    const { data, error } = await supabase
-      .from("wishlists")
-      .select(`
-        *,
-        products (
-          id,
-          name,
-          slug,
-          price,
-          image_url,
-          stock
-        )
-      `)
-      .eq("user_id", userId);
-
-    if (error) throw error;
-
-    return res.status(200).json({
-      success: true,
-      wishlist: data,
-    });
-
-  } catch (error) {
-
-    console.error(
-      "Fetch wishlist error:",
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch wishlist",
-    });
-  }
-};
-
-
+  return res.status(200).json({
+    success: true,
+    wishlist,
+  });
+});
 
 // ADD TO WISHLIST
-export const addToWishlist = async (
-  req,
-  res
-) => {
+export const addToWishlist = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
+  const { product_id } = req.body;
 
-  try {
+  const wishlistRef = db.collection("wishlists");
+  const existingSnapshot = await wishlistRef
+    .where("userId", "==", userId)
+    .where("product_id", "==", product_id)
+    .limit(1)
+    .get();
 
-    const userId = req.user.id;
-
-    const { product_id } = req.body;
-
-
-
-    const { data: existingItem } =
-      await supabase
-        .from("wishlists")
-        .select("*")
-        .eq("user_id", userId)
-        .eq("product_id", product_id)
-        .maybeSingle();
-
-
-
-    if (existingItem) {
-
-      return res.status(200).json({
-        success: true,
-        message:
-          "Already in wishlist",
-      });
-    }
-
-
-
-    const { data, error } =
-      await supabase
-        .from("wishlists")
-        .insert({
-          user_id: userId,
-          product_id,
-        })
-        .select()
-        .single();
-
-    if (error) throw error;
-
-
-
-    return res.status(201).json({
+  if (!existingSnapshot.empty) {
+    return res.status(200).json({
       success: true,
-      message:
-        "Added to wishlist",
-      wishlistItem: data,
-    });
-
-  } catch (error) {
-
-    console.error(
-      "Add wishlist error:",
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      message:
-        "Failed to add wishlist item",
+      message: "Already in wishlist",
     });
   }
-};
 
+  const newItem = {
+    userId,
+    product_id,
+    created_at: new Date().toISOString(),
+  };
 
+  const docRef = await wishlistRef.add(newItem);
+
+  return res.status(201).json({
+    success: true,
+    message: "Added to wishlist",
+    wishlistItem: { id: docRef.id, ...newItem },
+  });
+});
 
 // REMOVE WISHLIST ITEM
-export const removeWishlistItem =
-  async (req, res) => {
+export const removeWishlistItem = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
 
-    try {
+  await db.collection("wishlists").doc(id).delete();
 
-      const { id } = req.params;
-
-      const { error } =
-        await supabase
-          .from("wishlists")
-          .delete()
-          .eq("id", id);
-
-      if (error) throw error;
-
-      return res.status(200).json({
-        success: true,
-        message:
-          "Wishlist item removed",
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Remove wishlist error:",
-        error
-      );
-
-      return res.status(500).json({
-        success: false,
-        message:
-          "Failed to remove wishlist item",
-      });
-    }
-  };
+  return res.status(200).json({
+    success: true,
+    message: "Wishlist item removed",
+  });
+});

@@ -16,6 +16,7 @@ export default function MediaCard({ item, onClick, progress }) {
         <img
           src={item.image}
           alt={item.title}
+          loading="lazy"
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 transition-opacity group-hover:opacity-100" />

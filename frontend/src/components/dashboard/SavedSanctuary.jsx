@@ -4,6 +4,7 @@ import { Bookmark, FolderHeart, Video, Music } from "lucide-react";
 import { useMedia } from "../../context/MediaContext";
 import VideoPreviewCard from "../ui/health/VideoPreviewCard";
 import TrackCard from "../ui/cards/TrackCard";
+import EmptyState from "../ui/states/EmptyState";
 
 export default function SavedSanctuary({ handleSessionOpen, hasProPlan }) {
   const { bookmarks } = useMedia();
@@ -97,25 +98,17 @@ export default function SavedSanctuary({ handleSessionOpen, hasProPlan }) {
             })}
           </motion.div>
         ) : (
-          <motion.div
+          <EmptyState
             key="empty-state"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            className="flex flex-col items-center justify-center p-12 text-center rounded-[2.5rem] border border-white/40 bg-white/20 backdrop-blur-md shadow-glass max-w-lg mx-auto"
-          >
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-wellness-cream text-wellness-orange mb-5 shadow-sm border border-white/50">
-              <Bookmark size={28} />
-            </div>
-            <h3 className="font-heading text-lg font-bold text-wellness-dark mb-2">
-              No saved items found
-            </h3>
-            <p className="text-xs text-wellness-muted leading-relaxed max-w-sm mb-6">
-              {bookmarks.length === 0
+            icon={Bookmark}
+            title="No saved items found"
+            description={
+              bookmarks.length === 0
                 ? "Start adding sessions, audio meditations, or workout classes to your bookmarks by clicking the bookmark or heart icon on any session card."
-                : "No items match your active tab filter."}
-            </p>
-          </motion.div>
+                : "No items match your active tab filter."
+            }
+            className="max-w-xl mx-auto mt-8"
+          />
         )}
       </AnimatePresence>
     </section>

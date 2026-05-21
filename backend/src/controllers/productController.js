@@ -1,121 +1,54 @@
-import supabase from "../config/supabaseClient.js";
-
+import { db } from "../config/firebaseAdmin.js";
+import { AppError } from "../middleware/errorMiddleware.js";
+import asyncHandler from "express-async-handler";
 
 // GET ALL PRODUCTS
-export const getAllProducts = async (req, res) => {
+export const getAllProducts = asyncHandler(async (req, res, next) => {
+  const productsSnapshot = await db.collection("products").get();
+  
+  const products = productsSnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
 
-  try {
-
-    const { data, error } = await supabase
-      .from("products")
-      .select(`
-        *,
-        categories (
-          id,
-          name,
-          slug
-        )
-      `);
-
-    if (error) {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      products: data,
-    });
-
-  } catch (error) {
-
-    console.error("Get Products Error:", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Server Error",
-    });
-  }
-};
-
-
+  res.status(200).json({
+    success: true,
+    products,
+  });
+});
 
 // GET SINGLE PRODUCT
-export const getSingleProduct = async (req, res) => {
+export const getSingleProduct = asyncHandler(async (req, res, next) => {
+  const { slug } = req.params;
 
-  try {
+  const productsRef = db.collection("products");
+  const snapshot = await productsRef.where("slug", "==", slug).limit(1).get();
 
-    const { slug } = req.params;
-
-    const { data, error } = await supabase
-      .from("products")
-      .select(`
-        *,
-        categories (
-          id,
-          name,
-          slug
-        )
-      `)
-      .eq("slug", slug)
-      .single();
-
-    if (error) {
-      return res.status(404).json({
-        success: false,
-        message: "Product not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      product: data,
-    });
-
-  } catch (error) {
-
-    console.error("Single Product Error:", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Server Error",
-    });
+  if (snapshot.empty) {
+    res.status(404);
+    throw new Error("Product not found");
   }
-};
 
+  const productDoc = snapshot.docs[0];
+  const product = { id: productDoc.id, ...productDoc.data() };
 
-
+  res.status(200).json({
+    success: true,
+    product,
+  });
+});
 
 // GET ALL CATEGORIES
-export const getAllCategories = async (req, res) => {
+export const getAllCategories = asyncHandler(async (req, res, next) => {
+  const categoriesSnapshot = await db.collection("categories").get();
+  
+  const categories = categoriesSnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
 
-  try {
-
-    const { data, error } = await supabase
-      .from("categories")
-      .select("*");
-
-    if (error) {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      categories: data,
-    });
-
-  } catch (error) {
-
-    console.error("Categories Error:", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Server Error",
-    });
-  }
-};
+  res.status(200).json({
+    success: true,
+    categories,
+  });
+});

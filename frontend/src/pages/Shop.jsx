@@ -260,20 +260,22 @@ function CartDrawer({ open, onClose }) {
                 <span>Cart Total</span>
                 <span className="text-lg font-semibold text-white">{formatPrice(cartTotal)}</span>
               </div>
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 type="button"
                 onClick={goCheckout}
-                className="mt-4 w-full rounded-full bg-gradient-to-r from-[#2E7D32] to-[#E8651A] px-5 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-white"
+                className="mt-4 w-full rounded-full bg-gradient-to-r from-[#2F6B3B] to-[#E27229] px-5 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-white shadow-lg transition hover:shadow-[0_12px_30px_rgba(226,114,41,0.2)] hover:-translate-y-0.5"
               >
                 Proceed to Checkout
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 type="button"
                 onClick={clearCart}
                 className="mt-3 w-full rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white/75"
               >
                 Clear Cart
-              </button>
+              </motion.button>
             </div>
           </motion.aside>
         </>
@@ -396,11 +398,11 @@ const filteredProducts = useMemo(() => {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(232,101,26,0.18),_transparent_34%),linear-gradient(180deg,#0e1710_0%,#17261a_44%,#f5efe6_100%)] font-body text-white">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(226,114,41,0.15),_transparent_40%),linear-gradient(180deg,#121a14_0%,#1a2a1d_40%,#f7f3ee_100%)] font-body text-white">
       <ShopNavbar onToggleCart={() => setCartOpen(true)} cartCount={cartCount} />
 
       <main className="mx-auto max-w-[92rem] px-4 py-8 sm:px-6 lg:px-8">
-        <section className="grid items-center gap-8 rounded-[36px] border border-white/12 bg-white/8 p-6 shadow-[0_30px_120px_rgba(0,0,0,0.2)] backdrop-blur-2xl lg:grid-cols-[1.15fr_0.85fr] lg:p-8">
+        <section className="grid items-center gap-8 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_30px_100px_rgba(0,0,0,0.15)] backdrop-blur-[32px] lg:grid-cols-[1.15fr_0.85fr] lg:p-8 transition-all duration-500 hover:shadow-[0_40px_120px_rgba(0,0,0,0.2)]">
           <div className="space-y-5">
             <div className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white/65">
               Curated wellness marketplace
@@ -445,7 +447,7 @@ const filteredProducts = useMemo(() => {
                   onClick={() => setCategory(item)}
                   className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition ${
                     category === item
-                      ? "bg-[#E8651A] text-white shadow-[0_14px_34px_rgba(232,101,26,0.28)]"
+                      ? "bg-[#E27229] text-white shadow-[0_12px_30px_rgba(226,114,41,0.2)]"
                       : "border border-white/10 bg-white/5 text-white/65 hover:bg-white/10 hover:text-white"
                   }`}
                 >

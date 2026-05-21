@@ -13,10 +13,10 @@ export default function SidebarItem({ item, onClose }) {
         onClick={onClose}
         className={({ isActive }) =>
           [
-            "group relative flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-all duration-200",
+            "group relative flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-all duration-300",
             isActive
-              ? "bg-white shadow-liftSm text-[#1D1D1D]"
-              : "text-[#736B63] hover:text-[#1D1D1D] hover:bg-white/40",
+              ? "bg-white/80 shadow-liftSm text-wellness-dark"
+              : "text-wellness-muted hover:text-wellness-dark hover:bg-white/50",
           ].join(" ")
         }
       >
@@ -33,13 +33,13 @@ export default function SidebarItem({ item, onClose }) {
             {/* Icon container */}
             <span
               className={[
-                "flex h-9 w-9 flex-shrink-0 items-center justify-center transition-all duration-200",
+                "flex h-9 w-9 flex-shrink-0 items-center justify-center transition-all duration-300",
                 isActive
                   ? "rounded-xl bg-wellness-orange/10 text-wellness-orange"
-                  : "rounded-full bg-transparent text-[#736B63] group-hover:bg-white group-hover:text-[#1D1D1D] group-hover:shadow-sm group-hover:-translate-y-0.5",
+                  : "rounded-xl bg-transparent text-wellness-muted group-hover:bg-white group-hover:text-wellness-dark group-hover:shadow-liftSm group-hover:-translate-y-0.5",
               ].join(" ")}
             >
-              <Icon className="text-[1.1rem] transition-transform duration-200 group-hover:scale-110" />
+              <Icon className="text-[1.1rem] transition-transform duration-300 group-hover:scale-110" />
             </span>
 
             <span className="truncate">{item.label}</span>

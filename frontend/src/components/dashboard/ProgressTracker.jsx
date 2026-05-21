@@ -9,12 +9,18 @@ export default function ProgressTracker() {
   const { dashboardInsights } = useDashboard();
   return (
     <DashboardSection id="progress">
-      <SectionHeading
-        animate
-        eyebrow="Your Journey"
-        title="Wellness Stats & Progress"
-        className="mb-6"
-      />
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <SectionHeading
+          animate
+          eyebrow="Your Journey"
+          title="Wellness Stats & Progress"
+        />
+        <p className="text-sm font-medium text-wellness-muted max-w-sm">
+          {dashboardInsights[0].value > 0 
+            ? `You're on a ${dashboardInsights[0].value}-day streak! Keep building healthy habits.` 
+            : `Today is a great day to start your wellness journey.`}
+        </p>
+      </div>
 
       <motion.div
         variants={staggerContainer(0.1)}

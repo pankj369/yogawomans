@@ -33,7 +33,7 @@ module.exports = {
           orangeDeep: "#c55716",
           cream2:     "#fdf8f1",
           warm:       "#f7ead7",
-          border:     "rgba(210,190,165,0.35)", // Softened border color
+          border:     "rgba(210,190,165,0.25)", // Extremely soft border
         },
       },
 
@@ -48,13 +48,13 @@ module.exports = {
         glow: "0 10px 40px rgba(26, 107, 175, 0.16)",
         soft: "0 8px 28px rgba(44, 44, 44, 0.1)",
         // wellness design system
-        glass:    "0 20px 80px rgba(72, 42, 8, 0.05)", // Softer shadow for lighter glass feel
-        card:     "0 14px 35px rgba(72, 42, 8, 0.04)", // Softer shadow
+        glass:    "0 30px 80px rgba(0, 0, 0, 0.04)", // Soft immersive shadow
+        card:     "0 20px 40px rgba(0, 0, 0, 0.03)", // Very diffuse card shadow
         glow2:    "0 16px 35px rgba(226, 114, 41, 0.12)", // Calmed glow
-        sidebar:  "4px 0 40px rgba(72, 42, 8, 0.03)",
+        sidebar:  "4px 0 40px rgba(0, 0, 0, 0.02)",
         navitem:  "0 14px 30px rgba(226, 114, 41, 0.06)",
-        liftSm:   "0 10px 25px rgba(72, 42, 8, 0.04)",
-        heroCard: "0 20px 60px rgba(72, 42, 8, 0.06)",
+        liftSm:   "0 12px 30px rgba(0, 0, 0, 0.025)",
+        heroCard: "0 30px 90px rgba(0, 0, 0, 0.05)",
       },
 
       backgroundImage: {
@@ -117,7 +117,7 @@ module.exports = {
       },
 
       transitionTimingFunction: {
-        spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        spring: "cubic-bezier(0.2, 0.8, 0.2, 1)", // Cinematic, weightless spring
       },
     },
   },

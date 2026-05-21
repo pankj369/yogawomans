@@ -1,46 +1,54 @@
-import apiClient from "./apiClient";
+import { collection, doc, getDocs, setDoc, deleteDoc } from "firebase/firestore";
+import { db, auth, isConfigured } from "../config/firebase";
 
+const mockDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+export const getWishlistItems = async () => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { items: [] };
+  }
 
-// GET WISHLIST
-export const getWishlistItems =
-  async () => {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
 
-    const response =
-      await apiClient.get(
-        "/wishlist"
-      );
+  const wishlistRef = collection(db, "users", user.uid, "wishlist");
+  const snapshot = await getDocs(wishlistRef);
+  
+  const items = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
 
-    return response.data;
-  };
+  return { items };
+};
 
+export const addToWishlistApi = async (product_id) => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { success: true };
+  }
 
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
 
-// ADD TO WISHLIST
-export const addToWishlistApi =
-  async (product_id) => {
+  const docRef = doc(db, "users", user.uid, "wishlist", product_id);
+  await setDoc(docRef, { product_id, addedAt: new Date().toISOString() });
 
-    const response =
-      await apiClient.post(
-        "/wishlist/add",
-        {
-          product_id,
-        }
-      );
+  return { success: true };
+};
 
-    return response.data;
-  };
+export const removeWishlistItemApi = async (wishlistId) => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { success: true };
+  }
 
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
 
+  const docRef = doc(db, "users", user.uid, "wishlist", wishlistId);
+  await deleteDoc(docRef);
 
-// REMOVE WISHLIST ITEM
-export const removeWishlistItemApi =
-  async (wishlistId) => {
-
-    const response =
-      await apiClient.delete(
-        `/wishlist/remove/${wishlistId}`
-      );
-
-    return response.data;
-  };
+  return { success: true };
+};

@@ -25,7 +25,7 @@ export default function ContinueWatchingRow({ items }) {
       {/* Scrolling Container */}
       <div 
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-2 px-1 -mx-1"
+        className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-2 px-1 -mx-1 snap-x snap-mandatory"
       >
         {items.map((item) => (
           <ContinueWatchingCard 

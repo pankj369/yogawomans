@@ -34,16 +34,16 @@ export default function ProductCard({
 }) {
   return (
     <motion.article
-      whileHover={{ y: -10, scale: 1.01 }}
-      transition={{ type: "spring", stiffness: 240, damping: 20 }}
-      className="group overflow-hidden rounded-[28px] border border-white/20 bg-white/10 shadow-[0_24px_80px_rgba(24,16,10,0.18)] backdrop-blur-2xl"
+      whileHover={{ y: -6, scale: 1.01 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.15)] backdrop-blur-[24px]"
     >
       <div className={`relative overflow-hidden bg-gradient-to-br ${product.accent} p-4`}>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.24),_transparent_45%)]" />
         <img
           src={product.image}
           alt={product.title}
-          className="relative z-10 h-60 w-full cursor-pointer object-contain transition duration-500 group-hover:scale-105"
+          className="relative z-10 h-60 w-full cursor-pointer object-contain transition duration-500 ease-out group-hover:scale-105"
           onClick={onOpenDetails}
         />
         <div className="absolute left-4 top-4 z-20 rounded-full border border-white/20 bg-black/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/90 backdrop-blur-md">
@@ -78,36 +78,40 @@ export default function ProductCard({
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <button
+          <motion.button
+            whileTap={{ scale: 0.95 }}
             type="button"
             onClick={() => onAddToCart(product)}
             className="flex-1 rounded-full border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-white/18"
           >
             Add to Cart
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
             type="button"
             onClick={() => onBuyNow(product)}
-            className="flex-1 rounded-full bg-gradient-to-r from-[#E8651A] to-[#f1a15d] px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(232,101,26,0.3)] transition duration-300 hover:-translate-y-0.5"
+            className="flex-1 rounded-full bg-gradient-to-r from-[#E27229] to-[#d5631c] px-4 py-3 text-sm font-semibold text-white shadow-[0_12px_25px_rgba(226,114,41,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_35px_rgba(226,114,41,0.25)]"
           >
             Buy Now
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
             type="button"
             onClick={() => onToggleWishlist?.(product)}
             className="rounded-full border border-white/20 bg-white/10 p-3 text-white transition hover:bg-white/20"
             aria-label="Toggle wishlist"
           >
             {isWishlisted ? <FaHeart className="text-rose-300" /> : <FaRegHeart />}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
             type="button"
             onClick={() => onPreview?.(product)}
             className="rounded-full border border-white/20 bg-white/10 p-3 text-white transition hover:bg-white/20"
             aria-label="Preview product"
           >
             <FaPlay />
-          </button>
+          </motion.button>
         </div>
       </div>
     </motion.article>

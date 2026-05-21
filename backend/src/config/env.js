@@ -3,12 +3,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const env = {
-  PORT: process.env.PORT,
-  SUPABASE_URL: process.env.SUPABASE_URL,
-  SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-  SUPABASE_SERVICE_ROLE_KEY:
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
+  PORT: process.env.PORT || 5000,
   JWT_SECRET: process.env.JWT_SECRET,
+  FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+  FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
+  FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
 };
 
 export default env;

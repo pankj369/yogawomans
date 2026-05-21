@@ -65,12 +65,20 @@ if (onComplete) {
   } catch (error) {
     console.error("Signup Error:", error);
 
-    setErrors({
-      api:
-        error?.response?.data?.message ||
-        "Signup failed. Please try again.",
-    });
+    let errorMsg = "Signup failed. Please try again.";
+    if (error.code === "auth/email-already-in-use") {
+      errorMsg = "This email is already registered. Try signing in.";
+    } else if (error.code === "auth/invalid-email") {
+      errorMsg = "Invalid email format.";
+    } else if (error.code === "auth/weak-password") {
+      errorMsg = "Password is too weak. Please use a stronger password.";
+    } else if (error?.response?.data?.message) {
+      errorMsg = error.response.data.message;
+    }
 
+    setErrors({
+      api: errorMsg,
+    });
   } finally {
     setLoading(false);
   }

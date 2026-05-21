@@ -11,6 +11,9 @@ import {
 import { loadProfileSetupState } from "../pages/profileSetupStorage";
 import { useAuth } from "./AuthContext";
 import { Flame, Clock, Activity, Sparkles } from "lucide-react";
+import { usePlaylists } from "../hooks/usePlaylists";
+import { useWellnessStats } from "../hooks/useWellnessStats";
+import { useProgress } from "../hooks/useProgress";
 
 const DashboardContext = createContext(null);
 const DASHBOARD_STATE_KEY = "yogawomans_dashboard_state";
@@ -18,6 +21,7 @@ const DASHBOARD_STATE_KEY = "yogawomans_dashboard_state";
 const defaultDashboardState = {
   lastSessionId: featuredSessions[0].id,
   completedSessions: [],
+  sessionHistory: [], // { sessionId, timestamp, progress }
   completedRoutine: [],
   favorites: [],
   liveJoined: [],
@@ -36,8 +40,8 @@ const defaultDashboardState = {
   },
 };
 
-function buildRecommendationSeed(profile, dashboardState) {
-  const goals = profile?.data?.goals || [];
+function buildRecommendationSeed(profile, dashboardState, backendGoals = []) {
+  const goals = profile?.data?.goals || backendGoals || [];
   const completed = dashboardState.completedSessions.length;
   const pool = sessionCatalog.slice();
 
@@ -60,47 +64,52 @@ function buildRecommendationSeed(profile, dashboardState) {
 export function DashboardProvider({ children }) {
   const auth = useAuth();
   const profile = loadProfileSetupState();
+  
+  // Real Backend Hooks
+  const { savedPlaylists, toggleFavorite: toggleFavoriteApi, isSaved } = usePlaylists();
+  const { stats, logSession: logSessionApi, activityHistory } = useWellnessStats();
+  const { continueWatching, saveProgress: saveProgressApi } = useProgress();
+
   const [state, setState] = useLocalStorage(DASHBOARD_STATE_KEY, defaultDashboardState, "localStorage");
   const [modalSession, setModalSession] = useState(null);
   const [meetingClass, setMeetingClass] = useState(null);
 
+  // Derive final values from backend first, fallback to local storage
+  const activeStreak = stats?.currentStreak !== undefined ? stats.currentStreak : state.streakDays;
+  const totalMeditation = stats?.totalMeditationMinutes !== undefined ? stats.totalMeditationMinutes : state.meditationMinutes;
+  const totalYoga = stats?.totalSessionsCompleted !== undefined ? stats.totalSessionsCompleted : state.yogaSessionsCompleted;
+  
+  const isPremium = auth.user?.premiumStatus || state.activePlan !== "Basic";
+
+  // Compute active favorites based on real backend data if available
+  const activeFavorites = savedPlaylists.length > 0 
+    ? savedPlaylists.map(p => p.playlistId) 
+    : state.favorites;
+
+  // Compute session history based on backend continueWatching if available
+  const activeHistory = continueWatching.length > 0 
+    ? continueWatching.map(cw => ({ sessionId: cw.mediaId, timestamp: cw.lastWatchedAt }))
+    : state.sessionHistory;
+
+  // Determine last session
+  let lastSessionId = state.lastSessionId;
+  if (continueWatching && continueWatching.length > 0) {
+    lastSessionId = continueWatching[0].mediaId;
+  }
+
   useEffect(() => {
-    if (!state.lastSessionId && featuredSessions.length) {
+    if (!lastSessionId && featuredSessions.length) {
       setState((current) => ({ ...current, lastSessionId: featuredSessions[0].id }));
     }
-  }, [state.lastSessionId, setState]);
+  }, [lastSessionId, setState]);
 
-  // Real Streak Verification on app load / dashboard refresh
-  useEffect(() => {
-    const todayStr = new Date().toLocaleDateString('en-CA');
+  const lastSession = sessionCatalog.find((session) => session.id === lastSessionId) || sessionCatalog[0];
+
+  const toggleFavorite = async (session) => {
+    // Fire backend request (which updates optimistic state internally)
+    await toggleFavoriteApi(session.id);
     
-    // If lastActiveDate is not set, initialize it to yesterday to validate the initial default streak
-    if (!state.lastActiveDate) {
-      const yesterdayStr = new Date(Date.now() - 86400000).toLocaleDateString('en-CA');
-      setState((current) => ({
-        ...current,
-        lastActiveDate: yesterdayStr,
-      }));
-      return;
-    }
-
-    const lastActive = new Date(state.lastActiveDate);
-    const today = new Date(todayStr);
-    const diffTime = today - lastActive;
-    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-    
-    // If they missed yesterday (diffDays > 1), reset streak
-    if (diffDays > 1 && state.streakDays > 0) {
-      setState((current) => ({
-        ...current,
-        streakDays: 0,
-      }));
-    }
-  }, [state.lastActiveDate, state.streakDays, setState]);
-
-  const lastSession = sessionCatalog.find((session) => session.id === state.lastSessionId) || sessionCatalog[0];
-
-  const toggleFavorite = (session) => {
+    // Also keep local storage in sync as fallback
     setState((current) => {
       const exists = current.favorites.includes(session.id);
       return {
@@ -113,14 +122,27 @@ export function DashboardProvider({ children }) {
   };
 
   const openSession = (session) => {
-    setState((current) => ({
-      ...current,
-      lastSessionId: session.id,
-    }));
+    setState((current) => {
+      const filteredHistory = current.sessionHistory ? current.sessionHistory.filter(h => h.sessionId !== session.id) : [];
+      return {
+        ...current,
+        lastSessionId: session.id,
+        sessionHistory: [
+          { sessionId: session.id, timestamp: new Date().toISOString(), progress: 0 },
+          ...filteredHistory,
+        ].slice(0, 20),
+      };
+    });
     setModalSession(session);
   };
 
-  const markSessionCompleted = (sessionId, minutes = 0) => {
+  const markSessionCompleted = async (sessionId, minutes = 0) => {
+    // 1. Fire Real Backend Log
+    const sessionType = sessionCatalog.find(s => s.id === sessionId)?.category === "meditation" ? "meditation" : "yoga";
+    await logSessionApi(sessionId, sessionType, minutes);
+    await saveProgressApi(sessionId, minutes * 60);
+
+    // 2. Keep local fallback in sync
     setState((current) => {
       const completedSessions = current.completedSessions.includes(sessionId)
         ? current.completedSessions
@@ -131,26 +153,20 @@ export function DashboardProvider({ children }) {
 
       if (!current.lastActiveDate) {
         newStreak = 1;
-      } else if (current.lastActiveDate === todayStr) {
-        // Already active today, streak remains same
-      } else {
+      } else if (current.lastActiveDate !== todayStr) {
         const lastActive = new Date(current.lastActiveDate);
         const today = new Date(todayStr);
-        const diffTime = today - lastActive;
-        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        const diffDays = Math.round((today - lastActive) / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 1) {
-          newStreak = current.streakDays + 1;
-        } else {
-          newStreak = 1; // Broken streak, start fresh
-        }
+        if (diffDays === 1) newStreak = current.streakDays + 1;
+        else newStreak = 1; 
       }
 
       return {
         ...current,
         completedSessions,
-        meditationMinutes: current.meditationMinutes + minutes,
-        yogaSessionsCompleted: current.yogaSessionsCompleted + 1,
+        meditationMinutes: current.meditationMinutes + (sessionType === 'meditation' ? minutes : 0),
+        yogaSessionsCompleted: current.yogaSessionsCompleted + (sessionType === 'yoga' ? 1 : 0),
         streakDays: Math.min(newStreak, 30),
         lastActiveDate: todayStr,
         wellnessScore: Math.min(current.wellnessScore + 1, 100),
@@ -205,24 +221,37 @@ export function DashboardProvider({ children }) {
   };
 
   const recommendations = useMemo(
-    () => buildRecommendationSeed(profile, state).slice(0, 5),
-    [profile, state]
+    () => buildRecommendationSeed(profile, state, auth.user?.goals).slice(0, 5),
+    [profile, state, auth.user?.goals]
   );
+
+  const recentlyPlayed = useMemo(() => {
+    if (!activeHistory) return [];
+    return activeHistory
+      .map(h => sessionCatalog.find(s => s.id === h.sessionId))
+      .filter(Boolean)
+      .slice(0, 5);
+  }, [activeHistory]);
+
+  const isReturningUser = activeStreak > 0 || state.completedSessions.length > 0;
 
   const unreadNotifications = dashboardNotifications.filter(
     (item) => !state.notificationsRead.includes(item.id)
   );
 
   const dynamicInsights = useMemo(() => [
-    { id: "streak", label: "Weekly streak", value: state.streakDays, total: 7, color: "#E8651A", icon: Flame },
-    { id: "meditation", label: "Meditation minutes", value: state.meditationMinutes, total: 300, color: "#2E7D32", icon: Clock },
-    { id: "sessions", label: "Yoga sessions completed", value: state.yogaSessionsCompleted, total: 25, color: "#1565C0", icon: Activity },
+    { id: "streak", label: "Weekly streak", value: activeStreak, total: 7, color: "#E8651A", icon: Flame },
+    { id: "meditation", label: "Meditation minutes", value: totalMeditation, total: 300, color: "#2E7D32", icon: Clock },
+    { id: "sessions", label: "Yoga sessions completed", value: totalYoga, total: 25, color: "#1565C0", icon: Activity },
     { id: "score", label: "Wellness score", value: Math.round(state.wellnessScore), total: 100, color: "#8a6a3c", icon: Sparkles },
-  ], [state.streakDays, state.meditationMinutes, state.yogaSessionsCompleted, state.wellnessScore]);
+  ], [activeStreak, totalMeditation, totalYoga, state.wellnessScore]);
+
+  // Inject backend favorites into state for components that access it directly
+  const finalState = { ...state, favorites: activeFavorites };
 
   const value = useMemo(
     () => ({
-      state,
+      state: finalState,
       profile,
       auth,
       modalSession,
@@ -234,6 +263,9 @@ export function DashboardProvider({ children }) {
       dashboardInsights: dynamicInsights,
       notifications: unreadNotifications,
       recommendations,
+      recentlyPlayed,
+      isReturningUser,
+      isPremium,
       setModalSession,
       setMeetingClass,
       toggleFavorite,
@@ -245,7 +277,7 @@ export function DashboardProvider({ children }) {
       updateSetting,
       upgradePlan,
     }),
-    [state, profile, auth, modalSession, meetingClass, lastSession, recommendations, unreadNotifications, dynamicInsights]
+    [finalState, profile, auth, modalSession, meetingClass, lastSession, recommendations, recentlyPlayed, isReturningUser, isPremium, unreadNotifications, dynamicInsights]
   );
 
   return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;
@@ -258,3 +290,4 @@ export function useDashboard() {
   }
   return context;
 }
+

@@ -1,64 +1,69 @@
-import apiClient from "./apiClient";
+import { collection, doc, getDocs, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { db, auth, isConfigured } from "../config/firebase";
 
+const mockDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-
-// GET USER CART
 export const getCartItems = async () => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { items: [] };
+  }
 
-  const response = await apiClient.get(
-    "/cart"
-  );
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
 
-  return response.data;
+  const cartRef = collection(db, "users", user.uid, "cart");
+  const snapshot = await getDocs(cartRef);
+  
+  const items = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+
+  return { items };
 };
 
+export const addToCartApi = async (product_id, quantity = 1) => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { success: true };
+  }
 
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
 
-// ADD TO CART
-export const addToCartApi = async (
-  product_id,
-  quantity = 1
-) => {
+  const docRef = doc(db, "users", user.uid, "cart", product_id);
+  await setDoc(docRef, { product_id, quantity, addedAt: new Date().toISOString() });
 
-  const response = await apiClient.post(
-    "/cart/add",
-    {
-      product_id,
-      quantity,
-    }
-  );
-
-  return response.data;
+  return { success: true };
 };
 
+export const updateCartItemApi = async (cartId, quantity) => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { success: true };
+  }
 
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
 
-// UPDATE CART ITEM
-export const updateCartItemApi = async (
-  cartId,
-  quantity
-) => {
+  const docRef = doc(db, "users", user.uid, "cart", cartId);
+  await updateDoc(docRef, { quantity });
 
-  const response = await apiClient.put(
-    `/cart/update/${cartId}`,
-    {
-      quantity,
-    }
-  );
-
-  return response.data;
+  return { success: true };
 };
 
+export const removeCartItemApi = async (cartId) => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { success: true };
+  }
 
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
 
-// REMOVE CART ITEM
-export const removeCartItemApi = async (
-  cartId
-) => {
+  const docRef = doc(db, "users", user.uid, "cart", cartId);
+  await deleteDoc(docRef);
 
-  const response = await apiClient.delete(
-    `/cart/remove/${cartId}`
-  );
-
-  return response.data;
-};
+  return { success: true };
+};

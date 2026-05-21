@@ -1,60 +1,60 @@
-import apiClient from "./apiClient";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { db, isConfigured } from "../config/firebase";
 
+const mockDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-
-// GET ALL PRODUCTS
 export const getAllProducts = async () => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { data: [] };
+  }
 
   try {
-
-    const response = await apiClient.get("/products");
-
-    return response.data;
-
+    const productsRef = collection(db, "products");
+    const snapshot = await getDocs(productsRef);
+    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return { data };
   } catch (error) {
-
     console.error("Get Products Error:", error);
-
     throw error;
   }
 };
 
-
-
-
-// GET SINGLE PRODUCT
 export const getSingleProduct = async (slug) => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { data: null };
+  }
 
   try {
-
-    const response = await apiClient.get(`/products/${slug}`);
-
-    return response.data;
-
+    const productsRef = collection(db, "products");
+    const q = query(productsRef, where("slug", "==", slug));
+    const snapshot = await getDocs(q);
+    
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      return { data: { id: doc.id, ...doc.data() } };
+    }
+    return { data: null };
   } catch (error) {
-
     console.error("Get Single Product Error:", error);
-
     throw error;
   }
 };
 
-
-
-
-// GET CATEGORIES
 export const getAllCategories = async () => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { data: [] };
+  }
 
   try {
-
-    const response = await apiClient.get("/categories");
-
-    return response.data;
-
+    const categoriesRef = collection(db, "categories");
+    const snapshot = await getDocs(categoriesRef);
+    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return { data };
   } catch (error) {
-
     console.error("Get Categories Error:", error);
-
     throw error;
   }
 };

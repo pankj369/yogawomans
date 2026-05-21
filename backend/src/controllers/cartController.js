@@ -1,205 +1,105 @@
-import supabase from "../config/supabaseClient.js";
-
-
+import { db } from "../config/firebaseAdmin.js";
+import asyncHandler from "express-async-handler";
 
 // GET USER CART
-export const getCartItems = async (req, res) => {
+export const getCartItems = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
 
-  try {
+  const cartSnapshot = await db
+    .collection("carts")
+    .where("userId", "==", userId)
+    .get();
 
-    const userId = req.user.id;
+  const cart = cartSnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
 
-    const { data, error } = await supabase
-      .from("carts")
-      .select(`
-        *,
-        products (
-          id,
-          name,
-          slug,
-          price,
-          image_url,
-          stock
-        )
-      `)
-      .eq("user_id", userId);
-
-    if (error) {
-      throw error;
-    }
-
-    return res.status(200).json({
-      success: true,
-      cart: data,
-    });
-
-  } catch (error) {
-
-    console.error("Get cart error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch cart",
-    });
-  }
-};
-
-
+  return res.status(200).json({
+    success: true,
+    cart,
+  });
+});
 
 // ADD TO CART
-export const addToCart = async (req, res) => {
+export const addToCart = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
+  const { product_id, quantity = 1 } = req.body;
 
-  try {
+  const cartRef = db.collection("carts");
+  const existingSnapshot = await cartRef
+    .where("userId", "==", userId)
+    .where("product_id", "==", product_id)
+    .limit(1)
+    .get();
 
-    const userId = req.user.id;
+  if (!existingSnapshot.empty) {
+    // Update existing item
+    const existingDoc = existingSnapshot.docs[0];
+    const newQuantity = existingDoc.data().quantity + quantity;
 
-    const {
-      product_id,
-      quantity = 1,
-    } = req.body;
-
-
-
-    const { data: existingItem, error: existingError } = await supabase
-  .from("carts")
-  .select("*")
-  .eq("user_id", userId)
-  .eq("product_id", product_id)
-  .maybeSingle();
-
-
-
-    if (existingItem) {
-
-      const { data, error } = await supabase
-        .from("carts")
-        .update({
-          quantity:
-            existingItem.quantity + quantity,
-
-          updated_at: new Date(),
-        })
-        .eq("id", existingItem.id)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      return res.status(200).json({
-        success: true,
-        message: "Cart updated",
-        cartItem: data,
-      });
-    }
-
-
-
-    const { data, error } = await supabase
-      .from("carts")
-      .insert({
-        user_id: userId,
-        product_id,
-        quantity,
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-
-
-
-    return res.status(201).json({
-      success: true,
-      message: "Added to cart",
-      cartItem: data,
+    await existingDoc.ref.update({
+      quantity: newQuantity,
+      updated_at: new Date().toISOString(),
     });
-
-  } catch (error) {
-
-    console.error("Add cart error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to add to cart",
-    });
-  }
-};
-
-
-
-// UPDATE CART QUANTITY
-export const updateCartItem = async (req, res) => {
-
-  try {
-
-    const { id } = req.params;
-
-    const { quantity } = req.body;
-
-    if (quantity < 1) {
-  return res.status(400).json({
-    success: false,
-    message: "Quantity must be at least 1",
-  });
-}
-
-    const { data, error } = await supabase
-      .from("carts")
-      .update({
-        quantity,
-        updated_at: new Date(),
-      })
-      .eq("id", id)
-      .select()
-      .single();
-
-    if (error) throw error;
 
     return res.status(200).json({
       success: true,
       message: "Cart updated",
-      cartItem: data,
-    });
-
-  } catch (error) {
-
-    console.error("Update cart error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to update cart",
+      cartItem: { id: existingDoc.id, ...existingDoc.data(), quantity: newQuantity },
     });
   }
-};
 
+  // Add new item
+  const newItem = {
+    userId,
+    product_id,
+    quantity,
+    created_at: new Date().toISOString(),
+  };
 
+  const docRef = await cartRef.add(newItem);
+
+  return res.status(201).json({
+    success: true,
+    message: "Added to cart",
+    cartItem: { id: docRef.id, ...newItem },
+  });
+});
+
+// UPDATE CART QUANTITY
+export const updateCartItem = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const { quantity } = req.body;
+
+  if (quantity < 1) {
+    res.status(400);
+    throw new Error("Quantity must be at least 1");
+  }
+
+  const docRef = db.collection("carts").doc(id);
+  await docRef.update({
+    quantity,
+    updated_at: new Date().toISOString(),
+  });
+
+  const updatedDoc = await docRef.get();
+
+  return res.status(200).json({
+    success: true,
+    message: "Cart updated",
+    cartItem: { id: updatedDoc.id, ...updatedDoc.data() },
+  });
+});
 
 // REMOVE CART ITEM
-export const removeCartItem = async (req, res) => {
+export const removeCartItem = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
 
-  try {
+  await db.collection("carts").doc(id).delete();
 
-    const { id } = req.params;
-
-    const { error } = await supabase
-      .from("carts")
-      .delete()
-      .eq("id", id);
-
-    if (error) throw error;
-
-    return res.status(200).json({
-      success: true,
-      message: "Item removed from cart",
-    });
-
-  } catch (error) {
-
-    console.error("Remove cart error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to remove cart item",
-    });
-  }
-};
+  return res.status(200).json({
+    success: true,
+    message: "Item removed from cart",
+  });
+});

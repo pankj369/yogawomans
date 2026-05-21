@@ -175,9 +175,10 @@ if (!document.head.querySelector("[data-yoga-about]")) {
       transition: transform 0.28s ease, border-color 0.28s ease, background 0.28s ease;
     }
     .yoga-feature-pill:hover {
-      border-color: rgba(46,125,50,0.24);
-      background: rgba(46,125,50,0.08);
-      transform: translateX(4px);
+      border-color: rgba(210,190,165,0.4);
+      background: rgba(255,255,255,0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.03);
     }
     .yoga-pill-icon {
       font-size: 24px;
@@ -201,18 +202,18 @@ if (!document.head.querySelector("[data-yoga-about]")) {
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      background: linear-gradient(135deg, rgba(46,125,50,0.95), rgba(232,101,26,0.95));
+      background: linear-gradient(135deg, #E27229 0%, #d5631c 100%);
       color: #fff;
       font-family: 'Poppins', sans-serif;
       font-size: 14px;
       font-weight: 700;
       padding: 16px 38px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
+      border: none;
       cursor: pointer;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      box-shadow: 0 18px 40px rgba(46,125,50,0.18);
+      box-shadow: 0 16px 35px rgba(226, 114, 41, 0.12);
       transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -288,8 +289,8 @@ if (!document.head.querySelector("[data-yoga-about]")) {
       transition: transform 0.35s ease, box-shadow 0.35s ease;
     }
     .yoga-image-panel:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 36px 88px rgba(46,125,50,0.14);
+      transform: translateY(-3px);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.05);
     }
     .yoga-image-glow {
       position: absolute;
@@ -337,7 +338,7 @@ if (!document.head.querySelector("[data-yoga-about]")) {
       width: 100%;
       max-width: 100%;
       backdrop-filter: blur(24px);
-      box-shadow: 0 22px 60px rgba(46,125,50,0.1);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.04);
     }
     .yoga-visual-card::before {
       content: '';
@@ -420,9 +421,9 @@ if (!document.head.querySelector("[data-yoga-about]")) {
       backdrop-filter: blur(18px);
     }
     .yoga-stat-card:hover {
-      border-color: rgba(46,125,50,0.22);
-      transform: translateY(-6px);
-      box-shadow: 0 18px 34px rgba(46,125,50,0.12);
+      border-color: rgba(210,190,165,0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 14px 35px rgba(0,0,0,0.03);
     }
     .yoga-stat-icon {
       font-size: 28px;

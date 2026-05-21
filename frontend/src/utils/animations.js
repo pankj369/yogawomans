@@ -86,3 +86,31 @@ export const itemFade = {
   closed: { opacity: 0, x: -10, transition: { duration: 0.2 } },
 };
 
+export const shimmer = {
+  initial: { x: "-100%" },
+  animate: {
+    x: "100%",
+    transition: {
+      repeat: Infinity,
+      ease: "linear",
+      duration: 1.5,
+    },
+  },
+};
+
+export const pressScale = {
+  rest: { scale: 1 },
+  tap: { scale: 0.96, transition: { duration: 0.1, ease: "easeOut" } },
+};
+
+export const emptyStateReveal = {
+  hidden: { opacity: 0, y: 15, scale: 0.98 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    scale: 1,
+    transition: { duration: 0.5, ease: easings.smooth, delay: 0.1 } 
+  },
+};
+
+

@@ -1,63 +1,132 @@
-import apiClient, { setAuthToken, removeAuthToken } from "./apiClient";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile as updateFirebaseProfile,
+  sendPasswordResetEmail,
+} from "firebase/auth";
+import { auth, isConfigured } from "../config/firebase";
+import apiClient from "./apiClient";
 
-// Signup - create new user account
+const mockDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const signupUser = async (userData) => {
-  const response = await apiClient.post("/auth/signup", {
-    email: userData.email,
-    password: userData.password,
-  });
+  if (isConfigured) {
+    // 1. Create user in Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      userData.email,
+      userData.password
+    );
+    const user = userCredential.user;
 
-  const { token, user, success } = response.data;
+    // 2. Set Display Name locally in Firebase
+    if (userData.name) {
+      await updateFirebaseProfile(user, {
+        displayName: userData.name,
+      });
+    }
 
-  if (success && token) {
-    setAuthToken(token);
+    // 3. Sync with Backend to create Firestore `users/{uid}` document
+    // We pass username in the body as fallback if displayName isn't updated quickly enough
+    const response = await apiClient.post("/auth/register", {
+      username: userData.name || userData.email.split("@")[0],
+    });
+
+    const token = await user.getIdToken();
+
+    return {
+      success: true,
+      token,
+      user: response.data || {
+        id: user.uid,
+        email: user.email,
+        name: user.displayName || userData.name,
+      },
+    };
   }
 
-  return response.data;
+  // Fallback if Firebase is not configured
+  await mockDelay(1000);
+  return {
+    success: true,
+    token: "mock.jwt.token",
+    user: { id: "mock-id", email: userData.email, name: userData.name },
+  };
 };
 
-// Login - authenticate user
 export const loginUser = async (userData) => {
-  const response = await apiClient.post("/auth/login", {
-    email: userData.email,
-    password: userData.password,
-  });
+  if (isConfigured) {
+    // 1. Authenticate with Firebase
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      userData.email,
+      userData.password
+    );
+    const user = userCredential.user;
 
-  const { token, user, success } = response.data;
+    // 2. Sync login with backend (verifies user exists in Firestore and updates Last Login if applicable)
+    const response = await apiClient.post("/auth/login");
+    const token = await user.getIdToken();
 
-  if (success && token) {
-    setAuthToken(token);
+    return {
+      success: true,
+      token,
+      user: response.data || {
+        id: user.uid,
+        email: user.email,
+        name: user.displayName,
+      },
+    };
   }
 
-  return response.data;
+  // Fallback if Firebase is not configured
+  await mockDelay(1000);
+  return {
+    success: true,
+    token: "mock.jwt.token",
+    user: { id: "mock-id", email: userData.email, name: userData.email.split("@")[0] },
+  };
 };
 
-// Logout - clear auth state
 export const logoutUser = async () => {
-  try {
-    // Try to call logout endpoint if it exists
-    await apiClient.post("/auth/logout");
-  } catch (error) {
-    // Continue with local logout even if API fails
-    console.log("Logout API not available, proceeding with local logout");
-  } finally {
-    removeAuthToken();
+  if (isConfigured) {
+    // 1. Notify Backend
+    try {
+      await apiClient.post("/auth/logout");
+    } catch (e) {
+      console.warn("Backend logout failed, continuing with client logout.");
+    }
+    // 2. Sign out locally
+    await signOut(auth);
+  } else {
+    await mockDelay(500);
   }
 };
 
-// Get current user profile
+export const resetPassword = async (email) => {
+  if (isConfigured) {
+    await sendPasswordResetEmail(auth, email);
+    return { success: true };
+  }
+  await mockDelay(1000);
+  return { success: true };
+};
+
 export const getCurrentUser = async () => {
-  const response = await apiClient.get("/auth/me");
-  return response.data;
-};
-
-// Check if user is authenticated
-export const checkAuth = async () => {
-  try {
-    const response = await apiClient.get("/auth/verify");
-    return { authenticated: true, user: response.data.user };
-  } catch (error) {
-    removeAuthToken();
-    return { authenticated: false, user: null };
+  if (isConfigured && auth.currentUser) {
+    try {
+      // Fetch complete profile from backend (includes premiumStatus, streak, etc)
+      const response = await apiClient.get("/auth/me");
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch backend profile:", error);
+      return {
+        id: auth.currentUser.uid,
+        email: auth.currentUser.email,
+        name: auth.currentUser.displayName,
+      };
+    }
   }
+  return null;
 };

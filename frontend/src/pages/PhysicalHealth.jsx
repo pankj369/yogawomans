@@ -123,7 +123,7 @@ export default function PhysicalHealth() {
             document.getElementById("workout-catalog")?.scrollIntoView({ behavior: "smooth" });
           }}
           videoSrc={physicalVideo}
-          overlayVariant="cinematic"
+          overlayVariant="cinematicDark"
           stats={[
             {
               id: "workouts-stat",

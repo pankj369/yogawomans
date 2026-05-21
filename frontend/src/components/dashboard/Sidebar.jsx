@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, LogOut, TrendingUp } from "lucide-react";
+import { X, LogOut, TrendingUp, Play } from "lucide-react";
 import { dashboardMenuGroups } from "../../data/wellnessData";
 import { useAuth } from "../../context/AuthContext";
 import { useDashboard } from "../../context/DashboardContext";
@@ -51,15 +51,29 @@ function SidebarPanel({ onClose, isMobile = false }) {
         )}
       </div>
 
-      {/* ── Navigation Groups ── */}
       <nav className="flex-1 space-y-4 overflow-y-auto no-scrollbar pr-1">
         {dashboardMenuGroups.map(({ group, items }) => (
           <SidebarGroup key={group} group={group} items={items} onClose={onClose} />
         ))}
       </nav>
 
+      {/* ── Quick Action: Resume Journey ── */}
+      {state?.lastSessionId && (
+        <button
+          onClick={() => {
+            onClose();
+            // In a real app we'd dispatch an event or trigger the context directly
+            // For now, we'll navigate to home to ensure Dashboard is mounted
+            navigate("/dashboard");
+          }}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-wellness-dark py-3.5 text-sm font-bold text-white shadow-liftSm transition-all hover:-translate-y-0.5 hover:bg-black hover:shadow-card"
+        >
+          <Play fill="currentColor" size={14} /> Resume Journey
+        </button>
+      )}
+
       {/* ── Wellness Stats Card ── */}
-      <div className="mt-5 rounded-3xl border border-white/70 bg-white/80 p-4 shadow-liftSm backdrop-blur-xl transition duration-200 hover:-translate-y-0.5 hover:shadow-card hover:bg-white/95">
+      <div className="mt-5 rounded-2xl border border-white/50 bg-white/60 p-4 shadow-liftSm backdrop-blur-[24px] transition duration-300 hover:-translate-y-1 hover:shadow-card hover:bg-white/90">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-label text-[0.6rem]">Today</p>
@@ -112,9 +126,9 @@ function SidebarPanel({ onClose, isMobile = false }) {
       <button
         type="button"
         onClick={handleLogout}
-        className="group mt-4 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-[#736B63] transition-all duration-200 hover:text-red-600 hover:bg-red-50/40"
+        className="group mt-4 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-wellness-muted transition-all duration-300 hover:text-red-600 hover:bg-red-50/60"
       >
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-transparent text-[#736B63] group-hover:bg-white group-hover:text-red-600 group-hover:shadow-sm transition-all duration-200">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-transparent text-wellness-muted group-hover:bg-white group-hover:text-red-600 group-hover:shadow-liftSm transition-all duration-300">
           <LogOut className="text-[1.1rem]" />
         </span>
         Logout

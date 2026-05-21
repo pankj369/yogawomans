@@ -1,24 +1,39 @@
-import apiClient from "./apiClient";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db, auth, isConfigured } from "../config/firebase";
 
+const mockDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-
-// GET CURRENT USER PROFILE
 export const getMyProfile = async () => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { profile: { full_name: "Mock User" } };
+  }
 
-  const response = await apiClient.get("/profile/me");
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
 
-  return response.data;
+  const docRef = doc(db, "users", user.uid);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return { profile: docSnap.data() };
+  } else {
+    return { profile: null };
+  }
 };
 
-
-
-// UPDATE USER PROFILE
 export const updateProfile = async (profileData) => {
+  if (!isConfigured) {
+    await mockDelay(500);
+    return { success: true, profile: profileData };
+  }
 
-  const response = await apiClient.put(
-    "/profile/update",
-    profileData
-  );
+  const user = auth.currentUser;
+  if (!user) throw new Error("Not authenticated");
 
-  return response.data;
+  const docRef = doc(db, "users", user.uid);
+  // Use merge: true to avoid overwriting existing data fields not included in profileData
+  await setDoc(docRef, profileData, { merge: true });
+
+  return { success: true, profile: profileData };
 };
