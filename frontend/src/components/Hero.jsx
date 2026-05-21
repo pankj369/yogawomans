@@ -32,8 +32,7 @@ function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="
-                font-sans 
-                font-sans 
+                font-sans
                 font-extrabold 
                 tracking-tight 
                 leading-[1.1] 
