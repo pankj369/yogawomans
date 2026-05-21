@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Music, Volume2, Play, Pause, Sparkles, Sliders, RefreshCw } from "lucide-react";
-import DashboardSection from "../ui/sections/DashboardSection";
-import SectionHeading from "../ui/sections/SectionHeading";
-import TrackCard from "../ui/cards/TrackCard";
-import { healingAudio } from "../../data/mentalHealthData";
-import { audioTracks } from "../../data/wellnessData";
+import DashboardSection from "../sections/DashboardSection";
+import SectionHeading from "../sections/SectionHeading";
+import TrackCard from "../cards/TrackCard";
+import { healingAudio } from "../../../data/mentalHealthData";
+import { audioTracks } from "../../../data/wellnessData";
 
 // Nature Mixer Assets
-import audioRain from "../../assets/audios/mixkit-light-rain-loop-2393.wav";
-import audioBirds from "../../assets/audios/mixkit-little-birds-singing-in-the-trees-17.wav";
-import audioOcean from "../../assets/audios/oceanframemusic-relax-515144.mp3";
-import audioWind from "../../assets/audios/mixkit-valley-sunset-127.mp3";
+import audioRain from "../../../assets/audios/mixkit-light-rain-loop-2393.wav";
+import audioBirds from "../../../assets/audios/mixkit-little-birds-singing-in-the-trees-17.wav";
+import audioOcean from "../../../assets/audios/oceanframemusic-relax-515144.mp3";
+import audioWind from "../../../assets/audios/mixkit-valley-sunset-127.mp3";
 
 const mixerTracks = [
   { id: "rain", label: "Rain Showers", icon: "🌧️", src: audioRain },
@@ -20,7 +20,7 @@ const mixerTracks = [
   { id: "wind", label: "Soft Breeze", icon: "🍃", src: audioWind },
 ];
 
-export default function MusicSection() {
+export default function HealingAudioSection() {
   // Sound Mixer States
   const [activeMixer, setActiveMixer] = useState({
     rain: false,

@@ -23,8 +23,6 @@ import SavedSanctuary from "../components/dashboard/SavedSanctuary";
 import MeditationSection from "../components/dashboard/MeditationSection";
 import SleepSection from "../components/dashboard/SleepSection";
 import BreathworkSection from "../components/dashboard/BreathworkSection";
-import MusicSection from "../components/dashboard/MusicSection";
-import MovementSection from "../components/dashboard/MovementSection";
 import WisdomSection from "../components/dashboard/WisdomSection";
 import LiveClassesSection from "../components/dashboard/LiveClassesSection";
 import KidsYogaSection from "../components/dashboard/KidsYogaSection";
@@ -44,9 +42,7 @@ const sectionMeta = {
   home: { title: "Today feels lighter already", hero: "Morning sanctuary", focus: "All your wellness rituals in one place." },
   meditation: { title: "Meditation", hero: "Mindful stillness", focus: "Slow down and reset with guided calm." },
   sleep: { title: "Sleep", hero: "Night restoration", focus: "Wind down with soothing sessions and soundscapes." },
-  music: { title: "Music", hero: "Sound healing", focus: "Find a rhythm that softens the nervous system." },
   wisdom: { title: "Wisdom", hero: "Spiritual insight", focus: "Reflect, learn, and deepen your practice." },
-  movement: { title: "Movement", hero: "Daily motion", focus: "Build strength and flexibility with intention." },
   breathwork: { title: "Breathwork", hero: "Breath reset", focus: "Use the breath to energize or release tension." },
   kids: { title: "Kids Yoga", hero: "Family flow", focus: "Gentle movement for younger yogis." },
   saved: { title: "Saved Sanctuary", hero: "Your Sanctuary", focus: "Return to the practices that center you." },
@@ -185,7 +181,7 @@ export default function Dashboard() {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const DASHBOARD_CATEGORIES = ["All", "Meditation", "Yoga", "Sleep", "Breathwork", "Music"];
+  const DASHBOARD_CATEGORIES = ["All", "Meditation", "Yoga", "Sleep", "Breathwork"];
   
   if (auth.profileLoading) {
     return (
@@ -225,7 +221,7 @@ export default function Dashboard() {
 
   const getVideoSrc = (sec) => {
     if (sec === "home") return meditationVideo;
-    if (sec === "meditation" || sec === "movement") return physicalVideo;
+    if (sec === "meditation") return physicalVideo;
     if (sec === "breathwork" || sec === "kids") return meditationVideo;
     return homeVideo;
   };
@@ -304,8 +300,6 @@ export default function Dashboard() {
         {section === "meditation" && <MeditationSection />}
         {section === "sleep" && <SleepSection />}
         {section === "breathwork" && <BreathworkSection />}
-        {section === "music" && <MusicSection />}
-        {section === "movement" && <MovementSection />}
         {section === "wisdom" && <WisdomSection />}
         {section === "live" && <LiveClassesSection />}
         {section === "kids" && <KidsYogaSection />}

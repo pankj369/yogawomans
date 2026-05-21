@@ -14,6 +14,7 @@ import SessionCard from "../components/ui/cards/SessionCard";
 import TrackCard from "../components/ui/cards/TrackCard";
 import FilterBar from "../components/ui/health/FilterBar";
 import RoutineCard from "../components/ui/cards/RoutineCard";
+import HealingAudioSection from "../components/ui/mental/HealingAudioSection";
 
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
@@ -232,24 +233,7 @@ export default function MentalHealth() {
           </div>
         </DashboardSection>
 
-        {/* Healing Audio */}
-        <DashboardSection id="audio-healing">
-          <SectionHeading
-            animate
-            eyebrow="Soundscapes"
-            title="Healing Audio"
-            description="Immersive ambient sounds for focus, relaxation, and emotional balance."
-            className="mb-8"
-          />
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {healingAudio.map((track) => (
-              <TrackCard 
-                key={track.id} 
-                track={track} 
-              />
-            ))}
-          </div>
-        </DashboardSection>
+        <HealingAudioSection />
 
         {/* Sleep Wellness Section */}
         <DashboardSection id="sleep-wellness">

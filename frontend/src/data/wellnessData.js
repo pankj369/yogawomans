@@ -46,8 +46,6 @@ export const dashboardMenuGroups = [
       { label: "Meditation",      path: "/dashboard/meditation",   icon: Moon      },
       { label: "Sleep",           path: "/dashboard/sleep",        icon: Moon       },
       { label: "Breathwork",      path: "/dashboard/breathwork",   icon: Wind      },
-      { label: "Music",           path: "/dashboard/music",        icon: Music      },
-      { label: "Movement",        path: "/dashboard/movement",     icon: Feather   },
       { label: "Wisdom",          path: "/dashboard/wisdom",       icon: BookOpen   },
     ],
   },
