@@ -11,8 +11,8 @@ const apiClient = axios.create({
 // Request Interceptor: Attach Firebase ID Token
 apiClient.interceptors.request.use(
   async (config) => {
-    // Attempt to get the current Firebase user's ID token
-    const user = auth.currentUser;
+    // Attempt to get the current Firebase user's ID token safely
+    const user = auth?.currentUser;
     if (user) {
       try {
         const token = await user.getIdToken();

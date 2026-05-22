@@ -64,10 +64,12 @@ export function AuthProvider({ children }) {
     }
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!isMounted) return;
+      
       if (user) {
-        if (isMounted) setFirebaseUser(user);
+        setFirebaseUser(user);
         try {
-          // Fetch real profile from backend
+          // Fetch real profile from backend safely
           const profileData = await getCurrentUser();
           if (isMounted && profileData) {
             setBackendProfile(profileData);
@@ -80,10 +82,8 @@ export function AuthProvider({ children }) {
           console.error("AuthContext: Failed to sync backend profile", error);
         }
       } else {
-        if (isMounted) {
-          setFirebaseUser(null);
-          setBackendProfile(null);
-        }
+        setFirebaseUser(null);
+        setBackendProfile(null);
       }
 
       if (isMounted) {

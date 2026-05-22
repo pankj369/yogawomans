@@ -40,13 +40,13 @@ function Hero() {
                 text-5xl md:text-6xl lg:text-[5.5rem] xl:text-[6rem]
               "
             >
-              <span className="block text-wellness-orange">
+              <span className="block text-wellness-orange [-webkit-text-stroke:1px_white]">
                 Find Balance.
               </span>
-              <span className="block text-[#FAF8F5]">
+              <span className="block text-[#FAF8F5] [-webkit-text-stroke:1px_white]">
                 Inner Peace.
               </span>
-              <span className="block text-wellness-green">
+              <span className="block text-wellness-green [-webkit-text-stroke:1px_white]">
                 Better You.
               </span>
             </motion.h1>
@@ -151,20 +151,20 @@ function Hero() {
               className="
                 mt-4 
                 font-sans 
-                text-4xl sm:text-[3.2rem] 
+                text-6xl sm:text-[3.8rem] 
                 font-extrabold 
                 tracking-tight 
                 leading-[1.1] 
                 drop-shadow-[0_6px_20px_rgba(0,0,0,0.15)]
               "
             >
-              <span className="block text-wellness-orange">
+              <span className="block text-wellness-orange [-webkit-text-stroke:0.5px_white]">
                 Find Balance.
               </span>
-              <span className="block text-[#FAF8F5]">
+              <span className="block text-[#FAF8F5] [-webkit-text-stroke:0.5px_white]">
                 Inner Peace.
               </span>
-              <span className="block text-wellness-green">
+              <span className="block text-wellness-green [-webkit-text-stroke:0.5px_white]">
                 Better You.
               </span>
             </motion.h1>

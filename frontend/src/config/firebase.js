@@ -12,8 +12,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase only if config is provided
-const isConfigured = Boolean(firebaseConfig.apiKey);
+// Initialize Firebase only if a valid API key is provided
+const isConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.apiKey !== '""' && firebaseConfig.apiKey.trim() !== "");
 
 const app = isConfigured ? initializeApp(firebaseConfig) : null;
 const auth = isConfigured ? getAuth(app) : null;
@@ -21,9 +21,7 @@ const db = isConfigured ? getFirestore(app) : null;
 const storage = isConfigured ? getStorage(app) : null;
 
 if (!isConfigured) {
-  console.warn(
-    "Firebase is not configured. Please add VITE_FIREBASE_API_KEY and other variables to your .env file."
-  );
+  console.warn("Firebase is not configured. Please add valid VITE_FIREBASE_API_KEY and other variables to your .env file. Running in offline/mock mode.");
 }
 
 export { app, auth, db, storage, isConfigured };
