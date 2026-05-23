@@ -4,6 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Play, Pause, SkipForward, SkipBack, X, CheckCircle2 } from "lucide-react";
 import { updatePlanProgress } from "../services/planService";
 import { useAuth } from "../context/AuthContext";
+import { useMedia } from "../context/MediaContext";
+import PremiumButton from "../components/ui/PremiumButton";
+import AmbientSoundControls from "../components/ui/player/AmbientSoundControls";
+import { easings } from "../utils/animations";
 
 export default function SessionPlayer() {
   const location = useLocation();
@@ -24,6 +28,10 @@ export default function SessionPlayer() {
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [sessionCompleted, setSessionCompleted] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  const [showAmbient, setShowAmbient] = useState(false);
+  
+  const { playAmbient, stopAmbient } = useMedia();
   
   // Extract duration from strings like "4 mins" or "10 mins"
   const parseDurationSeconds = (durationString) => {
@@ -37,13 +45,23 @@ export default function SessionPlayer() {
 
   // Initialize phase
   useEffect(() => {
-    if (timeline[currentPhaseIndex]) {
+    if (timeline[currentPhaseIndex] && !showIntro) {
       const seconds = parseDurationSeconds(timeline[currentPhaseIndex].duration);
       setTimeLeft(seconds);
       setTotalTimeForPhase(seconds);
       setIsPlaying(true); // Auto-play when entering a phase
     }
-  }, [currentPhaseIndex, timeline]);
+  }, [currentPhaseIndex, timeline, showIntro]);
+
+  // Intro Sequence Timer
+  useEffect(() => {
+    if (showIntro) {
+      const timer = setTimeout(() => {
+        setShowIntro(false);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [showIntro]);
 
   // Timer countdown logic
   useEffect(() => {
@@ -65,6 +83,7 @@ export default function SessionPlayer() {
       // Session Complete
       setIsPlaying(false);
       setSessionCompleted(true);
+      stopAmbient();
       if (user?.id && planId && planId !== "current") {
         await updatePlanProgress(user.id, planId, 100);
       }
@@ -112,22 +131,55 @@ export default function SessionPlayer() {
       </AnimatePresence>
 
       {/* Top Header / Exit */}
-      <div className="absolute top-0 flex w-full items-center justify-between px-8 py-8 z-50">
-        <div className="flex flex-col">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#E27229]">
-            {planData.goalId} Journey
-          </span>
-          <span className="text-sm font-semibold text-[#3a4a3d]">
-            Phase {currentPhaseIndex + 1} of {timeline.length}
-          </span>
-        </div>
-        <button 
-          onClick={() => navigate(-1)}
-          className="group flex h-12 w-12 items-center justify-center rounded-full bg-white/40 text-[#3a4a3d] backdrop-blur-md transition-all hover:bg-white hover:text-[#11281d] hover:scale-105"
-        >
-          <X size={20} strokeWidth={1.5} />
-        </button>
-      </div>
+      <AnimatePresence>
+        {!showIntro && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: easings.cinematic }}
+            className="absolute top-0 flex w-full items-center justify-between px-8 py-8 z-50"
+          >
+            <div className="flex flex-col">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#E27229]">
+                {planData.goalId} Journey
+              </span>
+              <span className="text-sm font-semibold text-[#3a4a3d]">
+                Phase {currentPhaseIndex + 1} of {timeline.length}
+              </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setShowAmbient(!showAmbient)}
+                className="group flex h-12 px-6 items-center justify-center gap-2 rounded-full bg-white/40 text-[#11281d] font-bold text-xs uppercase tracking-wider backdrop-blur-md transition-all hover:bg-white hover:scale-105"
+              >
+                + Ambient Layer
+              </button>
+              <button 
+                onClick={() => {
+                  stopAmbient();
+                  navigate(-1);
+                }}
+                className="group flex h-12 w-12 items-center justify-center rounded-full bg-white/40 text-[#3a4a3d] backdrop-blur-md transition-all hover:bg-white hover:text-[#11281d] hover:scale-105"
+              >
+                <X size={20} strokeWidth={1.5} />
+              </button>
+            </div>
+            
+            <AnimatePresence>
+              {showAmbient && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  className="absolute right-8 top-24 z-[60]"
+                >
+                  <AmbientSoundControls onClose={() => setShowAmbient(false)} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main Content Area */}
       <AnimatePresence mode="wait">
@@ -145,12 +197,25 @@ export default function SessionPlayer() {
             <p className="text-xl text-[#3a4a3d] font-light max-w-md mb-12">
               Your consistency is building emotional resilience. Take this sense of calm with you into the rest of your day.
             </p>
-            <button 
-              onClick={() => navigate("/dashboard")}
-              className="rounded-full bg-gradient-to-r from-[#E27229] to-[#d5631c] px-10 py-5 text-[11px] font-bold uppercase tracking-[0.2em] text-white hover:shadow-[0_10px_30px_rgba(226,114,41,0.3)] transition-all"
-            >
+            <PremiumButton onClick={() => navigate("/dashboard")}>
               Return to Dashboard
-            </button>
+            </PremiumButton>
+          </motion.div>
+        ) : showIntro ? (
+          <motion.div 
+            key="intro"
+            initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+            transition={{ duration: 1.5, ease: easings.luxurious }}
+            className="z-10 flex flex-col items-center text-center px-6"
+          >
+            <h2 className="font-serif text-3xl sm:text-5xl font-light text-[#11281d] tracking-wide mb-6">
+              Take a deep breath.
+            </h2>
+            <p className="text-[#E27229] uppercase tracking-[0.3em] text-xs font-bold">
+              Preparing your space...
+            </p>
           </motion.div>
         ) : (
           <motion.div 
@@ -166,7 +231,7 @@ export default function SessionPlayer() {
               {currentPhase?.type}
             </h2>
             <h1 className="font-serif text-4xl sm:text-6xl font-light text-[#11281d] mb-6">
-              {currentPhase?.title}
+              {currentPhase?.name || currentPhase?.title}
             </h1>
             <p className="text-lg font-light text-[#3a4a3d] max-w-xl mb-16">
               {currentPhase?.description}
@@ -174,7 +239,7 @@ export default function SessionPlayer() {
 
             {/* Circular Timer */}
             <div className="relative mb-16 flex items-center justify-center">
-              <svg width="260" height="260" viewBox="0 0 260 260" className="-rotate-90">
+              <svg viewBox="0 0 260 260" className="-rotate-90 w-52 h-52 sm:w-[260px] sm:h-[260px]">
                 {/* Background Ring */}
                 <circle 
                   cx="130" cy="130" r="120" 
@@ -199,6 +264,13 @@ export default function SessionPlayer() {
                 <span className="font-serif text-5xl font-light text-[#11281d] tracking-tight">
                   {formatTime(timeLeft)}
                 </span>
+                {isPlaying && (
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 rounded-full bg-[#E27229]/5 blur-xl -z-10"
+                  />
+                )}
               </div>
             </div>
 

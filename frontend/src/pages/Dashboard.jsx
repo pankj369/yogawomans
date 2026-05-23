@@ -32,6 +32,14 @@ import DashboardPlansSection from "../components/dashboard/DashboardPlansSection
 import EmptyState from "../components/ui/states/EmptyState";
 import { Search } from "lucide-react";
 
+// Premium Wellness OS Components
+import WellnessHero from "../components/dashboard/WellnessHero";
+import WellnessInsights from "../components/dashboard/WellnessInsights";
+import ContinueJourney from "../components/dashboard/ContinueJourney";
+import RecentPlans from "../components/dashboard/RecentPlans";
+import AIRecommendations from "../components/dashboard/AIRecommendations";
+import { useGeneratedPlans } from "../hooks/useGeneratedPlans";
+
 import { useAuth } from "../context/AuthContext";
 import { useDashboard } from "../context/DashboardContext";
 import { useToast } from "../context/ToastContext";
@@ -183,6 +191,7 @@ export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const DASHBOARD_CATEGORIES = ["All", "Meditation", "Yoga", "Sleep", "Breathwork"];
+  const { generatedPlans } = useGeneratedPlans();
   
   if (!auth.isAuthReady) {
     return (
@@ -231,14 +240,18 @@ export default function Dashboard() {
     <DashboardLayout userName={userName} title={activeSection.title} query={query} onQueryChange={setQuery}>
       <div className="flex flex-col gap-10 lg:gap-14 pb-10">
         
-        <HeroBanner 
-          userName={userName}
-          lastSession={lastSession}
-          onResumeSession={() => lastSession && handleSessionOpen(lastSession)}
-          onExplorePrograms={() => navigate("/dashboard/meditation")}
-          sectionTitle={activeSection.hero}
-          videoSrc={getVideoSrc(section)}
-        />
+        {section === "home" ? (
+          <WellnessHero userName={userName} />
+        ) : (
+          <HeroBanner 
+            userName={userName}
+            lastSession={lastSession}
+            onResumeSession={() => lastSession && handleSessionOpen(lastSession)}
+            onExplorePrograms={() => navigate("/dashboard/meditation")}
+            sectionTitle={activeSection.hero}
+            videoSrc={getVideoSrc(section)}
+          />
+        )}
 
         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide px-2">
           {DASHBOARD_CATEGORIES.map((cat) => (
@@ -309,55 +322,41 @@ export default function Dashboard() {
         {section === "plans" && <DashboardPlansSection />}
 
         {section === "home" && (
-          <>
-            {lastSession && <ContinueWatchingSection onResume={handleSessionOpen} />}
+          <div className="flex flex-col gap-10 lg:gap-14">
+            {/* Mobile: Priority ordering (Continue first) */}
+            <div className="flex flex-col gap-10 lg:gap-14">
+              <div className="order-1 lg:order-none">
+                {lastSession && (
+                  <ContinueJourney 
+                    lastSession={lastSession} 
+                    onContinue={() => handleSessionOpen(lastSession)} 
+                  />
+                )}
+              </div>
+              
+              <div className="order-2 lg:order-none">
+                <WellnessInsights />
+              </div>
 
-            {/* 1.5 Recently Played (Session History) */}
-            <RecentlyPlayedSection onOpenSession={handleSessionOpen} />
-            
-            {/* 2. Recommended Sessions */}
-            <RecommendedSection items={recommendations} onOpenDetails={handleSessionOpen} />
-            
-            {/* 3. Daily Wellness Routine */}
-            <DailyRoutine
-              completedItems={state.completedRoutine}
-              onStartSession={(item) => {
-                const session = sessionCatalog.find((entry) => entry.id === item.sessionId);
-                if (session) {
-                  handleSessionOpen(session);
-                  markSessionCompleted(session.id, item.duration);
-                }
-                completeRoutine(item.id);
-              }}
-              onToggleComplete={completeRoutine}
-            />
-            
-            {/* 4 & 9. Featured Programs (Premium banners) */}
-            <FeaturedProgramsSection onExplore={(program) => {
-              toast.showToast({ title: "Exploring Program", message: `Opening ${program.title}` });
-            }} />
-            
-            {/* 5. Focus Music & Ambient Audio */}
-            <FocusMusicSection />
-            
-            {/* 6. Live Classes */}
-            <LiveClasses
-              joined={state.liveJoined}
-              onJoin={(liveClass) => {
-                joinClass(liveClass);
-                setMeetingClass(liveClass);
-                toast.showToast({ type: "success", title: "Live class joined", message: `You're in ${liveClass.title}.` });
-              }}
-            />
-            
-            {/* 7. Wellness Stats & Progress */}
-            <ProgressTracker />
-            
-            {/* 8. Breathing Exercises */}
-            <BreathingExercisesSection onStart={(exercise) => {
-              toast.showToast({ title: "Breathing Session", message: `Starting ${exercise.title} timer...` });
-            }} />
-          </>
+              <div className="order-3 lg:order-none grid gap-10 lg:grid-cols-12">
+                <div className="lg:col-span-7">
+                  <RecentPlans 
+                    plans={generatedPlans} 
+                    onContinue={(plan) => {
+                      navigate("/generated-plan", {
+                        state: { goalId: plan.goal, durationId: plan.duration, levelId: plan.level }
+                      });
+                    }} 
+                  />
+                </div>
+                <div className="lg:col-span-5">
+                  <AIRecommendations 
+                    onSelect={(rec) => toast.showToast({ title: "AI Suggestion", message: `Opening ${rec.title}` })} 
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         )}
 
         <Footer />

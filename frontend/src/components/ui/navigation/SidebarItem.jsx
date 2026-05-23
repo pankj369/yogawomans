@@ -13,10 +13,10 @@ export default function SidebarItem({ item, onClose }) {
         onClick={onClose}
         className={({ isActive }) =>
           [
-            "group relative flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-all duration-300",
+            "group relative flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold transition-all duration-500",
             isActive
-              ? "bg-white/80 shadow-liftSm text-wellness-dark"
-              : "text-wellness-muted hover:text-wellness-dark hover:bg-white/50",
+              ? "bg-white/80 shadow-[0_10px_30px_rgba(0,0,0,0.05)] text-[#11281d]"
+              : "text-[#8FA68E] hover:text-[#E27229] hover:bg-white/50",
           ].join(" ")
         }
       >
@@ -26,27 +26,27 @@ export default function SidebarItem({ item, onClose }) {
             {isActive && (
               <motion.span
                 layoutId="sidebar-active-bar"
-                className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-gradient-to-b from-[#A37E58] to-[#2D6338]"
+                className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-[#E27229]"
               />
             )}
 
             {/* Icon container */}
             <span
               className={[
-                "flex h-9 w-9 flex-shrink-0 items-center justify-center transition-all duration-300",
+                "flex h-10 w-10 flex-shrink-0 items-center justify-center transition-all duration-500",
                 isActive
-                  ? "rounded-xl bg-wellness-orange/10 text-wellness-orange"
-                  : "rounded-xl bg-transparent text-wellness-muted group-hover:bg-white group-hover:text-wellness-dark group-hover:shadow-liftSm group-hover:-translate-y-0.5",
+                  ? "rounded-xl bg-[#E27229]/10 text-[#E27229]"
+                  : "rounded-xl bg-transparent text-[#8FA68E] group-hover:bg-[#EFE7DC]/50 group-hover:text-[#E27229] group-hover:shadow-sm group-hover:-translate-y-0.5",
               ].join(" ")}
             >
-              <Icon className="text-[1.1rem] transition-transform duration-300 group-hover:scale-110" />
+              <Icon className="text-[1.2rem] transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3" />
             </span>
 
             <span className="truncate">{item.label}</span>
 
             {/* Hover glow dot */}
             {!isActive && (
-              <span className="ml-auto h-1.5 w-1.5 rounded-full bg-wellness-orange opacity-0 transition-opacity group-hover:opacity-60" />
+              <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#E27229] opacity-0 transition-opacity duration-500 group-hover:opacity-100 shadow-[0_0_10px_rgba(226,114,41,0.5)]" />
             )}
           </>
         )}

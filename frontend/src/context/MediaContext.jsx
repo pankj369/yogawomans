@@ -22,6 +22,11 @@ export function MediaProvider({ children }) {
   // Video state
   const [activeVideo, setActiveVideo] = useState(null);
 
+  // Ambient Sound State
+  const [ambientTrack, setAmbientTrack] = useState(null);
+  const [isAmbientPlaying, setIsAmbientPlaying] = useState(false);
+  const [ambientVolume, setAmbientVolumeState] = useState(0.5);
+
   // Lists (Continue watching & Bookmarks)
   const [watchHistory, setWatchHistory] = useState(() => {
     try {
@@ -42,6 +47,7 @@ export function MediaProvider({ children }) {
   });
 
   const audioRef = useRef(null);
+  const ambientRef = useRef(null);
   const { isAuthenticated } = useAuth();
 
   // Stop music when user logs out
@@ -58,6 +64,12 @@ export function MediaProvider({ children }) {
       setProgress(0);
       setDuration(0);
       setActiveVideo(null);
+      if (ambientRef.current) {
+        ambientRef.current.pause();
+        ambientRef.current.src = "";
+      }
+      setAmbientTrack(null);
+      setIsAmbientPlaying(false);
     }
   }, [isAuthenticated]);
 
@@ -88,6 +100,17 @@ export function MediaProvider({ children }) {
     audio.addEventListener("canplay", handleCanPlay);
     audio.addEventListener("ended", handleEnded);
 
+    // Initialize Ambient Audio
+    const ambientAudio = new Audio();
+    ambientRef.current = ambientAudio;
+    ambientAudio.loop = true; // Ambient sounds always loop
+    ambientAudio.volume = ambientVolume;
+
+    const handleAmbientPlay = () => setIsAmbientPlaying(true);
+    const handleAmbientPause = () => setIsAmbientPlaying(false);
+    ambientAudio.addEventListener("play", handleAmbientPlay);
+    ambientAudio.addEventListener("pause", handleAmbientPause);
+
     return () => {
       audio.pause();
       audio.removeEventListener("play", handlePlay);
@@ -97,6 +120,10 @@ export function MediaProvider({ children }) {
       audio.removeEventListener("loadstart", handleLoadStart);
       audio.removeEventListener("canplay", handleCanPlay);
       audio.removeEventListener("ended", handleEnded);
+
+      ambientAudio.pause();
+      ambientAudio.removeEventListener("play", handleAmbientPlay);
+      ambientAudio.removeEventListener("pause", handleAmbientPause);
     };
   }, []);
 
@@ -107,6 +134,13 @@ export function MediaProvider({ children }) {
       audioRef.current.muted = isMuted;
     }
   }, [volume, isMuted]);
+
+  // Sync ambient volume
+  useEffect(() => {
+    if (ambientRef.current) {
+      ambientRef.current.volume = ambientVolume;
+    }
+  }, [ambientVolume]);
 
   // Keep localStorage updated
   useEffect(() => {
@@ -286,6 +320,40 @@ export function MediaProvider({ children }) {
     setActiveVideo(null);
   };
 
+  // Ambient Sound Actions
+  const playAmbient = (track) => {
+    if (!ambientRef.current || !track || !track.audioSrc) return;
+    
+    // If the same track is clicked and playing, pause it (toggle behavior)
+    if (ambientTrack?.id === track.id && isAmbientPlaying) {
+      ambientRef.current.pause();
+      return;
+    }
+
+    ambientRef.current.pause();
+    ambientRef.current.src = track.audioSrc;
+    ambientRef.current.load();
+    ambientRef.current.play()
+      .then(() => {
+        setAmbientTrack(track);
+        setIsAmbientPlaying(true);
+      })
+      .catch((e) => console.error("Ambient playback error: ", e));
+  };
+
+  const stopAmbient = () => {
+    if (ambientRef.current) {
+      ambientRef.current.pause();
+    }
+    setAmbientTrack(null);
+    setIsAmbientPlaying(false);
+  };
+
+  const setAmbientVolume = (vol) => {
+    const clamped = Math.max(0, Math.min(1, vol));
+    setAmbientVolumeState(clamped);
+  };
+
   // History & Progress tracker (Continue Watching / Resume playback)
   const addToHistory = (item) => {
     setWatchHistory((prev) => {
@@ -369,6 +437,12 @@ export function MediaProvider({ children }) {
     toggleBookmark,
     isBookmarked,
     removeFromHistory,
+    ambientTrack,
+    isAmbientPlaying,
+    ambientVolume,
+    playAmbient,
+    stopAmbient,
+    setAmbientVolume,
   };
 
   return <MediaContext.Provider value={value}>{children}</MediaContext.Provider>;

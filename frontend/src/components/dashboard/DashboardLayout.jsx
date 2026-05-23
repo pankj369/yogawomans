@@ -27,7 +27,7 @@ export default function DashboardLayout({
           onQueryChange={onQueryChange}
         />
 
-        <main className="space-y-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-7">
+        <main className="space-y-6 px-4 py-6 pb-32 sm:px-6 lg:px-8 lg:py-7 lg:pb-32">
           {children}
         </main>
       </div>

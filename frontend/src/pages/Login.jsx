@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { loginUser } from "../services/authService";
 import {
@@ -370,12 +370,24 @@ export default function Login() {
   const [view, setView] = useState("login");
   const [resetEmail, setResetEmail] = useState("");
 
-  const returnTo = location.state?.returnTo;
-  const planState = location.state?.planState;
+  const returnTo = location.state?.returnTo || sessionStorage.getItem("authReturnTo");
+  const planState = location.state?.planState || JSON.parse(sessionStorage.getItem("authPlanState") || "null");
+  const actionPending = location.state?.actionPending || sessionStorage.getItem("authActionPending");
+
+  useEffect(() => {
+    if (location.state?.returnTo) {
+      sessionStorage.setItem("authReturnTo", location.state.returnTo);
+      if (location.state.planState) sessionStorage.setItem("authPlanState", JSON.stringify(location.state.planState));
+      if (location.state.actionPending) sessionStorage.setItem("authActionPending", location.state.actionPending);
+    }
+  }, [location.state]);
 
   if (auth.isAuthenticated) {
     if (returnTo) {
-      return <Navigate to={returnTo} state={planState} replace />;
+      sessionStorage.removeItem("authReturnTo");
+      sessionStorage.removeItem("authPlanState");
+      sessionStorage.removeItem("authActionPending");
+      return <Navigate to={returnTo} state={{ planState, actionPending }} replace />;
     }
     return <Navigate to={auth.profileSetupComplete ? "/dashboard" : "/profile-setup"} replace />;
   }
@@ -397,10 +409,13 @@ export default function Login() {
     });
     
     if (returnTo) {
+      sessionStorage.removeItem("authReturnTo");
+      sessionStorage.removeItem("authPlanState");
+      sessionStorage.removeItem("authActionPending");
       navigate(returnTo, { 
         state: { 
           planState, 
-          actionPending: location.state?.actionPending 
+          actionPending 
         }, 
         replace: true 
       });

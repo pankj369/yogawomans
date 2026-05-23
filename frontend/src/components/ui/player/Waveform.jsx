@@ -12,37 +12,40 @@ export default function Waveform({ isPlaying, barCount = 18 }) {
         return (
           <motion.div
             key={i}
-            className="w-1.5 rounded-full bg-gradient-to-t from-wellness-green via-[#a0bca1] to-wellness-orange"
+            className="w-1.5 rounded-full bg-gradient-to-t from-[#8FA68E] to-[#E27229]"
             style={{
               height: defaultHeight,
-              boxShadow: "0 0 10px rgba(47, 107, 59, 0.15)",
+              boxShadow: "0 0 10px rgba(143, 166, 142, 0.4)",
             }}
             animate={
               isPlaying
                 ? {
                     height: [
                       defaultHeight,
-                      Math.max(8, defaultHeight * 2.2),
-                      Math.max(6, defaultHeight * 0.4),
+                      defaultHeight * 1.8, // Inhale (4s)
+                      defaultHeight * 1.8, // Hold (7s)
+                      defaultHeight * 0.8, // Exhale (8s)
                       defaultHeight,
                     ],
+                    opacity: [0.6, 1, 1, 0.5, 0.6]
                   }
                 : {
                     height: defaultHeight,
+                    opacity: 0.5
                   }
             }
             transition={
               isPlaying
                 ? {
-                    duration: 1.2 + (i % 3) * 0.3,
+                    duration: 19, // 4 + 7 + 8
+                    times: [0, 0.21, 0.58, 1, 1], // Timing mapped to 4-7-8 rhythm
                     repeat: Infinity,
-                    repeatType: "reverse",
                     ease: "easeInOut",
-                    delay: i * 0.05,
+                    delay: i * 0.1, // Subtle wave ripple effect
                   }
                 : {
                     type: "spring",
-                    stiffness: 100,
+                    stiffness: 60,
                   }
             }
           />

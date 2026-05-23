@@ -1,73 +1,60 @@
-import { db } from "../config/firebase";
-import { collection, doc, setDoc, getDocs, query, orderBy, serverTimestamp, updateDoc } from "firebase/firestore";
+import { useWellnessStore } from '../stores/useWellnessStore';
 
 /**
- * Saves a generated plan to the user's generatedPlans subcollection.
- * @param {string} userId - The authenticated user's ID
- * @param {Object} planData - The plan object (goalId, durationId, levelId, timeline, etc.)
- * @returns {Promise<string>} - Returns the generated plan ID
+ * planService.js (Mock Layer)
+ * 
+ * Simulates backend API calls for saving and fetching plans.
+ * Currently writes directly to the Zustand global store.
+ * 
+ * Future Backend Integration:
+ * Replace the Zustand calls in these functions with fetch() or Firebase calls.
  */
+
 export const saveGeneratedPlan = async (userId, planData) => {
-  if (!userId) throw new Error("User ID is required to save a plan");
-
   try {
-    const plansRef = collection(db, "users", userId, "generatedPlans");
-    const newPlanRef = doc(plansRef); // Auto-generate ID
+    // Simulate network latency
+    await new Promise(resolve => setTimeout(resolve, 600));
 
-    const payload = {
+    // Ensure the plan has an ID
+    const planToSave = {
       ...planData,
-      id: newPlanRef.id,
-      completionPercentage: 0,
-      createdAt: serverTimestamp(),
-      lastOpenedAt: serverTimestamp(),
+      id: planData.id || `plan_${Date.now()}`
     };
 
-    await setDoc(newPlanRef, payload);
-    return newPlanRef.id;
+    useWellnessStore.getState().saveGeneratedPlan(planToSave);
+    
+    // Log activity
+    useWellnessStore.getState().addRecentActivity({
+      id: `act_${Date.now()}`,
+      type: 'PLAN_CREATED',
+      title: `Generated new ${planToSave.title}`,
+      timestamp: new Date().toISOString()
+    });
+
+    return planToSave.id;
   } catch (error) {
-    console.error("Error saving generated plan:", error);
+    console.error("Error in mock saveGeneratedPlan:", error);
     throw error;
   }
 };
 
-/**
- * Fetches all generated plans for a user, ordered by most recent first.
- * @param {string} userId - The authenticated user's ID
- * @returns {Promise<Array>} - Array of plan objects
- */
 export const getUserPlans = async (userId) => {
-  if (!userId) return [];
-
   try {
-    const plansRef = collection(db, "users", userId, "generatedPlans");
-    const q = query(plansRef, orderBy("createdAt", "desc"));
-    const snapshot = await getDocs(q);
-
-    return snapshot.docs.map(doc => ({
-      ...doc.data(),
-      // Safely convert timestamps to JS Dates if they exist
-      createdAt: doc.data().createdAt?.toDate() || new Date(),
-      lastOpenedAt: doc.data().lastOpenedAt?.toDate() || new Date(),
-    }));
+    // Simulate network latency
+    await new Promise(resolve => setTimeout(resolve, 400));
+    
+    const { generatedPlans } = useWellnessStore.getState();
+    return generatedPlans;
   } catch (error) {
-    console.error("Error fetching user plans:", error);
+    console.error("Error in mock getUserPlans:", error);
     return [];
   }
 };
 
-/**
- * Updates the completion percentage and last opened timestamp for a plan.
- */
 export const updatePlanProgress = async (userId, planId, completionPercentage) => {
-  if (!userId || !planId) return;
-
   try {
-    const planRef = doc(db, "users", userId, "generatedPlans", planId);
-    await updateDoc(planRef, {
-      completionPercentage,
-      lastOpenedAt: serverTimestamp(),
-    });
+    useWellnessStore.getState().updatePlanProgress(planId, completionPercentage);
   } catch (error) {
-    console.error("Error updating plan progress:", error);
+    console.error("Error in mock updatePlanProgress:", error);
   }
 };

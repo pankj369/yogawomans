@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Sparkles } from "lucide-react";
+import { Sparkles, ChevronDown } from "lucide-react";
+import PremiumButton from "./ui/PremiumButton";
 import { useNavigate } from "react-router-dom";
 import { wellnessCategories } from "../data/wellnessRecommendationData";
 
@@ -57,8 +58,8 @@ const PremiumSelector = ({ options, selectedId, onChange, placeholder, align = "
                   setIsOpen(false);
                 }}
                 className={`group flex w-full items-center gap-3 sm:gap-4 rounded-xl sm:rounded-2xl px-4 py-3 sm:px-5 sm:py-4 text-left transition-all duration-300 ${selectedId === option.id
-                    ? "bg-[#f4eadf] text-[#11281d]"
-                    : "text-[#3a4a3d] hover:bg-white/60 hover:text-[#11281d]"
+                    ? "bg-[#f4eadf] text-[#11281d] shadow-[inset_0_2px_10px_rgba(226,114,41,0.05)]"
+                    : "text-[#3a4a3d] hover:bg-[#EFE7DC]/50 hover:text-[#11281d] hover:translate-x-1"
                   }`}
               >
                 {option.icon && (
@@ -71,7 +72,12 @@ const PremiumSelector = ({ options, selectedId, onChange, placeholder, align = "
                 </span>
 
                 {selectedId === option.id && (
-                  <motion.div layoutId="activeIndicator" className="ml-auto h-2 w-2 rounded-full bg-[#E27229]" />
+                  <motion.div 
+                    layoutId="activeIndicator" 
+                    className="ml-auto h-2 w-2 rounded-full bg-[#E27229] shadow-[0_0_8px_rgba(226,114,41,0.5)]" 
+                    animate={{ scale: [1, 1.5, 1], opacity: [1, 0.7, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  />
                 )}
               </button>
             ))}
@@ -205,20 +211,13 @@ function FindSolution() {
           transition={{ duration: 1.2, delay: 0.5 }}
           className="mt-16 lg:mt-20 flex justify-center"
         >
-          <button
+          <PremiumButton
             onClick={handleGenerate}
-            className="group relative flex h-20 items-center justify-center gap-4 overflow-hidden rounded-full bg-gradient-to-r from-[#E27229] to-[#d5631c] px-16 text-[12px] font-bold tracking-[0.25em] text-white shadow-[0_20px_40px_rgba(226,114,41,0.22)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(226,114,41,0.35)] uppercase"
+            icon={Sparkles}
+            className="w-full sm:w-auto px-10 sm:px-16"
           >
-            {/* Breathing Glow Inside Button */}
-            <motion.div
-              animate={{ opacity: [0, 0.4, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.4)_0%,transparent_60%)]"
-            />
-
-            <Sparkles size={16} className="relative z-10 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-125" />
-            <span className="relative z-10">Generate My Wellness Plan</span>
-          </button>
+            Generate My Wellness Plan
+          </PremiumButton>
         </motion.div>
       </div>
     </section>

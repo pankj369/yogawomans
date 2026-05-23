@@ -22,6 +22,7 @@ import ProgressBar from "./ProgressBar";
 import VolumeSlider from "./VolumeSlider";
 import Waveform from "./Waveform";
 import PlaylistPanel from "./PlaylistPanel";
+import AmbientSoundControls from "./AmbientSoundControls";
 
 export default function GlobalAudioPlayer() {
   const {
@@ -49,6 +50,7 @@ export default function GlobalAudioPlayer() {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [showQueue, setShowQueue] = useState(false);
+  const [showAmbient, setShowAmbient] = useState(false);
 
   if (!currentTrack) return null;
 
@@ -77,11 +79,11 @@ export default function GlobalAudioPlayer() {
             className="flex items-center gap-4 rounded-[2rem] border border-white/60 bg-white/95 p-3 shadow-heroCard backdrop-blur-2xl cursor-pointer hover:bg-wellness-cream2 transition-colors duration-200"
           >
             {/* Thumbnail */}
-            <div className="relative h-12 w-12 overflow-hidden rounded-2xl flex-shrink-0 bg-wellness-softcream">
+            <div className="relative h-12 w-12 overflow-hidden rounded-2xl flex-shrink-0 bg-[#EFE7DC]">
               {currentTrack.image ? (
                 <img src={currentTrack.image} alt="" className="h-full w-full object-cover" />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-wellness-orange">
+                <div className="flex h-full w-full items-center justify-center text-[#E27229]">
                   <Music size={16} />
                 </div>
               )}
@@ -98,10 +100,10 @@ export default function GlobalAudioPlayer() {
 
             {/* Track Info */}
             <div className="flex-1 min-w-0 pr-1">
-              <h5 className="font-heading text-xs font-bold text-wellness-dark truncate">
+              <h5 className="font-heading text-xs font-bold text-[#11281d] truncate">
                 {currentTrack.title}
               </h5>
-              <p className="text-[9px] font-bold text-wellness-muted truncate uppercase tracking-widest mt-0.5">
+              <p className="text-[9px] font-bold text-[#8FA68E] truncate uppercase tracking-widest mt-0.5">
                 {currentTrack.category || "Audio Meditation"}
               </p>
             </div>
@@ -110,20 +112,20 @@ export default function GlobalAudioPlayer() {
             <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={togglePlay}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-wellness-dark text-white shadow-sm hover:bg-black transition-transform active:scale-95"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[#11281d] text-white shadow-sm hover:bg-black transition-transform active:scale-95"
               >
                 {isPlaying ? <Pause size={15} fill="currentColor" /> : <Play size={15} fill="currentColor" className="ml-0.5" />}
               </button>
               <button
                 onClick={nextTrack}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-wellness-muted hover:text-wellness-dark transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-[#8FA68E] hover:text-[#11281d] transition-colors"
                 title="Next track"
               >
                 <SkipForward size={16} />
               </button>
               <button
                 onClick={() => setIsExpanded(true)}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-wellness-muted hover:text-wellness-dark transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-[#8FA68E] hover:text-[#11281d] transition-colors"
                 title="Expand"
               >
                 <ChevronUp size={16} />
@@ -149,20 +151,20 @@ export default function GlobalAudioPlayer() {
           </div>
 
           {/* Header */}
-          <div className="flex items-center justify-between mb-4 border-b border-wellness-softcream/40 pb-3">
+          <div className="flex items-center justify-between mb-4 border-b border-[#EFE7DC]/50 pb-3">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-wellness-gold bg-wellness-warm/50 px-2.5 py-1 rounded-full">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C89B63] bg-[#C89B63]/10 px-2.5 py-1 rounded-full">
                 Now Playing
               </span>
               {isAudioLoading && (
-                <span className="text-[10px] font-semibold text-wellness-muted animate-pulse">
+                <span className="text-[10px] font-semibold text-[#8FA68E] animate-pulse">
                   Loading...
                 </span>
               )}
             </div>
             <button
               onClick={() => setIsExpanded(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-wellness-softcream/60 text-wellness-muted hover:bg-wellness-softcream hover:text-wellness-dark transition"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EFE7DC]/60 text-[#8FA68E] hover:bg-[#EFE7DC] hover:text-[#11281d] transition"
             >
               <ChevronDown size={18} />
             </button>
@@ -170,13 +172,13 @@ export default function GlobalAudioPlayer() {
 
           {/* Body Content */}
           <div className="space-y-4">
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-4 items-center relative">
               {/* Cover Art */}
-              <div className="relative h-20 w-20 sm:h-24 sm:w-24 overflow-hidden rounded-3xl flex-shrink-0 bg-wellness-cream shadow-md">
+              <div className="relative h-20 w-20 sm:h-24 sm:w-24 overflow-hidden rounded-3xl flex-shrink-0 bg-[#EFE7DC] shadow-[0_10px_20px_rgba(0,0,0,0.05)]">
                 {currentTrack.image ? (
                   <img src={currentTrack.image} alt="" className="h-full w-full object-cover" />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-wellness-orange">
+                  <div className="flex h-full w-full items-center justify-center text-[#E27229]">
                     <Music size={24} />
                   </div>
                 )}
@@ -185,28 +187,49 @@ export default function GlobalAudioPlayer() {
               {/* Title & Instructor */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
-                  <h4 className="font-heading text-lg font-extrabold text-wellness-dark truncate">
+                  <h4 className="font-heading text-lg font-extrabold text-[#11281d] truncate">
                     {currentTrack.title}
                   </h4>
                   <button
                     onClick={() => toggleBookmark(currentTrack)}
-                    className="text-wellness-muted hover:text-wellness-orange transition-colors flex-shrink-0"
+                    className="text-[#8FA68E] hover:text-[#E27229] transition-colors flex-shrink-0"
                     title={bookmarked ? "Saved" : "Save Session"}
                   >
                     {bookmarked ? (
-                      <BookmarkCheck size={20} className="text-wellness-orange fill-current" />
+                      <BookmarkCheck size={20} className="text-[#E27229] fill-current" />
                     ) : (
                       <Bookmark size={20} />
                     )}
                   </button>
                 </div>
-                <p className="text-xs font-bold text-wellness-muted uppercase tracking-wider mt-1 truncate">
+                <p className="text-xs font-bold text-[#8FA68E] uppercase tracking-wider mt-1 truncate">
                   {currentTrack.instructor ? `with ${currentTrack.instructor}` : currentTrack.category}
                 </p>
-                <p className="text-[10px] font-semibold text-wellness-orange bg-wellness-greenLight/60 px-2 py-0.5 rounded-full inline-block mt-2">
-                  {currentTrack.category || "Sound Healing"}
-                </p>
+                <div className="flex gap-2 mt-2">
+                  <p className="text-[10px] font-semibold text-[#E27229] bg-[#E27229]/10 px-2 py-0.5 rounded-full inline-block">
+                    {currentTrack.category || "Sound Healing"}
+                  </p>
+                  <button 
+                    onClick={() => setShowAmbient(!showAmbient)}
+                    className="text-[10px] font-semibold text-[#2F6B3B] bg-[#2F6B3B]/10 hover:bg-[#2F6B3B]/20 px-2 py-0.5 rounded-full inline-block transition-colors"
+                  >
+                    + Ambient
+                  </button>
+                </div>
               </div>
+              
+              <AnimatePresence>
+                {showAmbient && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                    className="absolute right-0 top-full mt-2 z-50 origin-top-right"
+                  >
+                    <AmbientSoundControls onClose={() => setShowAmbient(false)} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Waveform Visualization */}
@@ -222,15 +245,15 @@ export default function GlobalAudioPlayer() {
                 onClick={cycleLoopMode}
                 className={`p-2 rounded-xl transition ${
                   loopMode !== "none"
-                    ? "bg-wellness-orange/10 text-wellness-orange font-bold"
-                    : "text-wellness-muted hover:text-wellness-dark"
+                    ? "bg-[#E27229]/10 text-[#E27229] font-bold"
+                    : "text-[#8FA68E] hover:text-[#11281d]"
                 }`}
                 title={`Repeat: ${loopMode}`}
               >
                 <div className="relative">
                   <Repeat size={18} />
                   {loopMode === "one" && (
-                    <span className="absolute -top-1 -right-1 text-[8px] bg-wellness-orange text-white rounded-full w-3 h-3 flex items-center justify-center scale-90">
+                    <span className="absolute -top-1 -right-1 text-[8px] bg-[#E27229] text-white rounded-full w-3 h-3 flex items-center justify-center scale-90">
                       1
                     </span>
                   )}
@@ -241,14 +264,14 @@ export default function GlobalAudioPlayer() {
               <div className="flex items-center gap-4">
                 <button
                   onClick={prevTrack}
-                  className="p-2 rounded-full text-wellness-muted hover:text-wellness-dark transition-colors active:scale-95"
+                  className="p-2 rounded-full text-[#8FA68E] hover:text-[#11281d] transition-colors active:scale-95"
                 >
                   <SkipBack size={20} fill="currentColor" />
                 </button>
 
                 <button
                   onClick={togglePlay}
-                  className="flex h-14 w-14 items-center justify-center rounded-full bg-wellness-dark text-white shadow-glow2 hover:bg-black transition-transform active:scale-95"
+                  className="flex h-14 w-14 items-center justify-center rounded-full bg-[#11281d] text-white shadow-[0_10px_20px_rgba(17,40,29,0.2)] hover:bg-black transition-transform active:scale-95"
                 >
                   {isPlaying ? (
                     <Pause size={24} fill="currentColor" />
@@ -259,7 +282,7 @@ export default function GlobalAudioPlayer() {
 
                 <button
                   onClick={nextTrack}
-                  className="p-2 rounded-full text-wellness-muted hover:text-wellness-dark transition-colors active:scale-95"
+                  className="p-2 rounded-full text-[#8FA68E] hover:text-[#11281d] transition-colors active:scale-95"
                 >
                   <SkipForward size={20} fill="currentColor" />
                 </button>
@@ -270,8 +293,8 @@ export default function GlobalAudioPlayer() {
                 onClick={() => setShowQueue(!showQueue)}
                 className={`p-2 rounded-xl transition ${
                   showQueue
-                    ? "bg-wellness-green/10 text-wellness-green font-bold"
-                    : "text-wellness-muted hover:text-wellness-dark"
+                    ? "bg-[#2F6B3B]/10 text-[#2F6B3B] font-bold"
+                    : "text-[#8FA68E] hover:text-[#11281d]"
                 }`}
                 title="Up Next Queue"
               >
@@ -280,8 +303,8 @@ export default function GlobalAudioPlayer() {
             </div>
 
             {/* Volume slider & mute */}
-            <div className="flex items-center justify-between border-t border-wellness-softcream/40 pt-4 px-1">
-              <span className="text-[10px] font-bold text-wellness-muted uppercase tracking-wider">
+            <div className="flex items-center justify-between border-t border-[#EFE7DC]/50 pt-4 px-1">
+              <span className="text-[10px] font-bold text-[#8FA68E] uppercase tracking-wider">
                 Volume
               </span>
               <VolumeSlider

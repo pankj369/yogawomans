@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, PlayCircle, Heart, RefreshCw, Bookmark, Sparkles, Clock, Calendar, CheckCircle2, Image as ImageIcon } from "lucide-react";
-import { wellnessCategories, generateRecommendations } from "../data/wellnessRecommendationData";
+import { wellnessCategories } from "../data/wellnessRecommendationData";
 import { useAuth } from "../context/AuthContext";
-import { usePlanContext } from "../context/PlanContext";
+import { useGeneratedPlans } from "../hooks/useGeneratedPlans";
+import { generatePlan } from "../generators/planEngine";
+import { saveGeneratedPlan } from "../services/planService";
+import CinematicLoader from "../components/ui/loaders/CinematicLoader";
 
 // AI Message Sequences
 const AI_MESSAGES = [
@@ -114,7 +117,7 @@ function TimelinePhase({ step, index, isExpanded, onToggle, isLast }) {
                 </div>
               </div>
 
-              <h4 className="mb-4 font-serif text-2xl font-light text-[#11281d]">{step.title}</h4>
+              <h4 className="mb-4 font-serif text-2xl font-light text-[#11281d]">{step.name || step.title}</h4>
               <p className="mb-6 text-lg font-light leading-relaxed text-[#3a4a3d]">{step.description}</p>
               {step.items && (
                 <div className="flex flex-wrap gap-3">
@@ -135,22 +138,19 @@ function TimelinePhase({ step, index, isExpanded, onToggle, isLast }) {
 
 // History Tab Component
 function HistoryList({ userId, onContinue }) {
+  const { generatedPlans } = useGeneratedPlans();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { loadUserPlans } = usePlanContext();
 
   useEffect(() => {
-    async function fetchPlans() {
-      if (!userId) {
-        setLoading(false);
-        return;
-      }
-      const data = loadUserPlans(userId);
-      setPlans(data);
+    // Simulate loading for smooth UX
+    const timer = setTimeout(() => {
+      // Filter if necessary, but generatedPlans is already user's plans in a robust app
+      setPlans(generatedPlans);
       setLoading(false);
-    }
-    fetchPlans();
-  }, [userId, loadUserPlans]);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [generatedPlans]);
 
   if (loading) {
     return (
@@ -185,19 +185,19 @@ function HistoryList({ userId, onContinue }) {
             <div>
               <div className="mb-2 flex items-center gap-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EFE7DC] px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-[#E27229]">
-                  {plan.goalId}
+                  {plan.goal}
                 </span>
                 <span className="flex items-center gap-1 text-xs text-[#E27229]/80">
                   <Calendar size={12} />
-                  {plan.createdAt?.toLocaleDateString()}
+                  {new Date(plan.createdAt).toLocaleDateString()}
                 </span>
               </div>
               <h3 className="font-serif text-2xl font-light text-[#11281d]">
-                {wellnessCategories.find(c => c.id === plan.goalId)?.label || "Wellness"} Journey
+                {plan.title}
               </h3>
               <div className="mt-3 flex items-center gap-4 text-xs font-medium uppercase tracking-[0.15em] text-[#3a4a3d]">
-                <span className="flex items-center gap-1"><Clock size={14} /> {plan.durationId}</span>
-                <span className="flex items-center gap-1"><CheckCircle2 size={14} className="text-[#E27229]" /> {plan.completionPercentage}% Done</span>
+                <span className="flex items-center gap-1"><Clock size={14} /> {plan.duration}</span>
+                <span className="flex items-center gap-1"><CheckCircle2 size={14} className="text-[#E27229]" /> {plan.progress}% Done</span>
               </div>
             </div>
             
@@ -210,7 +210,7 @@ function HistoryList({ userId, onContinue }) {
           </div>
           {/* Progress Bar */}
           <div className="absolute bottom-0 left-0 h-1 w-full bg-[#EFE7DC]">
-            <div className="h-full bg-[#E27229] transition-all" style={{ width: `${plan.completionPercentage}%` }} />
+            <div className="h-full bg-[#E27229] transition-all" style={{ width: `${plan.progress}%` }} />
           </div>
         </motion.div>
       ))}
@@ -222,7 +222,7 @@ export default function GeneratedPlan() {
   const location = useLocation();
   const navigate = useNavigate();
   const auth = useAuth();
-  const { savePlan } = usePlanContext();
+  const { setCurrentPlan } = useGeneratedPlans();
   
   const [isGenerating, setIsGenerating] = useState(true);
   const [generationStep, setGenerationStep] = useState(0);
@@ -256,14 +256,7 @@ export default function GeneratedPlan() {
     }
   }, [auth.isAuthenticated, location.state]);
 
-  // AI Message cycling
-  useEffect(() => {
-    if (!isGenerating) return;
-    const interval = setInterval(() => {
-      setGenerationStep(prev => (prev + 1) % AI_MESSAGES.length);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isGenerating]);
+  // Cinematic loader handles message cycling now
 
   useEffect(() => {
     // If navigated without state and not authenticated, go home. 
@@ -273,71 +266,28 @@ export default function GeneratedPlan() {
       return;
     }
 
-    const timer = setTimeout(() => {
-      const adapterAnswers = {
-        timeAvailable: durationId,
-        experienceLevel: levelId,
-        preferredSolution: "all",
-        preferredPractice: "combined",
-        preferredStyle: "mixed",
-        preferredActivity: "movement",
-        preferredMethod: "mixed",
-        preferredApproach: "mixed",
-        symptoms: ["anxiety", "fatigue"], 
-        goals: "moderate",
-        triggers: ["work"],
-        sleepIssues: ["falling_asleep"],
-        areas: ["physical", "mental"],
-        painType: "throughout",
-        timeOfDay: "allday"
-      };
-
-      const rawData = generateRecommendations(goalId, adapterAnswers);
-
-      const timeline = [];
-      
-      if (rawData.breathingExercises && rawData.breathingExercises.length > 0) {
-        timeline.push({
-          id: "phase-1",
-          type: "Breathing",
-          title: rawData.breathingExercises[0].name,
-          duration: `${Math.floor(totalMinutes * 0.2)} mins`,
-          description: rawData.breathingExercises[0].description,
+    const timer = setTimeout(async () => {
+      try {
+        const normalizedPlan = await generatePlan(goalId, {
+          durationId,
+          levelId
         });
+        
+        // Enrich plan for UI specifics
+        const uiPlanData = {
+          ...normalizedPlan,
+          summary: getEmotionalSummary(goalId),
+          sessionCount: normalizedPlan.phases?.length || 0,
+          calmScore: 85
+        };
+
+        setPlanData(uiPlanData);
+        setCurrentPlan(uiPlanData);
+      } catch (error) {
+        console.error("Error generating:", error);
+      } finally {
+        setIsGenerating(false);
       }
-
-      if (rawData.yogaPoses && rawData.yogaPoses.length > 0) {
-        timeline.push({
-          id: "phase-2",
-          type: "Movement",
-          title: `${category.label} Flow`,
-          duration: `${Math.floor(totalMinutes * 0.5)} mins`,
-          description: "A tailored physical sequence designed to release tension and build strength at your specific pace.",
-          items: rawData.yogaPoses.map(p => p.name)
-        });
-      }
-
-      if (rawData.meditations && rawData.meditations.length > 0) {
-        timeline.push({
-          id: "phase-3",
-          type: "Recovery",
-          title: rawData.meditations[0].name,
-          duration: `${Math.floor(totalMinutes * 0.3)} mins`,
-          description: rawData.meditations[0].description,
-        });
-      }
-
-      setPlanData({
-        goalId,
-        durationId,
-        levelId,
-        timeline,
-        summary: getEmotionalSummary(goalId),
-        sessionCount: timeline.length,
-        calmScore: 85
-      });
-
-      setIsGenerating(false);
     }, 5000); 
 
     return () => clearTimeout(timer);
@@ -388,7 +338,7 @@ export default function GeneratedPlan() {
     try {
       let savedPlanId = "current";
       if (auth.user?.id && planData) {
-        savedPlanId = await savePlan(auth.user.id, planData);
+        savedPlanId = await saveGeneratedPlan(auth.user.id, planData);
       }
       
       navigate(`/session/${savedPlanId}`, { state: { planData } });
@@ -405,7 +355,7 @@ export default function GeneratedPlan() {
     setIsSaving(true);
     try {
       if (auth.user?.id && planData) {
-        await savePlan(auth.user.id, planData);
+        await saveGeneratedPlan(auth.user.id, planData);
         alert("Journey saved successfully to your History!");
         setActiveTab("history");
       }
@@ -420,9 +370,9 @@ export default function GeneratedPlan() {
     // Re-generate the view with the history plan's state
     navigate("/generated-plan", {
       state: {
-        goalId: historyPlan.goalId,
-        durationId: historyPlan.durationId,
-        levelId: historyPlan.levelId
+        goalId: historyPlan.goal,
+        durationId: historyPlan.duration,
+        levelId: historyPlan.level
       },
       replace: true
     });
@@ -431,36 +381,9 @@ export default function GeneratedPlan() {
 
   if (isGenerating) {
     return (
-      <motion.div 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
-        exit={{ opacity: 0 }}
-        className="flex min-h-screen items-center justify-center bg-[#F7F3EE]"
-      >
-        <div className="flex flex-col items-center">
-          <motion.div
-            animate={{ 
-              opacity: [0.1, 0.6, 0.1], 
-              scale: [0.9, 1.1, 0.9],
-              filter: ["blur(20px)", "blur(30px)", "blur(20px)"]
-            }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="mb-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(226,114,41,0.4)_0%,transparent_70%)]"
-          />
-          <AnimatePresence mode="wait">
-            <motion.h2
-              key={generationStep}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.5 }}
-              className="font-serif text-3xl font-light tracking-wide text-[#E27229]"
-            >
-              {AI_MESSAGES[generationStep]}
-            </motion.h2>
-          </AnimatePresence>
-        </div>
-      </motion.div>
+      <div className="flex min-h-screen items-center justify-center bg-[#F7F3EE]">
+        <CinematicLoader />
+      </div>
     );
   }
 
@@ -549,14 +472,14 @@ export default function GeneratedPlan() {
               {/* ================= MIDDLE SECTION ================= */}
               <motion.div variants={itemVariants} className="mb-24">
                 <div className="relative border-y border-[#EFE7DC]/50 py-10 sm:py-16">
-                  {planData?.timeline.map((step, index) => (
+                  {planData?.phases?.map((step, index) => (
                     <TimelinePhase
                       key={step.id}
                       step={step}
                       index={index}
                       isExpanded={expandedPhaseId === step.id}
                       onToggle={() => setExpandedPhaseId(expandedPhaseId === step.id ? null : step.id)}
-                      isLast={index === planData.timeline.length - 1}
+                      isLast={index === planData.phases.length - 1}
                     />
                   ))}
                 </div>
