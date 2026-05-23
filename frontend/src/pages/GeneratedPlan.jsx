@@ -4,7 +4,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, PlayCircle, Heart, RefreshCw, Bookmark, Sparkles, Clock, Calendar, CheckCircle2, Image as ImageIcon } from "lucide-react";
 import { wellnessCategories, generateRecommendations } from "../data/wellnessRecommendationData";
 import { useAuth } from "../context/AuthContext";
-import { saveGeneratedPlan, getUserPlans, updatePlanProgress } from "../services/planService";
+import { usePlanContext } from "../context/PlanContext";
+
+// AI Message Sequences
+const AI_MESSAGES = [
+  "Feeling your energy...",
+  "Analyzing your wellness needs...",
+  "Balancing nervous system recovery...",
+  "Curating your personalized flow...",
+  "Finalizing your journey..."
+];
 
 // Emotional AI Generators
 const getEmotionalSummary = (goalId) => {
@@ -128,6 +137,7 @@ function TimelinePhase({ step, index, isExpanded, onToggle, isLast }) {
 function HistoryList({ userId, onContinue }) {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { loadUserPlans } = usePlanContext();
 
   useEffect(() => {
     async function fetchPlans() {
@@ -135,12 +145,12 @@ function HistoryList({ userId, onContinue }) {
         setLoading(false);
         return;
       }
-      const data = await getUserPlans(userId);
+      const data = loadUserPlans(userId);
       setPlans(data);
       setLoading(false);
     }
     fetchPlans();
-  }, [userId]);
+  }, [userId, loadUserPlans]);
 
   if (loading) {
     return (
@@ -212,8 +222,10 @@ export default function GeneratedPlan() {
   const location = useLocation();
   const navigate = useNavigate();
   const auth = useAuth();
+  const { savePlan } = usePlanContext();
   
   const [isGenerating, setIsGenerating] = useState(true);
+  const [generationStep, setGenerationStep] = useState(0);
   const [planData, setPlanData] = useState(null);
   const [expandedPhaseId, setExpandedPhaseId] = useState("phase-1");
   const [activeTab, setActiveTab] = useState("practice"); // 'practice' | 'history'
@@ -243,6 +255,15 @@ export default function GeneratedPlan() {
       setActiveTab("history");
     }
   }, [auth.isAuthenticated, location.state]);
+
+  // AI Message cycling
+  useEffect(() => {
+    if (!isGenerating) return;
+    const interval = setInterval(() => {
+      setGenerationStep(prev => (prev + 1) % AI_MESSAGES.length);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isGenerating]);
 
   useEffect(() => {
     // If navigated without state and not authenticated, go home. 
@@ -317,7 +338,7 @@ export default function GeneratedPlan() {
       });
 
       setIsGenerating(false);
-    }, 2000); 
+    }, 5000); 
 
     return () => clearTimeout(timer);
   }, [goalId, durationId, levelId, navigate, category.label, totalMinutes, auth.isAuthenticated, location.state]);
@@ -367,7 +388,7 @@ export default function GeneratedPlan() {
     try {
       let savedPlanId = "current";
       if (auth.user?.id && planData) {
-        savedPlanId = await saveGeneratedPlan(auth.user.id, planData);
+        savedPlanId = await savePlan(auth.user.id, planData);
       }
       
       navigate(`/session/${savedPlanId}`, { state: { planData } });
@@ -384,7 +405,7 @@ export default function GeneratedPlan() {
     setIsSaving(true);
     try {
       if (auth.user?.id && planData) {
-        await saveGeneratedPlan(auth.user.id, planData);
+        await savePlan(auth.user.id, planData);
         alert("Journey saved successfully to your History!");
         setActiveTab("history");
       }
@@ -426,13 +447,18 @@ export default function GeneratedPlan() {
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             className="mb-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(226,114,41,0.4)_0%,transparent_70%)]"
           />
-          <motion.h2
-            animate={{ opacity: [0.3, 1, 0.3] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="font-serif text-3xl font-light tracking-wide text-[#E27229]"
-          >
-            Feeling your energy...
-          </motion.h2>
+          <AnimatePresence mode="wait">
+            <motion.h2
+              key={generationStep}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5 }}
+              className="font-serif text-3xl font-light tracking-wide text-[#E27229]"
+            >
+              {AI_MESSAGES[generationStep]}
+            </motion.h2>
+          </AnimatePresence>
         </div>
       </motion.div>
     );

@@ -6,6 +6,7 @@ import { WishlistProvider } from "./context/WishlistContext";
 import { DashboardProvider } from "./context/DashboardContext";
 import { ToastProvider } from "./context/ToastContext";
 import { MediaProvider } from "./context/MediaContext";
+import { PlanProvider } from "./context/PlanContext";
 import AppRoutes, { AppRouteLoader } from "./routes/AppRoutes";
 import { Suspense } from "react";
 
@@ -18,11 +19,13 @@ function App() {
             <DashboardProvider>
               <ToastProvider>
                 <MediaProvider>
-                  <Suspense fallback={<AppRouteLoader />}>
-                    <div className="overflow-x-hidden">
-                      <AppRoutes />
-                    </div>
-                  </Suspense>
+                  <PlanProvider>
+                    <Suspense fallback={<AppRouteLoader />}>
+                      <div className="overflow-x-hidden">
+                        <AppRoutes />
+                      </div>
+                    </Suspense>
+                  </PlanProvider>
                 </MediaProvider>
               </ToastProvider>
             </DashboardProvider>
