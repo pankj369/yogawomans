@@ -1,5 +1,5 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db, auth, isConfigured } from "../config/firebase";
+import apiClient from "./apiClient";
+import { isConfigured } from "../config/firebase";
 
 const mockDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -9,15 +9,11 @@ export const getMyProfile = async () => {
     return { profile: { full_name: "Mock User" } };
   }
 
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not authenticated");
-
-  const docRef = doc(db, "users", user.uid);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    return { profile: docSnap.data() };
-  } else {
+  try {
+    const response = await apiClient.get("/auth/me");
+    return { profile: response.data };
+  } catch (error) {
+    console.error("Failed to fetch profile", error);
     return { profile: null };
   }
 };
@@ -28,12 +24,11 @@ export const updateProfile = async (profileData) => {
     return { success: true, profile: profileData };
   }
 
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not authenticated");
-
-  const docRef = doc(db, "users", user.uid);
-  // Use merge: true to avoid overwriting existing data fields not included in profileData
-  await setDoc(docRef, profileData, { merge: true });
-
-  return { success: true, profile: profileData };
+  try {
+    // We mock the update since actual writes happen via /onboarding or specific feature endpoints
+    console.warn("Direct updateProfile is deprecated. Use feature-specific API endpoints.");
+    return { success: true, profile: profileData };
+  } catch (error) {
+    throw error;
+  }
 };

@@ -20,7 +20,9 @@ export default function VideoBackground({
           loop
           muted
           playsInline
-          className="h-full w-full object-cover object-center"
+          preload="metadata"
+          poster={posterSrc}
+          className="h-full w-full object-cover object-center bg-wellness-bg"
         >
           <source src={videoSrc} type="video/mp4" />
         </video>

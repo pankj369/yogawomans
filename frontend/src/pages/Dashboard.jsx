@@ -202,6 +202,8 @@ export default function Dashboard() {
   }
   
   const userName = auth.user?.name || "Yogi";
+  const currentStreak = auth.user?.wellnessStats?.currentStreak || 0;
+  const calmScore = auth.user?.wellnessStats?.calmScore || 0;
   const hasProPlan = auth.isPremium || state.activePlan === "Pro";
   const activeSection = sectionMeta[section] || sectionMeta.home;
 
@@ -241,7 +243,7 @@ export default function Dashboard() {
       <div className="flex flex-col gap-10 lg:gap-14 pb-10">
         
         {section === "home" ? (
-          <WellnessHero userName={userName} />
+          <WellnessHero userName={userName} streak={currentStreak} calmScore={calmScore} />
         ) : (
           <HeroBanner 
             userName={userName}

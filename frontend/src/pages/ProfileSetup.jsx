@@ -15,9 +15,8 @@ import {
   persistProfileSetupState,
 } from "./profileSetupStorage";
 import {
-  getMyProfile,
-  updateProfile,
-} from "../services/userService";
+  completeOnboarding,
+} from "../services/authService";
 
 const stepVariants = {
   enter: (direction) => ({
@@ -201,23 +200,16 @@ useEffect(() => {
     setError("");
 
     const payload = {
-      full_name: state.data.fullName,
-      phone: state.data.phone,
-      age: Number(state.data.age),
-      gender: state.data.gender,
-      height: state.data.height,
-      weight: state.data.weight,
-
-      wellness_goal:
-        state.data.goals?.[0] || "",
-
-      preferred_yoga_style:
-        state.data.yogaStyle || "",
-
-      onboarding_completed: true,
+      goal: state.data.goals?.[0] || "",
+      style: state.data.yogaStyle || "",
+      ambient: "nature" // default or from state
     };
 
-    await updateProfile(payload);
+    const response = await completeOnboarding(payload);
+    
+    if (!response.success) {
+      throw new Error(response.message || "Failed to save profile");
+    }
 
     markProfileSetupCompleted(state.data);
 

@@ -5,8 +5,7 @@ import { ArrowLeft, PlayCircle, Heart, RefreshCw, Bookmark, Sparkles, Clock, Cal
 import { wellnessCategories } from "../data/wellnessRecommendationData";
 import { useAuth } from "../context/AuthContext";
 import { useGeneratedPlans } from "../hooks/useGeneratedPlans";
-import { generatePlan } from "../generators/planEngine";
-import { saveGeneratedPlan } from "../services/planService";
+import { generatePlanApi, saveGeneratedPlan } from "../services/planService";
 import CinematicLoader from "../components/ui/loaders/CinematicLoader";
 
 // AI Message Sequences
@@ -268,17 +267,27 @@ export default function GeneratedPlan() {
 
     const timer = setTimeout(async () => {
       try {
-        const normalizedPlan = await generatePlan(goalId, {
-          durationId,
-          levelId
-        });
+        const userPreferences = auth.user?.preferences || {};
+        
+        // Call the OpenAI-powered backend generator
+        const generatedAIPlan = await generatePlanApi(userPreferences, durationId, goalId);
         
         // Enrich plan for UI specifics
         const uiPlanData = {
-          ...normalizedPlan,
+          ...generatedAIPlan,
+          goal: goalId,
+          duration: durationId,
+          level: levelId,
           summary: getEmotionalSummary(goalId),
-          sessionCount: normalizedPlan.phases?.length || 0,
-          calmScore: 85
+          sessionCount: generatedAIPlan.schedule?.length || 0,
+          calmScore: 85,
+          phases: generatedAIPlan.schedule?.map(day => ({
+            name: `Day ${day.day}: ${day.theme}`,
+            description: day.theme,
+            duration: day.sessions?.[0]?.durationMin ? `${day.sessions[0].durationMin} min` : "15 min",
+            type: day.sessions?.[0]?.type || "Practice",
+            items: day.sessions?.map(s => s.title) || []
+          }))
         };
 
         setPlanData(uiPlanData);

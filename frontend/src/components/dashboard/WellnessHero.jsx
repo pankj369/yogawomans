@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Sparkles, Flame, Heart } from "lucide-react";
 import { fadeUp } from "../../utils/animations";
 
-export default function WellnessHero({ userName = "Yogi" }) {
+export default function WellnessHero({ userName = "Yogi", streak = 0, calmScore = 0 }) {
   return (
     <motion.div 
       variants={fadeUp}
@@ -63,15 +63,15 @@ export default function WellnessHero({ userName = "Yogi" }) {
           {/* Streak Card */}
           <div className="flex flex-col items-center justify-center rounded-3xl bg-white/60 p-6 backdrop-blur-md border border-[#EFE7DC] shadow-sm hover:shadow-md transition-shadow min-w-[120px]">
             <Flame size={24} className="text-[#E27229] mb-2" />
-            <span className="font-heading text-3xl font-extrabold text-[#11281d]">4</span>
+            <span className="font-heading text-3xl font-extrabold text-[#11281d]">{streak}</span>
             <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#8FA68E] mt-1">Day Streak</span>
           </div>
           
           {/* Daily Status */}
           <div className="flex flex-col items-center justify-center rounded-3xl bg-white/60 p-6 backdrop-blur-md border border-[#EFE7DC] shadow-sm hover:shadow-md transition-shadow min-w-[120px]">
             <Heart size={24} className="text-[#8FA68E] mb-2" />
-            <span className="font-heading text-3xl font-extrabold text-[#11281d]">Calm</span>
-            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#8FA68E] mt-1">Morning State</span>
+            <span className="font-heading text-3xl font-extrabold text-[#11281d]">{calmScore > 0 ? calmScore : "Calm"}</span>
+            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#8FA68E] mt-1">Score</span>
           </div>
         </motion.div>
 

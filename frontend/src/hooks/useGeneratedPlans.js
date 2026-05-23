@@ -1,4 +1,7 @@
+import { useEffect } from 'react';
 import { useWellnessStore } from '../stores/useWellnessStore';
+import { getUserPlans } from '../services/planService';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * useGeneratedPlans Hook
@@ -7,11 +10,20 @@ import { useWellnessStore } from '../stores/useWellnessStore';
  * on other unrelated store updates.
  */
 export const useGeneratedPlans = () => {
+  const { user } = useAuth();
   const generatedPlans = useWellnessStore((state) => state.generatedPlans);
   const currentPlan = useWellnessStore((state) => state.currentPlan);
   const setCurrentPlan = useWellnessStore((state) => state.setCurrentPlan);
-  
-  // Notice we don't return the store directly, we return specific slices
+  const isLoaded = useWellnessStore((state) => state.plansLoaded);
+
+  useEffect(() => {
+    if (user?.id && !isLoaded) {
+      getUserPlans(user.id).then(() => {
+        useWellnessStore.setState({ plansLoaded: true });
+      });
+    }
+  }, [user?.id, isLoaded]);
+
   return {
     generatedPlans,
     currentPlan,

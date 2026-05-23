@@ -75,7 +75,8 @@ export function AuthProvider({ children }) {
             setBackendProfile(profileData);
             setAuthState((current) => ({
               ...current,
-              isPremium: profileData.premiumStatus || current.isPremium,
+              isPremium: profileData.premiumStatus?.isPremium || current.isPremium,
+              profileSetupComplete: profileData.onboarding?.completed || current.profileSetupComplete,
             }));
           }
         } catch (error) {
@@ -123,7 +124,7 @@ export function AuthProvider({ children }) {
       ...authState,
       rememberMe,
       profileSetupComplete:
-        payload.profileSetupComplete ?? profile.completed ?? authState.profileSetupComplete ?? false,
+        payload.backendUser?.onboarding?.completed ?? payload.profileSetupComplete ?? profile.completed ?? authState.profileSetupComplete ?? false,
       profileSetupSkipped:
         payload.profileSetupSkipped ?? profile.skipped ?? authState.profileSetupSkipped ?? false,
     };
@@ -218,17 +219,13 @@ export function AuthProvider({ children }) {
       ? {
           id: backendProfile?.uid || firebaseUser.uid,
           email: backendProfile?.email || firebaseUser.email,
-          name: backendProfile?.username || authState.profile?.fullName || firebaseUser.displayName || firebaseUser.email?.split("@")[0],
+          name: backendProfile?.fullName || authState.profile?.fullName || firebaseUser.displayName || firebaseUser.email?.split("@")[0],
           avatar: backendProfile?.avatar || authState.profile?.avatar || firebaseUser.photoURL || "",
           role: "member",
           premiumStatus: backendProfile?.premiumStatus || authState.isPremium,
-          streak: backendProfile?.streak || 0,
-          meditationMinutes: backendProfile?.meditationMinutes || 0,
-          goals: backendProfile?.goals || [],
+          wellnessStats: backendProfile?.wellnessStats || { currentStreak: 0, calmScore: 0, totalSessions: 0, totalMinutes: 0 },
           preferences: backendProfile?.preferences || {},
-          savedPlaylists: backendProfile?.savedPlaylists || [],
-          recentActivity: backendProfile?.recentActivity || [],
-          onboardingCompleted: backendProfile?.onboardingCompleted || false,
+          onboardingCompleted: backendProfile?.onboarding?.completed || authState.profileSetupComplete || false,
         }
       : null;
 

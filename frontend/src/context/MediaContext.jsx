@@ -1,5 +1,7 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
 import { useAuth } from "./AuthContext";
+import { useProgress } from "../hooks/useProgress";
+import { usePlaylists } from "../hooks/usePlaylists";
 
 const MediaContext = createContext(null);
 
@@ -27,24 +29,16 @@ export function MediaProvider({ children }) {
   const [isAmbientPlaying, setIsAmbientPlaying] = useState(false);
   const [ambientVolume, setAmbientVolumeState] = useState(0.5);
 
-  // Lists (Continue watching & Bookmarks)
-  const [watchHistory, setWatchHistory] = useState(() => {
-    try {
-      const stored = localStorage.getItem(WATCH_HISTORY_KEY);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [bookmarks, setBookmarks] = useState(() => {
-    try {
-      const stored = localStorage.getItem(BOOKMARKS_KEY);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
+  // Backend Hooks
+  const { continueWatching, saveProgress } = useProgress();
+  const { savedPlaylists, toggleFavorite, isSaved } = usePlaylists();
+  
+  // Local state for instant UI feedback before backend syncs
+  const [localHistory, setLocalHistory] = useState([]);
+  
+  // We'll merge backend history and local optimistic history
+  const watchHistory = continueWatching.length > 0 ? continueWatching : localHistory;
+  const bookmarks = savedPlaylists;
 
   const audioRef = useRef(null);
   const ambientRef = useRef(null);
@@ -142,14 +136,15 @@ export function MediaProvider({ children }) {
     }
   }, [ambientVolume]);
 
-  // Keep localStorage updated
-  useEffect(() => {
-    localStorage.setItem(WATCH_HISTORY_KEY, JSON.stringify(watchHistory));
-  }, [watchHistory]);
-
-  useEffect(() => {
-    localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks));
-  }, [bookmarks]);
+  // Backend Sync Throttle (Only save progress every 10 seconds to prevent API spam)
+  const lastSyncTimeRef = useRef(0);
+  const syncProgressToBackend = useCallback((itemId, currentProgressSecs) => {
+    const now = Date.now();
+    if (now - lastSyncTimeRef.current > 10000) {
+      saveProgress(itemId, currentProgressSecs);
+      lastSyncTimeRef.current = now;
+    }
+  }, [saveProgress]);
 
   // Ended handler
   const handleTrackEnded = () => {
@@ -356,56 +351,49 @@ export function MediaProvider({ children }) {
 
   // History & Progress tracker (Continue Watching / Resume playback)
   const addToHistory = (item) => {
-    setWatchHistory((prev) => {
+    // Optimistic local update
+    setLocalHistory((prev) => {
       const filtered = prev.filter((h) => h.id !== item.id);
       return [
-        {
-          ...item,
-          progress: 0,
-          percentage: 0,
-          timestamp: Date.now(),
-        },
+        { ...item, progress: 0, percentage: 0, timestamp: Date.now() },
         ...filtered,
-      ].slice(0, 12); // Limit to last 12 items
+      ].slice(0, 12);
     });
+    // Sync to backend immediately on start
+    saveProgress(item.id, 0);
   };
 
   const updateMediaProgress = (itemId, time, durationSeconds) => {
     if (!itemId || !durationSeconds) return;
     const percent = Math.min(100, Math.round((time / durationSeconds) * 100));
-    setWatchHistory((prev) =>
+    
+    // Optimistic local update for smooth UI
+    setLocalHistory((prev) =>
       prev.map((h) => {
         if (h.id === itemId) {
-          return {
-            ...h,
-            progress: time,
-            percentage: percent,
-            timestamp: Date.now(),
-          };
+          return { ...h, progress: time, percentage: percent, timestamp: Date.now() };
         }
         return h;
       })
     );
+
+    // Throttled backend sync
+    syncProgressToBackend(itemId, time);
   };
 
   // Bookmarking / Save features
   const toggleBookmark = (item) => {
-    setBookmarks((prev) => {
-      const exists = prev.some((b) => b.id === item.id);
-      if (exists) {
-        return prev.filter((b) => b.id !== item.id);
-      } else {
-        return [{ ...item, bookmarkedAt: Date.now() }, ...prev];
-      }
-    });
+    toggleFavorite(item.id);
   };
 
   const isBookmarked = (itemId) => {
-    return bookmarks.some((b) => b.id === itemId);
+    return isSaved(itemId);
   };
 
   const removeFromHistory = (itemId) => {
-    setWatchHistory((prev) => prev.filter((h) => h.id !== itemId));
+    setLocalHistory((prev) => prev.filter((h) => h.id !== itemId));
+    // Ideally we would have a backend endpoint to remove from history,
+    // but for now local filter will hide it until next refresh
   };
 
   const value = {

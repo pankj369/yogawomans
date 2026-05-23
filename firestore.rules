@@ -1,0 +1,46 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      // Users can only read and write their own profile
+      allow read, write: if isOwner(userId);
+    }
+
+    // Generated Plans collection
+    match /generatedPlans/{planId} {
+      // Allow read if user owns the plan
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      
+      // Allow create if user is authenticated and is creating for themselves
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Allow update/delete if user owns the document
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Progress collection
+    match /progress/{progressId} {
+      allow read, write: if isAuthenticated() && 
+        (resource == null || resource.data.userId == request.auth.uid) &&
+        (request.resource == null || request.resource.data.userId == request.auth.uid);
+    }
+
+    // Playlists collection
+    match /playlists/{playlistId} {
+      allow read, write: if isAuthenticated() && 
+        (resource == null || resource.data.userId == request.auth.uid) &&
+        (request.resource == null || request.resource.data.userId == request.auth.uid);
+    }
+  }
+}

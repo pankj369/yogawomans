@@ -60,6 +60,23 @@ export const getCurrentUser = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * Complete onboarding and save preferences
+ * POST /api/auth/onboarding
+ */
+export const completeOnboarding = asyncHandler(async (req, res, next) => {
+  const { uid } = req.user;
+  const preferences = req.body;
+
+  const updatedProfile = await authService.completeOnboarding(uid, preferences);
+
+  res.status(200).json({
+    success: true,
+    message: "Onboarding completed successfully",
+    data: updatedProfile,
+  });
+});
+
+/**
  * Logout
  * POST /api/auth/logout
  * Mostly handled on frontend for Firebase, but backend can optionally revoke refresh tokens.

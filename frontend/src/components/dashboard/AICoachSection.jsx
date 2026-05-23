@@ -4,6 +4,7 @@ import { Cpu, Send, Sparkles, MessageCircle, AlertCircle } from "lucide-react";
 import DashboardSection from "../ui/sections/DashboardSection";
 import SectionHeading from "../ui/sections/SectionHeading";
 import { useToast } from "../../context/ToastContext";
+import apiClient from "../../services/apiClient";
 
 const suggestionPrompts = [
   "Suggest a 5-minute desk stretch",
@@ -44,19 +45,36 @@ export default function AICoachSection() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  const streamResponse = (rawResponse) => {
+  const streamResponse = async (userMsgText, currentMessages) => {
     setIsTyping(true);
     
-    // Simulate thinking/typing delay
-    setTimeout(() => {
-      setIsTyping(false);
+    try {
+      // Map frontend messages to OpenAI format: [{role, content}]
+      const apiMessages = currentMessages.map(m => ({
+        role: m.sender === "user" ? "user" : "assistant",
+        content: m.text
+      }));
+
+      // Make API call
+      const response = await apiClient.post("/coach/chat", { messages: apiMessages });
+      
       const newMsg = {
         id: `coach-${Date.now()}`,
         sender: "coach",
-        text: rawResponse,
+        text: response.data.data.content,
       };
+      
       setMessages((prev) => [...prev, newMsg]);
-    }, 1500);
+    } catch (error) {
+      console.error("Coach API Error:", error);
+      setMessages((prev) => [...prev, {
+        id: `coach-${Date.now()}`,
+        sender: "coach",
+        text: "I'm having a little trouble connecting right now. Let's take a deep breath and try again in a moment.",
+      }]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   const handleSend = (textToSend) => {
@@ -72,17 +90,11 @@ export default function AICoachSection() {
     setMessages((prev) => [...prev, userMsg]);
     setInputText("");
 
-    // Determine Response
-    const queryNormalized = text.toLowerCase().trim();
-    let response = "That is a beautiful inquiry. In yoga philosophy, we focus on tuning in and listening closely to our body's internal wisdom. Try starting with one of our guided meditations or a breathing exercise in the side menu to ground yourself.";
+    // Prepare new message list for the API
+    const newMessagesList = [...messages, userMsg];
 
-    // Match preset
-    const match = Object.keys(presets).find((p) => queryNormalized.includes(p));
-    if (match) {
-      response = presets[match];
-    }
-
-    streamResponse(response);
+    // Stream Response from backend
+    streamResponse(text, newMessagesList);
   };
 
   return (

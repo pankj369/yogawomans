@@ -10,6 +10,9 @@ import wellnessRoutes from "./routes/wellnessRoutes.js";
 import mediaRoutes from "./routes/mediaRoutes.js";
 import progressRoutes from "./routes/progressRoutes.js";
 import playlistRoutes from "./routes/playlistRoutes.js";
+import generatedPlanRoutes from "./routes/generatedPlanRoutes.js";
+import recommendationRoutes from "./routes/recommendationRoutes.js";
+import coachRoutes from "./routes/coachRoutes.js";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
@@ -40,6 +43,9 @@ app.use("/api/wellness", wellnessRoutes);
 app.use("/api/media", mediaRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/playlists", playlistRoutes);
+app.use("/api/plans", generatedPlanRoutes);
+app.use("/api/recommendations", recommendationRoutes);
+app.use("/api/coach", coachRoutes);
 
 // Legacy routes
 app.use("/api", productRoutes);

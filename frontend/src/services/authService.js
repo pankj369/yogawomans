@@ -114,19 +114,29 @@ export const resetPassword = async (email) => {
 };
 
 export const getCurrentUser = async () => {
-  if (isConfigured && auth.currentUser) {
+  if (isConfigured) {
     try {
-      // Fetch complete profile from backend (includes premiumStatus, streak, etc)
       const response = await apiClient.get("/auth/me");
       return response.data;
-    } catch (error) {
-      console.error("Failed to fetch backend profile:", error);
-      return {
-        id: auth.currentUser.uid,
-        email: auth.currentUser.email,
-        name: auth.currentUser.displayName,
-      };
+    } catch (e) {
+      console.warn("Failed to fetch user profile from backend.", e);
+      return null;
     }
   }
-  return null;
+  await mockDelay(500);
+  return { id: "mock-id", email: "mock@example.com", name: "Mock User", onboarding: { completed: false } };
+};
+
+export const completeOnboarding = async (preferences) => {
+  if (isConfigured) {
+    try {
+      const response = await apiClient.post("/auth/onboarding", preferences);
+      return { success: true, user: response.data };
+    } catch (e) {
+      console.error("Failed to complete onboarding", e);
+      return { success: false, message: e.response?.data?.message || e.message };
+    }
+  }
+  await mockDelay(500);
+  return { success: true, user: { onboarding: { completed: true } } };
 };

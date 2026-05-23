@@ -1,6 +1,6 @@
 import express from "express";
 import { body, validationResult } from "express-validator";
-import { register, login, getCurrentUser, logout } from "../controllers/authController.js";
+import { register, login, getCurrentUser, logout, completeOnboarding } from "../controllers/authController.js";
 import { requireAuth } from "../middleware/authMiddleware.js";
 import { AppError } from "../middleware/errorMiddleware.js";
 
@@ -35,6 +35,20 @@ router.post("/login", requireAuth, login);
 // GET /api/auth/me
 // Returns current user profile
 router.get("/me", requireAuth, getCurrentUser);
+
+// POST /api/auth/onboarding
+// Complete onboarding and save preferences
+router.post(
+  "/onboarding",
+  requireAuth,
+  [
+    body("goal").optional().isString().trim(),
+    body("style").optional().isString().trim(),
+    body("ambient").optional().isString().trim(),
+  ],
+  validate,
+  completeOnboarding
+);
 
 // POST /api/auth/logout
 router.post("/logout", requireAuth, logout);

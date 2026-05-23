@@ -8,10 +8,12 @@ import { ToastProvider } from "./context/ToastContext";
 import { MediaProvider } from "./context/MediaContext";
 import AppRoutes, { AppRouteLoader } from "./routes/AppRoutes";
 import { Suspense } from "react";
+import ErrorBoundary from "./components/ui/ErrorBoundary";
 
 function App() {
   return (
-    <BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>
@@ -30,6 +32,7 @@ function App() {
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

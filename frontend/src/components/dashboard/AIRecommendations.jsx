@@ -1,37 +1,25 @@
 import { motion } from "framer-motion";
-import { Sparkles, Music, Wind, Activity } from "lucide-react";
+import { Sparkles, Play } from "lucide-react";
 import { fadeUp } from "../../utils/animations";
+import { useRecommendations } from "../../hooks/useRecommendations";
 
 export default function AIRecommendations({ onSelect }) {
-  const recommendations = [
-    {
-      id: "rec1",
-      title: "Evening Wind Down",
-      category: "Yoga",
-      duration: "15 min",
-      reason: "To balance your morning cortisol levels",
-      icon: Activity,
-      color: "bg-[#8FA68E]/20 text-[#2F6B3B]"
-    },
-    {
-      id: "rec2",
-      title: "Deep Nervous System Reset",
-      category: "Breathwork",
-      duration: "10 min",
-      reason: "Because you've been highly active today",
-      icon: Wind,
-      color: "bg-[#E27229]/20 text-[#E27229]"
-    },
-    {
-      id: "rec3",
-      title: "Delta Wave Sleep",
-      category: "Soundscape",
-      duration: "45 min",
-      reason: "To improve your deep sleep cycle tonight",
-      icon: Music,
-      color: "bg-[#C89B63]/20 text-[#C89B63]"
-    }
-  ];
+  const { recommendations, loading } = useRecommendations();
+
+  if (loading) {
+    return (
+      <div className="w-full animate-pulse space-y-4">
+        <div className="h-6 w-1/3 rounded-full bg-wellness-muted/20"></div>
+        <div className="grid gap-5 md:grid-cols-3">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-32 rounded-3xl bg-wellness-muted/10"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!recommendations || recommendations.length === 0) return null;
 
   return (
     <motion.section variants={fadeUp} className="w-full">
@@ -54,17 +42,17 @@ export default function AIRecommendations({ onSelect }) {
             onClick={() => onSelect(rec)}
             className="group relative flex flex-col items-start overflow-hidden rounded-[2rem] bg-white/40 p-6 text-left backdrop-blur-md border border-[#EFE7DC] transition-all hover:-translate-y-1 hover:bg-white hover:shadow-[0_15px_40px_rgba(0,0,0,0.06)]"
           >
-            <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-full ${rec.color} transition-transform group-hover:scale-110`}>
-              <rec.icon size={20} />
+            <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-wellness-greenLight text-wellness-green transition-transform group-hover:scale-110`}>
+              <Play size={20} className="ml-1" />
             </div>
             
             <div className="flex items-center gap-2 mb-2">
               <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#11281d]">
-                {rec.category}
+                {rec.category || "Wellness"}
               </span>
               <span className="h-1 w-1 rounded-full bg-[#EFE7DC]" />
               <span className="text-[10px] font-semibold text-[#8FA68E]">
-                {rec.duration}
+                {rec.duration || "15 min"}
               </span>
             </div>
             
@@ -72,8 +60,8 @@ export default function AIRecommendations({ onSelect }) {
               {rec.title}
             </h3>
             
-            <p className="text-xs text-[#8FA68E] leading-relaxed italic">
-              "{rec.reason}"
+            <p className="text-xs text-[#8FA68E] leading-relaxed italic line-clamp-2">
+              Recommended for your current energy and goals.
             </p>
           </motion.button>
         ))}
