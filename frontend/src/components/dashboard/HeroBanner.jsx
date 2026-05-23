@@ -54,8 +54,8 @@ export default function HeroBanner({
 
   // Determine user-friendly personalized greeting
   const displayTitle = sectionTitle === "Morning sanctuary" || !sectionTitle
-    ? `${isReturning ? "Welcome back" : "Welcome"}, ${userName} 🌿`
-    : `${userName} 🌿`;
+    ? `${isReturning ? "Welcome back" : "Welcome"}, ${userName}`
+    : `${userName}`;
 
   // Render stats cards reactively if not explicitly passed
   const renderedStats = stats || [

@@ -303,7 +303,7 @@ export default function Instructors() {
           </div>
 
           <h2 className="ins-title">
-            Learn From the <span className="ot">Best</span>
+            Learn From the <span className="ot">Best Guru</span>
           </h2>
 
           <p className="ins-subtitle">

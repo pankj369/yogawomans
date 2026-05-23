@@ -61,7 +61,6 @@ const WellnessCard = ({ category, onClick }) => {
           opacity-[0.04]
         "
       >
-        🌿
       </div>
 
       {/* CONTENT */}
