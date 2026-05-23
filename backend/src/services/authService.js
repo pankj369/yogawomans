@@ -17,9 +17,12 @@ class AuthService {
       avatar: "",
       premiumStatus: false,
       streak: 0,
+      meditationMinutes: 0,
       createdAt: new Date().toISOString(),
       goals: [],
       preferences: {},
+      savedPlaylists: [],
+      recentActivity: [],
       onboardingCompleted: false,
     };
 

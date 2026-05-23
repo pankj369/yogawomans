@@ -223,8 +223,12 @@ export function AuthProvider({ children }) {
           role: "member",
           premiumStatus: backendProfile?.premiumStatus || authState.isPremium,
           streak: backendProfile?.streak || 0,
+          meditationMinutes: backendProfile?.meditationMinutes || 0,
           goals: backendProfile?.goals || [],
           preferences: backendProfile?.preferences || {},
+          savedPlaylists: backendProfile?.savedPlaylists || [],
+          recentActivity: backendProfile?.recentActivity || [],
+          onboardingCompleted: backendProfile?.onboardingCompleted || false,
         }
       : null;
 

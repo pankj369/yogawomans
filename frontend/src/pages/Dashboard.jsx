@@ -28,9 +28,9 @@ import LiveClassesSection from "../components/dashboard/LiveClassesSection";
 import KidsYogaSection from "../components/dashboard/KidsYogaSection";
 import JournalSection from "../components/dashboard/JournalSection";
 import AICoachSection from "../components/dashboard/AICoachSection";
+import DashboardPlansSection from "../components/dashboard/DashboardPlansSection";
 import EmptyState from "../components/ui/states/EmptyState";
 import { Search } from "lucide-react";
-
 
 import { useAuth } from "../context/AuthContext";
 import { useDashboard } from "../context/DashboardContext";
@@ -46,6 +46,7 @@ const sectionMeta = {
   breathwork: { title: "Breathwork", hero: "Breath reset", focus: "Use the breath to energize or release tension." },
   kids: { title: "Kids Yoga", hero: "Family flow", focus: "Gentle movement for younger yogis." },
   saved: { title: "Saved Sanctuary", hero: "Your Sanctuary", focus: "Return to the practices that center you." },
+  plans: { title: "AI Generated Plans", hero: "Your Healing Journeys", focus: "Continue your personalized wellness paths." },
 };
 
 function SessionModal({ session, onClose, onPreview, onStart }) {
@@ -183,7 +184,7 @@ export default function Dashboard() {
 
   const DASHBOARD_CATEGORIES = ["All", "Meditation", "Yoga", "Sleep", "Breathwork"];
   
-  if (auth.profileLoading) {
+  if (!auth.isAuthReady) {
     return (
       <div className="flex min-h-screen items-center justify-center text-xl font-semibold bg-wellness-bg text-wellness-dark">
         Loading dashboard...
@@ -305,6 +306,7 @@ export default function Dashboard() {
         {section === "kids" && <KidsYogaSection />}
         {section === "journal" && <JournalSection />}
         {section === "ai-coach" && <AICoachSection />}
+        {section === "plans" && <DashboardPlansSection />}
 
         {section === "home" && (
           <>

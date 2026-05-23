@@ -19,6 +19,8 @@ const Settings = lazy(() => import("../pages/Settings"));
 const Wishlist = lazy(() => import("../pages/Wishlist"));
 const PhysicalHealth = lazy(() => import("../pages/PhysicalHealth"));
 const MentalHealth = lazy(() => import("../pages/MentalHealth"));
+const GeneratedPlan = lazy(() => import("../pages/GeneratedPlan"));
+const SessionPlayer = lazy(() => import("../pages/SessionPlayer"));
 
 function AppRouteLoader() {
   return (
@@ -50,8 +52,10 @@ export default function AppRoutes() {
         <Route path="/pricing" element={<PageWrapper><PricingPage /></PageWrapper>} />
         <Route path="/shop" element={<PageWrapper><Shop /></PageWrapper>} />
         <Route path="/shop/:slug" element={<PageWrapper><ProductDetail /></PageWrapper>} />
+        <Route path="/generated-plan" element={<PageWrapper><GeneratedPlan /></PageWrapper>} />
 
         <Route element={<ProtectedRoute />}>
+          <Route path="/session/:planId" element={<PageWrapper><SessionPlayer /></PageWrapper>} />
           <Route path="/profile-setup" element={<PageWrapper><ProfileSetup /></PageWrapper>} />
           <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
           <Route path="/settings" element={<PageWrapper><Settings /></PageWrapper>} />

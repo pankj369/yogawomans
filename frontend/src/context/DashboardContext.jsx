@@ -75,8 +75,8 @@ export function DashboardProvider({ children }) {
   const [meetingClass, setMeetingClass] = useState(null);
 
   // Derive final values from backend first, fallback to local storage
-  const activeStreak = stats?.currentStreak !== undefined ? stats.currentStreak : state.streakDays;
-  const totalMeditation = stats?.totalMeditationMinutes !== undefined ? stats.totalMeditationMinutes : state.meditationMinutes;
+  const activeStreak = stats?.currentStreak !== undefined ? stats.currentStreak : (auth.user?.streak || state.streakDays);
+  const totalMeditation = stats?.totalMeditationMinutes !== undefined ? stats.totalMeditationMinutes : (auth.user?.meditationMinutes || state.meditationMinutes);
   const totalYoga = stats?.totalSessionsCompleted !== undefined ? stats.totalSessionsCompleted : state.yogaSessionsCompleted;
   
   const isPremium = auth.user?.premiumStatus || state.activePlan !== "Basic";

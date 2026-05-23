@@ -1,7 +1,7 @@
 import {
   Activity, BookOpen, Clock, Droplets, Feather, Headphones,
   Heart, Moon, Music, Sun, Wind, Zap, Users, Briefcase,
-  Bookmark, Edit3, Settings, Cpu, Radio, Lock
+  Bookmark, Edit3, Settings, Cpu, Radio, Lock, Sparkles
 } from "lucide-react";
 
 import ananyaImg from "../assets/images/ananya.png";
@@ -62,6 +62,7 @@ export const dashboardMenuGroups = [
     group: "AI & Settings",
     items: [
       { label: "AI Wellness Coach",path: "/dashboard/ai-coach",    icon: Cpu      },
+      { label: "Generated Plans",  path: "/dashboard/plans",       icon: Sparkles },
       { label: "Settings",        path: "/settings",               icon: Settings },
     ],
   },

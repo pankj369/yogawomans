@@ -365,10 +365,18 @@ function ResetSuccess({ onLogin }) {
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const auth = useAuth();
   const [view, setView] = useState("login");
   const [resetEmail, setResetEmail] = useState("");
+
+  const returnTo = location.state?.returnTo;
+  const planState = location.state?.planState;
+
   if (auth.isAuthenticated) {
+    if (returnTo) {
+      return <Navigate to={returnTo} state={planState} replace />;
+    }
     return <Navigate to={auth.profileSetupComplete ? "/dashboard" : "/profile-setup"} replace />;
   }
 
@@ -387,7 +395,18 @@ export default function Login() {
       id,
       name,
     });
-    navigate(session.profileSetupComplete ? "/dashboard" : "/profile-setup", { replace: true });
+    
+    if (returnTo) {
+      navigate(returnTo, { 
+        state: { 
+          planState, 
+          actionPending: location.state?.actionPending 
+        }, 
+        replace: true 
+      });
+    } else {
+      navigate(session.profileSetupComplete ? "/dashboard" : "/profile-setup", { replace: true });
+    }
   };
 
   return (

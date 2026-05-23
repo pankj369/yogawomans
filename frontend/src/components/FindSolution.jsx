@@ -1,404 +1,224 @@
-/**
- * FindSolution Component - Personalized Wellness Recommendation System
- * Premium AI-powered wellness recommendations with beautiful UI/UX
- * Features: Interactive cards, animated modal, multi-step forms, personalized recommendations
- * Powered by Framer Motion animations and Tailwind CSS styling
- */
-
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import WellnessCard from "./wellness/WellnessCard";
-import WellnessModal from "./wellness/WellnessModal";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { wellnessCategories } from "../data/wellnessRecommendationData";
 
-function FindSolution() {
-  const [activeCard, setActiveCard] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+// Ultra-premium Glassmorphic Selector
+function PremiumSelector({ options, selectedId, onChange, placeholder }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-  // Handle card click - open modal
-  const handleCardClick = (category) => {
-    setSelectedCategory(category);
-    setActiveCard(category.id);
-    setIsModalOpen(true);
-  };
+  const selectedOption = options.find((opt) => opt.id === selectedId);
 
-  // Handle modal close
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-    setActiveCard(null);
-  };
-
-  // Animation variants for staggered card animations
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  };
+  // Click outside to close
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <section
-      className="
-        relative
-        overflow-hidden
-        bg-[linear-gradient(180deg,#f7f4ee_0%,#fffaf4_35%,#f3f8ef_100%)]
-        px-4
-        py-24
-        md:px-10
-      "
-    >
-      {/* Decorative animated background elements */}
-      <motion.div
-        animate={{ y: [0, 20, 0], rotate: [0, 5, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -left-16 -top-16 h-56 w-56 rounded-full bg-blue-400/10 blur-3xl"
-      />
-      <motion.div
-        animate={{ y: [0, -20, 0], rotate: [0, -5, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-purple-400/10 blur-3xl"
-      />
-
-      {/* BADGE - Animated entrance */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="mb-5 flex justify-center"
+    <div className="relative inline-block mx-2 sm:mx-3 align-middle" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="group relative flex w-full items-center justify-between gap-3 sm:gap-5 rounded-[2rem] border border-[#EFE7DC]/80 bg-white/60 px-5 py-2.5 font-serif text-3xl font-medium tracking-tight text-[#11281d] shadow-[0_8px_30px_rgba(0,0,0,0.02)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-[#E27229]/30 hover:bg-white hover:shadow-[0_20px_40px_rgba(226,114,41,0.06)] sm:px-6 sm:py-3.5 sm:text-5xl lg:text-[56px]"
       >
-        <div className="yc-badge ">
-            🧘 Yoga Solution
-          </div>
-      </motion.div>
-
-      {/* HEADING - Main title */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="text-center"
-      >
-        <h2
-          className="
-            text-center
-            text-4xl
-            font-extrabold
-            leading-tight
-            text-gray-900
-            sm:text-5xl
-          "
-        >
-          Find <span className="text-orange-500">Solution</span> For... 
-        </h2>
-
-        <p
-          className="
-            mx-auto
-            mt-5
-            max-w-[650px]
-            text-center
-            text-[15px]
-            leading-relaxed
-            text-gray-600
-            sm:text-[17px]
-          "
-        >
-          Discover personalized yoga, meditation, and breathing exercises tailored to your wellness goals.
-          Click any card to get started with your AI-powered wellness journey.
-        </p>
-      </motion.div>
-
-      {/* DIVIDER - Decorative separator */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="mt-8 flex items-center justify-center gap-4 origin-center"
-      >
-        <div className="h-[2px] w-14 rounded-full bg-gradient-to-r from-blue-400 to-transparent" />
-        <motion.span
-          animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-          className="text-2xl"
-        >
-          🪷
-        </motion.span>
-        <div className="h-[2px] w-14 rounded-full bg-gradient-to-l from-purple-400 to-transparent" />
-      </motion.div>
-
-      {/* CARDS GRID - Responsive wellness category cards */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="
-          mx-auto
-          mt-14
-          grid
-          max-w-[1400px]
-          grid-cols-2
-          gap-4
-          sm:grid-cols-3
-          md:grid-cols-4
-          lg:grid-cols-5
-        "
-      >
-        {wellnessCategories.map((category) => (
-          <motion.div
-            key={category.id}
-            variants={itemVariants}
-            onClick={() => handleCardClick(category)}
-          >
-            <WellnessCard
-              category={category}
-              isActive={activeCard === category.id}
-              onClick={() => handleCardClick(category)}
-            />
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Highlighted description card for active category */}
-      {activeCard && selectedCategory && (
+        <span className="whitespace-nowrap">
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
         <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          transition={{ duration: 0.4 }}
-          className="
-            mx-auto
-            mt-12
-            max-w-[950px]
-            rounded-[30px]
-            border border-white/40
-            bg-white/80
-            p-7
-            shadow-[0_20px_50px_rgba(0,0,0,0.1)]
-            backdrop-blur-2xl
-          "
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#f4eadf] text-[#2B3B2E] transition-colors duration-300 group-hover:bg-[#E27229] group-hover:text-white sm:h-12 sm:w-12"
         >
-          <div className="flex flex-col gap-5 md:flex-row md:items-start">
-            {/* Icon */}
-            <motion.div
-              animate={{ rotate: [0, -5, 5, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="
-                flex
-                h-20
-                w-20
-                flex-shrink-0
-                items-center
-                justify-center
-                rounded-[24px]
-                bg-gradient-to-br from-blue-100 to-purple-100
-                text-4xl
-              "
-            >
-              {selectedCategory.icon}
-            </motion.div>
-
-            {/* Content */}
-            <div >
-              <h3 className="text-2xl font-bold text-gray-800">
-                {selectedCategory.label} Wellness
-              </h3>
-
-              <p className="mt-3 text-[15px] leading-relaxed text-gray-700">
-                {selectedCategory.description}
-              </p>
-
-              {/* CTA - Click to start form */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleCardClick(selectedCategory)}
-                className="
-                  mt-5
-                  inline-flex
-                  items-center
-                  gap-2
-                  rounded-full
-                  bg-gradient-to-r from-blue-500 to-purple-500
-                  px-6
-                  py-2
-                  text-sm
-                  font-bold
-                  text-white
-                  shadow-lg
-                  hover:shadow-xl
-                  transition-all
-                "
-              >
-                Start Personalization → 
-              </motion.button>
-            </div>
-
-            {/* Close button */}
-            <motion.button
-              whileHover={{ scale: 1.1, rotate: 90 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                setActiveCard(null);
-                setSelectedCategory(null);
-              }}
-              className="
-                flex
-                h-10
-                w-10
-                flex-shrink-0
-                items-center
-                justify-center
-                rounded-full
-                bg-red-100/80
-                text-red-600
-                hover:bg-red-200
-                transition-colors
-              "
-            >
-              ✕
-            </motion.button>
-          </div>
+          <ChevronDown size={28} strokeWidth={1.5} />
         </motion.div>
-      )}
+      </button>
 
-      {/* Wellness Modal - Opens when user clicks a card */}
-      {selectedCategory && (
-        <WellnessModal
-          category={selectedCategory}
-          isOpen={isModalOpen}
-          onClose={handleModalClose}
-        />
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 15, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="absolute left-1/2 top-[calc(100%+16px)] z-50 max-h-[320px] w-max min-w-[280px] -translate-x-1/2 overflow-y-auto rounded-[2rem] border border-[#EFE7DC] bg-white/90 p-3 shadow-[0_40px_80px_-20px_rgba(17,40,29,0.15)] backdrop-blur-3xl custom-scrollbar"
+          >
+            {options.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => {
+                  onChange(option.id);
+                  setIsOpen(false);
+                }}
+                className={`group flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-left transition-all duration-300 ${
+                  selectedId === option.id
+                    ? "bg-[#f4eadf] text-[#11281d]"
+                    : "text-[#3a4a3d] hover:bg-white/60 hover:text-[#11281d]"
+                }`}
+              >
+                {option.icon && (
+                  <span className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-2xl shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${selectedId === option.id ? 'bg-white shadow-md' : 'bg-[#f4eadf]'}`}>
+                    {option.icon}
+                  </span>
+                )}
+                <span className={`text-lg tracking-wide ${selectedId === option.id ? 'font-bold' : 'font-medium'}`}>
+                  {option.label}
+                </span>
+                
+                {selectedId === option.id && (
+                  <motion.div layoutId="activeIndicator" className="ml-auto h-2 w-2 rounded-full bg-[#E27229]" />
+                )}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
-      {/* CTA Button - Link to explore all classes */}
+const DURATIONS = [
+  { id: "10min", label: "10 min", icon: "⏱️" },
+  { id: "20min", label: "20 min", icon: "⏳" },
+  { id: "30min", label: "30 min", icon: "🕒" },
+  { id: "45min", label: "45 min", icon: "🕤" },
+  { id: "60min", label: "60 min", icon: "🕰️" },
+];
+
+const LEVELS = [
+  { id: "beginner", label: "Beginner", icon: "🌱" },
+  { id: "intermediate", label: "Intermed.", icon: "🌿" },
+  { id: "advanced", label: "Advanced", icon: "🌳" },
+];
+
+function FindSolution() {
+  const [goalId, setGoalId] = useState("stress");
+  const [durationId, setDurationId] = useState("20min");
+  const [levelId, setLevelId] = useState("beginner");
+  
+  const navigate = useNavigate();
+
+  const handleGenerate = () => {
+    navigate("/generated-plan", { state: { goalId, durationId, levelId } });
+  };
+
+  // Dynamic Backgrounds based on Goal - using warm, soft brand tones
+  const getBgColors = (goal) => {
+    switch(goal) {
+      case 'stress': return ['rgba(226,114,41,0.15)', 'rgba(43,59,46,0.1)']; // Subtle Orange/Green
+      case 'sleep': return ['rgba(138,154,186,0.2)', 'rgba(43,59,46,0.15)']; // Night Blue / Green
+      case 'focus': return ['rgba(226,114,41,0.2)', 'rgba(238,226,204,0.4)']; // Energizing Orange
+      case 'flexibility': return ['rgba(43,59,46,0.15)', 'rgba(238,226,204,0.4)']; // Soft Teal/Green
+      default: return ['rgba(238,226,204,0.3)', 'rgba(226,114,41,0.1)'];
+    }
+  };
+
+  const [bg1, bg2] = getBgColors(goalId);
+
+  return (
+    <section className="relative overflow-hidden bg-[#F7F3EE] px-4 py-20 md:px-10 lg:py-24 min-h-[70vh] flex items-center justify-center">
+      {/* Ambient Lighting / Atmospheric Mesh Gradients */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="mt-14 flex flex-col items-center gap-4"
-      >
-        <p className="text-center text-gray-600 text-sm">
-          💡 Select any wellness category above to get personalized recommendations
-        </p>
+        animate={{ opacity: [0.4, 0.6, 0.4], scale: [1, 1.05, 1], backgroundColor: bg1 }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", backgroundColor: { duration: 2 } }}
+        className="pointer-events-none absolute left-[5%] top-[10%] h-[700px] w-[700px] rounded-full blur-[120px]"
+      />
+      <motion.div
+        animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.1, 1], backgroundColor: bg2 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2, backgroundColor: { duration: 2 } }}
+        className="pointer-events-none absolute right-[5%] bottom-[5%] h-[800px] w-[800px] rounded-full blur-[120px]"
+      />
 
-        <Link
-          to="/auth"
-          className="
-            inline-flex
-            items-center
-            gap-3
-            rounded-full
-            bg-[linear-gradient(135deg,#c77732,#d9924c)]
-            px-8
-            py-4
-            text-sm
-            font-semibold
-            uppercase
-            tracking-[0.08em]
-            text-white
-            shadow-[0_14px_35px_rgba(199,119,50,0.28)]
-            transition-all
-            duration-300
-            hover:-translate-y-1
-            hover:shadow-[0_20px_45px_rgba(199,119,50,0.35)]
-          "
+      <div className="relative z-10 w-full max-w-[1200px] text-center">
+        {/* Header matching Instructors style */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="mb-8 lg:mb-12 flex flex-col items-center justify-center"
         >
-          🧘 Explore All Premium Classes
-        </Link>
-      </motion.div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#2E7D32]/20 bg-[#2E7D32]/10 px-[18px] py-[7px] text-[11px] font-bold uppercase tracking-[0.14em] text-[#2E7D32] mb-4">
+            ✨ AI WELLNESS ARCHITECT
+          </div>
+          
+          <h2 className="font-['Poppins',sans-serif] text-[30px] sm:text-[42px] font-extrabold leading-[1.18] text-[#1A2E1A] mb-4">
+            Generate <span className="text-[#E8651A]">Plans</span>
+          </h2>
+          
+          <p className="font-['Poppins',sans-serif] text-[16px] leading-[1.75] text-[#777777] max-w-[520px] mx-auto">
+            Tell us how you're feeling, and our AI will curate the perfect combination of breathing, movement, and meditation specifically for your needs today.
+          </p>
+        </motion.div>
 
-      {/* Features section */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.6 }}
-        className="mt-16 mx-auto max-w-[1100px]"
-      >
-       <div
-  className="
-    mt-10
+        {/* Conversational Sentence */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, delay: 0.2 }}
+          className="mx-auto flex flex-wrap items-center justify-center gap-x-2 gap-y-6 text-center font-serif text-3xl font-medium tracking-tight text-[#3a4a3d] sm:text-5xl md:text-6xl lg:text-[64px] lg:leading-[1.6]"
+        >
+          <span className="whitespace-nowrap px-2">I want to improve my</span>
+          
+          <PremiumSelector
+            options={wellnessCategories}
+            selectedId={goalId}
+            onChange={setGoalId}
+            placeholder="wellness"
+          />
+          
+          <span className="whitespace-nowrap px-2">for</span>
+          
+          <PremiumSelector
+            options={DURATIONS}
+            selectedId={durationId}
+            onChange={setDurationId}
+            placeholder="duration"
+          />
+          
+          <span className="whitespace-nowrap px-2 mt-4 sm:mt-0">at a</span>
+          
+          <PremiumSelector
+            options={LEVELS}
+            selectedId={levelId}
+            onChange={setLevelId}
+            placeholder="level"
+          />
+          
+          <span className="whitespace-nowrap px-2">level.</span>
+        </motion.div>
 
-    flex
-    flex-wrap
-    items-center
-    justify-center
-
-    gap-4
-    sm:gap-6
-    lg:gap-10
-  "
->
-
-  {/* ITEM */}
-  <div className="flex items-center gap-3">
-    <span className="text-2xl">🎯</span>
-
-    <div>
-      <h4 className="text-sm font-semibold text-[#11281d]">
-        AI-Powered
-      </h4>
-
-      <p className="text-xs text-[#667267]">
-        Smart recommendations
-      </p>
-    </div>
-  </div>
-
-
-
-
-
-  {/* ITEM */}
-  <div className="flex items-center gap-3">
-    <span className="text-2xl">⚡</span>
-
-    <div>
-      <h4 className="text-sm font-semibold text-[#11281d]">
-        Instant Results
-      </h4>
-
-      <p className="text-xs text-[#667267]">
-        Wellness plans in seconds
-      </p>
-    </div>
-  </div>
-
-
-
-
-
-  {/* ITEM */}
-  <div className="flex items-center gap-3">
-    <span className="text-2xl">🔄</span>
-
-    <div>
-      <h4 className="text-sm font-semibold text-[#11281d]">
-        Adjust Anytime
-      </h4>
-
-      <p className="text-xs text-[#667267]">
-        Retake anytime
-      </p>
-    </div>
-  </div>
-
-</div>
-      </motion.div>
+        {/* Cinematic CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, delay: 0.5 }}
+          className="mt-16 lg:mt-20 flex justify-center"
+        >
+          <button
+            onClick={handleGenerate}
+            className="group relative flex h-20 items-center justify-center gap-4 overflow-hidden rounded-full bg-gradient-to-r from-[#E27229] to-[#d5631c] px-16 text-[12px] font-bold tracking-[0.25em] text-white shadow-[0_20px_40px_rgba(226,114,41,0.22)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_rgba(226,114,41,0.35)] uppercase"
+          >
+            {/* Breathing Glow Inside Button */}
+            <motion.div 
+              animate={{ opacity: [0, 0.4, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.4)_0%,transparent_60%)]"
+            />
+            
+            <Sparkles size={16} className="relative z-10 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-125" />
+            <span className="relative z-10">Generate My Wellness Plan</span>
+          </button>
+        </motion.div>
+      </div>
     </section>
   );
 }

@@ -20,8 +20,12 @@ class UserService {
       avatar: data.avatar,
       premiumStatus: data.premiumStatus || false,
       streak: data.streak || 0,
+      meditationMinutes: data.meditationMinutes || 0,
       goals: data.goals || [],
       preferences: data.preferences || {},
+      savedPlaylists: data.savedPlaylists || [],
+      recentActivity: data.recentActivity || [],
+      onboardingCompleted: data.onboardingCompleted || false,
       recentActivitySummary: [], // To be populated by progress APIs
     };
   }
