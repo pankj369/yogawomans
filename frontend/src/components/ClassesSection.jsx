@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import ScrollReveal from "./ui/animations/ScrollReveal";
+import StaggerGroup from "./ui/animations/StaggerGroup";
 
 /* Class imagery */
 import hathaImg from "../assets/images/hathayoga.png";
@@ -15,16 +17,6 @@ if (!document.head.querySelector("[data-yoga-classes]")) {
 
   s.textContent = `
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Lato:wght@300;400;700&display=swap');
-
-    @keyframes yc-fadeUp {
-      from{opacity:0;transform:translateY(28px);}
-      to{opacity:1;transform:translateY(0);}
-    }
-
-    @keyframes yc-cardIn {
-      from{opacity:0;transform:translateY(20px) scale(0.96);}
-      to{opacity:1;transform:translateY(0) scale(1);}
-    }
 
     .yc-section{
       font-family:'Poppins',sans-serif;
@@ -53,7 +45,6 @@ if (!document.head.querySelector("[data-yoga-classes]")) {
     .yc-top{
       text-align:center;
       margin-bottom:56px;
-      animation:yc-fadeUp 0.6s ease both;
     }
 
     .yc-badge{
@@ -135,7 +126,6 @@ if (!document.head.querySelector("[data-yoga-classes]")) {
       overflow:hidden;
       transition:all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
       cursor:pointer;
-      animation:yc-cardIn 0.5s ease both;
     }
 
     .yc-card:hover{
@@ -390,45 +380,47 @@ export default function ClassesSection() {
 
       <div className="yc-inner">
 
-        <div className="yc-top">
+        <ScrollReveal>
+          <div className="yc-top">
 
-          <div className="yc-badge">
-            🧘 What We Offer
+            <div className="yc-badge">
+              🧘 What We Offer
+            </div>
+
+            <h2 className="yc-heading">
+              Yoga For <span className="acc-o">Every</span>{" "}
+              <span className="acc-g">Body</span>
+            </h2>
+
+            <p className="yc-subtext">
+              Choose from our wide range of expertly designed yoga programs
+            </p>
+
           </div>
-
-          <h2 className="yc-heading">
-            Yoga For <span className="acc-o">Every</span>{" "}
-            <span className="acc-g">Body</span>
-          </h2>
-
-          <p className="yc-subtext">
-            Choose from our wide range of expertly designed yoga programs
-          </p>
-
-        </div>
+        </ScrollReveal>
 
         {/* FILTERS */}
-        <div className="yc-filters">
-          {filters.map((f) => (
-            <button
-              key={f}
-              className={`yc-filter-btn${activeFilter === f ? " active" : ""}`}
-              onClick={() => setActiveFilter(f)}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
+        <ScrollReveal delay={0.2}>
+          <div className="yc-filters">
+            {filters.map((f) => (
+              <button
+                key={f}
+                className={`yc-filter-btn${activeFilter === f ? " active" : ""}`}
+                onClick={() => setActiveFilter(f)}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+        </ScrollReveal>
 
         {/* CARDS */}
-        <div className="yc-grid">
-
+        <StaggerGroup className="yc-grid" staggerDelay={0.1}>
           {filtered.map((cls, i) => (
 
             <div
-              className="yc-card"
+              className="yc-card h-full"
               key={cls.id}
-              style={{ animationDelay: `${i * 0.08}s` }}
             >
 
               {/* CARD HEADER */}
@@ -449,7 +441,7 @@ export default function ClassesSection() {
               </div>
 
               {/* CARD BODY */}
-              <div className="yc-card-body">
+              <div className="yc-card-body flex flex-col h-[calc(100%-240px)]">
 
                 <div className="yc-card-title-wrap">
                   <h3 className="yc-card-title">
@@ -457,7 +449,7 @@ export default function ClassesSection() {
                   </h3>
                 </div>
 
-                <p className="yc-card-desc">
+                <p className="yc-card-desc flex-1">
                   {cls.desc}
                 </p>
 
@@ -479,7 +471,7 @@ export default function ClassesSection() {
 
                 <Link
                   to="/auth"
-                  className="yc-enroll-btn"
+                  className="yc-enroll-btn mt-auto"
                   style={{ display: "inline-block" }}
                 >
                   Enroll Now
@@ -489,16 +481,17 @@ export default function ClassesSection() {
 
             </div>
           ))}
+        </StaggerGroup>
 
-        </div>
+        <ScrollReveal delay={0.3}>
+          <div className="yc-cta-wrap">
 
-        <div className="yc-cta-wrap">
+          <Link to="/auth" className="yc-cta-btn">
+            View All Classes →
+          </Link>
 
-        <Link to="/auth" className="yc-cta-btn">
-          View All Classes →
-        </Link>
-
-        </div>
+          </div>
+        </ScrollReveal>
 
       </div>
 

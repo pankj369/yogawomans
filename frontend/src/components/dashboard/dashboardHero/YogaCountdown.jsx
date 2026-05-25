@@ -39,11 +39,11 @@ export default function YogaCountdown() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
-      className="relative overflow-hidden rounded-[2.5rem] bg-gray-900 p-8 sm:p-12 shadow-2xl h-full flex flex-col justify-center"
+      className="relative overflow-hidden rounded-[2.5rem] bg-wellness-black p-8 sm:p-12 shadow-2xl h-full flex flex-col justify-center"
     >
       {/* Animated Aurora Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-wellness-greenLight/20 via-gray-900 to-gray-900" />
-      <div className="absolute -left-1/4 -top-1/4 h-[150%] w-[150%] animate-[spin_60s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(167,243,208,0.1)_360deg)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-wellness-greenLight via-wellness-black to-wellness-black" />
+      <div className="absolute -left-1/4 -top-1/4 h-[150%] w-[150%] animate-[spin_60s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(0,230,118,0.1)_360deg)]" />
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
 
       <div className="relative z-10 flex flex-col items-center text-center h-full justify-center">
@@ -51,7 +51,7 @@ export default function YogaCountdown() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="inline-flex items-center gap-2 rounded-full bg-wellness-green/20 px-4 py-1.5 text-sm font-bold text-wellness-greenLight border border-wellness-green/30 mb-6 shadow-[0_0_15px_rgba(167,243,208,0.2)]"
+          className="inline-flex items-center gap-2 rounded-full bg-wellness-green/20 px-4 py-1.5 text-sm font-bold text-wellness-glow border border-wellness-green/30 mb-6 shadow-[0_0_15px_rgba(0,230,118,0.2)]"
         >
           <Globe size={16} /> Global Celebration
         </motion.div>
@@ -62,7 +62,7 @@ export default function YogaCountdown() {
           transition={{ delay: 0.3, duration: 0.5 }}
           className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight drop-shadow-lg"
         >
-          International Day of <span className="text-transparent bg-clip-text bg-gradient-to-r from-wellness-greenLight to-emerald-300">Yoga</span>
+          International Day of <span className="text-transparent bg-clip-text bg-gradient-to-r from-wellness-glow to-emerald-300">Yoga</span>
         </motion.h1>
         
         <motion.p 
@@ -94,7 +94,7 @@ export default function YogaCountdown() {
                   {block.value.toString().padStart(2, "0")}
                 </span>
               </div>
-              <span className="mt-3 text-xs font-bold uppercase tracking-widest text-wellness-greenLight opacity-80">
+              <span className="mt-3 text-xs font-bold uppercase tracking-widest text-wellness-glow opacity-80">
                 {block.label}
               </span>
             </motion.div>

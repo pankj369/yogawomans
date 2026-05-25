@@ -35,7 +35,7 @@ function SidebarPanel({ onClose, isMobile = false }) {
           <img
             src={fotlogo}
             alt="YogaWomans Logo"
-            className="h-10 w-auto object-contain"
+            className="h-10 w-auto object-contain brightness-0 invert opacity-90"
           />
         </div>
 
@@ -44,7 +44,7 @@ function SidebarPanel({ onClose, isMobile = false }) {
             type="button"
             onClick={onClose}
             aria-label="Close menu"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/60 text-[#736B63] transition hover:bg-white hover:text-wellness-dark"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20"
           >
             <X className="text-lg" />
           </button>
@@ -62,34 +62,32 @@ function SidebarPanel({ onClose, isMobile = false }) {
         <button
           onClick={() => {
             onClose();
-            // In a real app we'd dispatch an event or trigger the context directly
-            // For now, we'll navigate to home to ensure Dashboard is mounted
             navigate("/dashboard");
           }}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-wellness-dark py-3.5 text-sm font-bold text-white shadow-liftSm transition-all hover:-translate-y-0.5 hover:bg-black hover:shadow-card"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-white/10 py-3.5 text-sm font-bold text-white shadow-liftSm border border-white/10 transition-all hover:-translate-y-0.5 hover:bg-white/20 hover:shadow-card hover:border-white/30"
         >
-          <Play fill="currentColor" size={14} /> Resume Journey
+          <Play fill="currentColor" size={14} className="text-wellness-glow" /> Resume Journey
         </button>
       )}
 
       {/* ── Wellness Stats Card ── */}
-      <div className="mt-5 rounded-2xl border border-white/50 bg-white/60 p-4 shadow-liftSm backdrop-blur-[24px] transition duration-300 hover:-translate-y-1 hover:shadow-card hover:bg-white/90">
+      <div className="mt-5 rounded-2xl border border-white/10 bg-wellness-glass p-4 shadow-liftSm backdrop-blur-[24px] transition duration-300 hover:-translate-y-1 hover:shadow-card hover:bg-white/10">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-label text-[0.6rem]">Today</p>
+            <p className="text-label text-[0.6rem] text-wellness-glow">Today</p>
             <div className="mt-1 flex items-baseline gap-1">
-              <span className="font-heading text-2xl font-bold text-wellness-dark">
+              <span className="font-heading text-2xl font-bold text-white">
                 {wellnessScore}
               </span>
-              <span className="text-xs font-semibold text-wellness-muted">/100</span>
+              <span className="text-xs font-semibold text-white/50">/100</span>
             </div>
-            <p className="mt-0.5 text-[0.7rem] font-medium text-wellness-muted">Wellness index</p>
+            <p className="mt-0.5 text-[0.7rem] font-medium text-white/70">Wellness index</p>
           </div>
 
           {/* Progress ring */}
           <div className="relative h-14 w-14">
             <svg viewBox="0 0 56 56" className="h-full w-full -rotate-90 filter drop-shadow-sm">
-              <circle cx="28" cy="28" r="22" stroke="rgba(210,190,165,0.2)" strokeWidth="5" fill="none" />
+              <circle cx="28" cy="28" r="22" stroke="rgba(255,255,255,0.1)" strokeWidth="5" fill="none" />
               <motion.circle
                 cx="28" cy="28" r="22"
                 stroke="url(#sidebarRingGrad)"
@@ -103,36 +101,48 @@ function SidebarPanel({ onClose, isMobile = false }) {
               />
               <defs>
                 <linearGradient id="sidebarRingGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%"   stopColor="#E27229" />
-                  <stop offset="100%" stopColor="#EC9558" />
+                  <stop offset="0%"   stopColor="#00E676" />
+                  <stop offset="100%" stopColor="#1E7A46" />
                 </linearGradient>
               </defs>
             </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[0.65rem] font-bold text-wellness-dark">
+            <span className="absolute inset-0 flex items-center justify-center text-[0.65rem] font-bold text-white">
               {wellnessScore}%
             </span>
           </div>
         </div>
 
-        <div className="mt-3 flex items-center gap-2 rounded-2xl bg-wellness-orange/5 px-3 py-2 text-wellness-orange">
+        <div className="mt-3 flex items-center gap-2 rounded-2xl bg-white/5 px-3 py-2 text-wellness-glow">
           <TrendingUp className="text-sm" />
-          <p className="text-xs font-bold">
-            {streakDays}-day streak 🔥
+          <p className="text-xs font-bold text-white">
+            {streakDays}-day streak <span className="text-wellness-orange">🔥</span>
           </p>
         </div>
       </div>
 
-      {/* ── Logout ── */}
-      <button
-        type="button"
-        onClick={handleLogout}
-        className="group mt-4 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-wellness-muted transition-all duration-300 hover:text-red-600 hover:bg-red-50/60"
-      >
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-transparent text-wellness-muted group-hover:bg-white group-hover:text-red-600 group-hover:shadow-liftSm transition-all duration-300">
-          <LogOut className="text-[1.1rem]" />
-        </span>
-        Logout
-      </button>
+      {/* ── Bottom Section ── */}
+      <div className="mt-6 border-t border-white/10 pt-4">
+        <div className="flex items-center gap-3 px-2">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-wellness-glass font-bold text-wellness-glow border border-white/10">
+            {auth.user?.displayName?.[0]?.toUpperCase() || "Y"}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-bold text-white">
+              {auth.user?.displayName || "Yogi"}
+            </p>
+            <div className="mt-0.5 flex items-center gap-1.5 text-xs text-white/60">
+              <TrendingUp size={12} className="text-wellness-glow" /> {streakDays} day streak
+            </div>
+          </div>
+          <button
+            onClick={handleLogout}
+            title="Log out"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/60 transition hover:bg-red-500/20 hover:text-red-400"
+          >
+            <LogOut size={16} />
+          </button>
+        </div>
+      </div>
     </aside>
   );
 }

@@ -3,6 +3,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import ScrollReveal from "./ui/animations/ScrollReveal";
+import StaggerGroup from "./ui/animations/StaggerGroup";
 
 const testimonials = [
   {
@@ -23,17 +25,19 @@ function Testimonials() {
   return (
     <section id="testimonials" className="bg-lightSage py-16 sm:py-20">
       <div className="section-container px-4 sm:px-6 lg:px-0">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="inline-flex items-center justify-center rounded-full bg-white/80 px-4 py-2 text-sm font-semibold tracking-[0.22em] text-primaryOrange shadow-soft mb-4">
-            COMMUNITY VOICES
-          </p>
-          <h2 className="text-center font-heading text-3xl font-extrabold sm:text-4xl">What Women Are Saying</h2>
-          <p className="mt-4 text-sm text-grayText sm:text-base">
-            A softer, supportive wellness experience built for real-life transformation.
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="max-w-3xl mx-auto text-center">
+            <p className="inline-flex items-center justify-center rounded-full bg-white/80 px-4 py-2 text-sm font-semibold tracking-[0.22em] text-primaryOrange shadow-soft mb-4">
+              COMMUNITY VOICES
+            </p>
+            <h2 className="text-center font-heading text-3xl font-extrabold sm:text-4xl">What Women Are Saying</h2>
+            <p className="mt-4 text-sm text-grayText sm:text-base">
+              A softer, supportive wellness experience built for real-life transformation.
+            </p>
+          </div>
+        </ScrollReveal>
 
-        <div className="mt-10">
+        <ScrollReveal delay={0.2} className="mt-10">
           <Swiper
             modules={[Autoplay, Pagination]}
             autoplay={{ delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true }}
@@ -65,10 +69,9 @@ function Testimonials() {
               </SwiperSlide>
             ))}
           </Swiper>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );
 }
-
 export default Testimonials;

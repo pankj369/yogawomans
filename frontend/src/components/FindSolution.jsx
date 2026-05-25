@@ -4,6 +4,8 @@ import { Sparkles, ChevronDown } from "lucide-react";
 import PremiumButton from "./ui/PremiumButton";
 import { useNavigate } from "react-router-dom";
 import { wellnessCategories } from "../data/wellnessRecommendationData";
+import ScrollReveal from "./ui/animations/ScrollReveal";
+import StaggerGroup from "./ui/animations/StaggerGroup";
 
 // Ultra-premium Glassmorphic Selector
 const PremiumSelector = ({ options, selectedId, onChange, placeholder, align = "center" }) => {
@@ -141,84 +143,65 @@ function FindSolution() {
       />
 
       <div className="relative z-10 w-full max-w-[1200px] text-center">
-        {/* Header matching Instructors style */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="mb-8 lg:mb-12 flex flex-col items-center justify-center"
-        >
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#2E7D32]/20 bg-[#2E7D32]/10 px-[18px] py-[7px] text-[11px] font-bold uppercase tracking-[0.14em] text-[#2E7D32] mb-4">
-            ✨ AI WELLNESS ARCHITECT
+        <StaggerGroup staggerDelay={0.2}>
+          <div className="mb-8 lg:mb-12 flex flex-col items-center justify-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#2E7D32]/20 bg-[#2E7D32]/10 px-[18px] py-[7px] text-[11px] font-bold uppercase tracking-[0.14em] text-[#2E7D32] mb-4">
+              ✨ AI WELLNESS ARCHITECT
+            </div>
+
+            <h2 className="font-['Poppins',sans-serif] text-[30px] sm:text-[42px] font-extrabold leading-[1.18] text-[#1A2E1A] mb-4">
+              Generate <span className="text-[#E8651A]">Plans</span>
+            </h2>
+
+            <p className="font-['Poppins',sans-serif] text-[16px] leading-[1.75] text-[#777777] max-w-[520px] mx-auto">
+              Tell us how you're feeling, and our AI will curate the perfect combination of breathing, movement, and meditation specifically for your needs today.
+            </p>
           </div>
 
-          <h2 className="font-['Poppins',sans-serif] text-[30px] sm:text-[42px] font-extrabold leading-[1.18] text-[#1A2E1A] mb-4">
-            Generate <span className="text-[#E8651A]">Plans</span>
-          </h2>
+          <div className="mx-auto flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-3 gap-y-4 sm:gap-y-6 text-center font-serif text-[26px] sm:text-4xl md:text-5xl lg:text-[64px] font-medium tracking-tight text-[#3a4a3d] leading-[1.4] lg:leading-[1.6]">
+            <span className="whitespace-nowrap px-2">I want to improve my</span>
 
-          <p className="font-['Poppins',sans-serif] text-[16px] leading-[1.75] text-[#777777] max-w-[520px] mx-auto">
-            Tell us how you're feeling, and our AI will curate the perfect combination of breathing, movement, and meditation specifically for your needs today.
-          </p>
-        </motion.div>
+            <PremiumSelector
+              options={wellnessCategories}
+              selectedId={goalId}
+              onChange={setGoalId}
+              placeholder="wellness"
+              align="left"
+            />
 
-        {/* Conversational Sentence */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, delay: 0.2 }}
-          className="mx-auto flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-3 gap-y-4 sm:gap-y-6 text-center font-serif text-[26px] sm:text-4xl md:text-5xl lg:text-[64px] font-medium tracking-tight text-[#3a4a3d] leading-[1.4] lg:leading-[1.6]"
-        >
-          <span className="whitespace-nowrap px-2">I want to improve my</span>
+            <span className="whitespace-nowrap px-2">for</span>
 
-          <PremiumSelector
-            options={wellnessCategories}
-            selectedId={goalId}
-            onChange={setGoalId}
-            placeholder="wellness"
-            align="left"
-          />
+            <PremiumSelector
+              options={DURATIONS}
+              selectedId={durationId}
+              onChange={setDurationId}
+              placeholder="duration"
+              align="right"
+            />
 
-          <span className="whitespace-nowrap px-2">for</span>
+            <span className="whitespace-nowrap px-2 mt-4 sm:mt-0">at a</span>
 
-          <PremiumSelector
-            options={DURATIONS}
-            selectedId={durationId}
-            onChange={setDurationId}
-            placeholder="duration"
-            align="right"
-          />
+            <PremiumSelector
+              options={LEVELS}
+              selectedId={levelId}
+              onChange={setLevelId}
+              placeholder="level"
+              align="center"
+            />
 
-          <span className="whitespace-nowrap px-2 mt-4 sm:mt-0">at a</span>
+            <span className="whitespace-nowrap px-2">level.</span>
+          </div>
 
-          <PremiumSelector
-            options={LEVELS}
-            selectedId={levelId}
-            onChange={setLevelId}
-            placeholder="level"
-            align="center"
-          />
-
-          <span className="whitespace-nowrap px-2">level.</span>
-        </motion.div>
-
-        {/* Cinematic CTA Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, delay: 0.5 }}
-          className="mt-16 lg:mt-20 flex justify-center"
-        >
-          <PremiumButton
-            onClick={handleGenerate}
-            icon={Sparkles}
-            className="w-full sm:w-auto px-10 sm:px-16"
-          >
-            Generate My Wellness Plan
-          </PremiumButton>
-        </motion.div>
+          <div className="mt-16 lg:mt-20 flex justify-center">
+            <PremiumButton
+              onClick={handleGenerate}
+              icon={Sparkles}
+              className="w-full sm:w-auto px-10 sm:px-16"
+            >
+              Generate My Wellness Plan
+            </PremiumButton>
+          </div>
+        </StaggerGroup>
       </div>
     </section>
   );

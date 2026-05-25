@@ -65,7 +65,7 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title }) 
             type="button"
             onClick={onMenuClick}
             id="navbar-menu-btn"
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/55 bg-white/65 text-wellness-dark shadow-liftSm transition hover:-translate-y-0.5 hover:bg-white lg:hidden hover:shadow-card"
+            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white shadow-liftSm transition hover:-translate-y-0.5 hover:bg-white/10 lg:hidden hover:shadow-card"
             aria-label="Open menu"
           >
             <Menu size={20} />
@@ -73,7 +73,7 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title }) 
 
           <div className="hidden sm:block">
             <div className="flex items-center gap-2">
-              <p className="text-[0.6rem] font-bold uppercase tracking-[0.32em] text-wellness-gold">
+              <p className="text-[0.6rem] font-bold uppercase tracking-[0.32em] text-wellness-glow">
                 YogaWomans
               </p>
               {streakDays > 0 && (
@@ -82,7 +82,7 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title }) 
                 </span>
               )}
             </div>
-            <p className="text-sm font-bold text-wellness-dark leading-tight mt-0.5">
+            <p className="text-sm font-bold text-white leading-tight mt-0.5">
               {title || dynamicGreeting}
             </p>
           </div>
@@ -115,7 +115,7 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title }) 
             <button
               type="button"
               onClick={() => navigate("/dashboard")}
-              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-wellness-dark text-white shadow-liftSm transition hover:-translate-y-0.5 hover:bg-black hover:shadow-card md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-wellness-glow shadow-liftSm border border-white/10 transition hover:-translate-y-0.5 hover:bg-white/20 hover:shadow-card md:hidden"
               aria-label="Resume Journey"
             >
               <Play fill="currentColor" size={14} className="ml-0.5" />

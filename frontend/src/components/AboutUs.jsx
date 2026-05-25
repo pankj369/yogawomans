@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import CountUp from "react-countup";
 import sacredimage from "../assets/images/sacredimage.png";
+import ScrollReveal from "./ui/animations/ScrollReveal";
+import StaggerGroup from "./ui/animations/StaggerGroup";
 
 const stats = [
   { icon: "🧘", end: 10000, suffix: "+", label: "Students" },
@@ -41,14 +43,6 @@ if (!document.head.querySelector("[data-yoga-about]")) {
   s.textContent = `
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Lato:wght@300;400;700&display=swap');
 
-    @keyframes yoga-fadeUp {
-      from { opacity: 0; transform: translateY(28px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes yoga-scaleIn {
-      from { opacity: 0; transform: scale(0.88); }
-      to   { opacity: 1; transform: scale(1); }
-    }
     @keyframes yoga-floatOrb {
       0%, 100% { transform: translateY(0px) scale(1); }
       50%       { transform: translateY(-18px) scale(1.04); }
@@ -56,10 +50,6 @@ if (!document.head.querySelector("[data-yoga-about]")) {
     @keyframes yoga-rotateLotus {
       from { transform: rotate(0deg); }
       to   { transform: rotate(360deg); }
-    }
-    @keyframes yoga-countUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
     }
     @keyframes yoga-floatingImage {
       0%, 100% { transform: translateY(0px); }
@@ -465,21 +455,6 @@ if (!document.head.querySelector("[data-yoga-about]")) {
       background: linear-gradient(90deg, transparent, rgba(46,125,50,0.3), transparent);
     }
 
-    /* ---------- Animations on mount ---------- */
-    .yoga-anim-left {
-      animation: yoga-fadeUp 0.7s ease both;
-    }
-    .yoga-anim-right {
-      animation: yoga-scaleIn 0.7s 0.2s ease both;
-    }
-    .yoga-anim-stat {
-      animation: yoga-countUp 0.5s ease both;
-    }
-    .yoga-anim-stat:nth-child(1) { animation-delay: 0.1s; }
-    .yoga-anim-stat:nth-child(2) { animation-delay: 0.2s; }
-    .yoga-anim-stat:nth-child(3) { animation-delay: 0.3s; }
-    .yoga-anim-stat:nth-child(4) { animation-delay: 0.4s; }
-
     /* ---------- Responsive ---------- */
     @media (max-width: 768px) {
       .yoga-about-section {
@@ -505,18 +480,8 @@ if (!document.head.querySelector("[data-yoga-about]")) {
 }
 
 export default function AboutUs() {
-  const [visible, setVisible] = useState(false);
   const [scrollOffset, setScrollOffset] = useState(0);
   const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.15 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -539,28 +504,28 @@ export default function AboutUs() {
       <div className="yoga-about-inner">
 
         {/* ── LEFT ── */}
-        <div className={`yoga-left ${visible ? "yoga-anim-left" : ""}`}
-             style={{ opacity: visible ? 1 : 0 }}>
+        <div className="yoga-left">
+          <ScrollReveal>
+            <div className="yoga-badge">
+              <span>🌿</span> Who We Are
+            </div>
 
-          <div className="yoga-badge">
-            <span>🌿</span> Who We Are
-          </div>
+            <h2 className="yoga-heading">
+              Ancient <span className="accent-orange">Wisdom,</span>
+              <br />
+              Modern <span className="accent-green">Wellness</span>
+            </h2>
 
-          <h2 className="yoga-heading">
-            Ancient <span className="accent-orange">Wisdom,</span>
-            <br />
-            Modern <span className="accent-green">Wellness</span>
-          </h2>
-
-          <p className="yoga-desc">
-            At YOGAWOMANS, we believe that true wellness begins from within.
-            Founded on the timeless principles of yoga, we bring together
-            expert instructors, personalized programs, and a supportive
-            community to help you transform your mind, body, and soul.
-          </p>
+            <p className="yoga-desc">
+              At YOGAWOMANS, we believe that true wellness begins from within.
+              Founded on the timeless principles of yoga, we bring together
+              expert instructors, personalized programs, and a supportive
+              community to help you transform your mind, body, and soul.
+            </p>
+          </ScrollReveal>
 
           {/* Feature pills */}
-          <div className="yoga-features">
+          <StaggerGroup className="yoga-features" staggerDelay={0.15}>
             {features.map((f) => (
               <div className="yoga-feature-pill" key={f.title}>
                 <span className="yoga-pill-icon" aria-hidden="true">{f.icon}</span>
@@ -570,56 +535,62 @@ export default function AboutUs() {
                 </div>
               </div>
             ))}
-          </div>
+          </StaggerGroup>
 
-          <Link to="/auth" className="yoga-cta-btn" style={{display: 'inline-block'}}>
-            Discover Our Story
-            <span className="arrow" aria-hidden="true">→</span>
-          </Link>
+          <ScrollReveal delay={0.3}>
+            <Link to="/auth" className="yoga-cta-btn" style={{display: 'inline-block'}}>
+              Discover Our Story
+              <span className="arrow" aria-hidden="true">→</span>
+            </Link>
 
-          <div className="yoga-trust-grid">
-            {trustBadges.map((badge) => (
-              <div className="yoga-trust-badge" key={badge.label}>
-                <span aria-hidden="true">{badge.icon}</span>
-                <span>{badge.label}</span>
-              </div>
-            ))}
-          </div>
+            <div className="yoga-trust-grid">
+              {trustBadges.map((badge) => (
+                <div className="yoga-trust-badge" key={badge.label}>
+                  <span aria-hidden="true">{badge.icon}</span>
+                  <span>{badge.label}</span>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
         </div>
 
         {/* ── RIGHT ── */}
-        <div className={`yoga-right ${visible ? "yoga-anim-right" : ""}`}
-             style={{ opacity: visible ? 1 : 0 }}>
+        <div className="yoga-right">
+          <ScrollReveal direction="left" delay={0.2}>
+            <div className="yoga-image-panel"
+                 style={{ transform: `translateY(${scrollOffset}px)` }}>
+              <div className="yoga-image-glow" aria-hidden="true" />
+              <img
+                src={sacredimage}
+                alt="Yoga woman practicing wellness"
+                className="yoga-yoga-image"
+              />
+              <div className="yoga-image-label">Sacred Flow</div>
+            </div>
+          </ScrollReveal>
 
-          <div className="yoga-image-panel"
-               style={{ transform: `translateY(${scrollOffset}px)` }}>
-            <div className="yoga-image-glow" aria-hidden="true" />
-            <img
-              src={sacredimage}
-              alt="Yoga woman practicing wellness"
-              className="yoga-yoga-image"
-            />
-            <div className="yoga-image-label">Sacred Flow</div>
-          </div>
-
-          <div className="yoga-visual-card">
-            <div className="yoga-quote-icon" aria-hidden="true">“</div>
-            <p className="yoga-quote">
-              "Yoga is not about touching your toes.<br />
-              It's about what you learn on the way down."
-            </p>
-            <p className="yoga-quote-attr">— Jigar Gor</p>
-            <div className="yoga-quote-lotus" aria-hidden="true">🪷</div>
-          </div>
+          <ScrollReveal direction="up" delay={0.3}>
+            <div className="yoga-visual-card">
+              <div className="yoga-quote-icon" aria-hidden="true">“</div>
+              <p className="yoga-quote">
+                "Yoga is not about touching your toes.<br />
+                It's about what you learn on the way down."
+              </p>
+              <p className="yoga-quote-attr">— Jigar Gor</p>
+              <div className="yoga-quote-lotus" aria-hidden="true">🪷</div>
+            </div>
+          </ScrollReveal>
         </div>
       </div>
 
       {/* Bottom decorative divider */}
-      <div className="yoga-section-divider" aria-hidden="true">
-        <div className="yoga-div-line" />
-        <span style={{ fontSize: 20 }}>🪷</span>
-        <div className="yoga-div-line" />
-      </div>
+      <ScrollReveal delay={0.4}>
+        <div className="yoga-section-divider" aria-hidden="true">
+          <div className="yoga-div-line" />
+          <span style={{ fontSize: 20 }}>🪷</span>
+          <div className="yoga-div-line" />
+        </div>
+      </ScrollReveal>
     </section>
   );
 }

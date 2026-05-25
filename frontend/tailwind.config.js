@@ -17,23 +17,30 @@ module.exports = {
         darkText: "#2C2C2C",
         grayText: "#555555",
 
-        // --- Premium Wellness Design System ---
+        // --- Premium Wellness Design System (OFFICIAL PALETTE) ---
         wellness: {
-          cream:      "#F7F3EE",
-          softcream:  "#EFE7DC",
-          green:      "#2F6B3B",
-          sage:       "#8FA68E",
-          gold:       "#A37E58", // Richer bronze-gold for improved contrast/readability
-          orange:     "#E27229", // Calming terracotta sunset
-          dark:       "#1D1D1D",
-          muted:      "#6E6A66",
-          // Derived shades
-          greenDark:  "#2D6338",
-          greenLight: "#eff7ea",
+          bg:         "#F7F3EC", // BACKGROUND IVORY
+          sand:       "#EDE4D6", // SOFT SAND
+          green:      "#1E7A46", // PRIMARY ACCENT
+          dark:       "#0F2E1D", // PRIMARY DARK
+          glow:       "#00E676", // PREMIUM GLOW
+          orange:     "#E9781F", // SPIRITUAL ORANGE
+          black:      "#0A0A0A", // LUXURY BLACK
+          text:       "#1E1E1E", // TEXT PRIMARY
+          muted:      "#7A7A7A", // TEXT SECONDARY
+          glass:      "rgba(255,255,255,0.08)", // GLASS SURFACE
+
+          // Legacy maps to prevent layout breaks
+          cream:      "#F7F3EC",
+          softcream:  "#EDE4D6",
+          sage:       "#1E7A46",
+          gold:       "#E9781F",
+          greenDark:  "#0F2E1D",
+          greenLight: "rgba(0, 230, 118, 0.15)", // Subtle neon glow for backgrounds
           orangeDeep: "#c55716",
-          cream2:     "#fdf8f1",
-          warm:       "#f7ead7",
-          border:     "rgba(210,190,165,0.25)", // Extremely soft border
+          cream2:     "#F7F3EC",
+          warm:       "#EDE4D6",
+          border:     "rgba(255,255,255,0.1)", // Elegant glass border
         },
       },
 
@@ -50,9 +57,9 @@ module.exports = {
         // wellness design system
         glass:    "0 30px 80px rgba(0, 0, 0, 0.04)", // Soft immersive shadow
         card:     "0 20px 40px rgba(0, 0, 0, 0.03)", // Very diffuse card shadow
-        glow2:    "0 16px 35px rgba(226, 114, 41, 0.12)", // Calmed glow
+        glow2:    "0 16px 35px rgba(0, 230, 118, 0.15)", // Premium Emerald Glow
         sidebar:  "4px 0 40px rgba(0, 0, 0, 0.02)",
-        navitem:  "0 14px 30px rgba(226, 114, 41, 0.06)",
+        navitem:  "0 14px 30px rgba(0, 230, 118, 0.08)",
         liftSm:   "0 12px 30px rgba(0, 0, 0, 0.025)",
         heroCard: "0 30px 90px rgba(0, 0, 0, 0.05)",
       },
@@ -63,19 +70,19 @@ module.exports = {
           "linear-gradient(120deg, rgba(26,107,175,0.3), rgba(232,101,26,0.2), rgba(46,125,50,0.2))",
         // wellness system
         "wellness-bg":
-          "radial-gradient(circle at top left, rgba(226,114,41,0.06) 0%, transparent 32%), " +
-          "radial-gradient(circle at top right, rgba(47,107,59,0.06) 0%, transparent 28%), " +
-          "linear-gradient(180deg, #F7F3EE 0%, #f8f1e8 52%, #eef6ea 100%)",
+          "radial-gradient(circle at top left, rgba(233,120,31,0.04) 0%, transparent 32%), " + // Spiritual Orange
+          "radial-gradient(circle at top right, rgba(0,230,118,0.04) 0%, transparent 28%), " + // Premium Glow
+          "linear-gradient(180deg, #F7F3EC 0%, #EDE4D6 52%, #F7F3EC 100%)", // Ivory to Sand
         "sidebar-bg":
-          "linear-gradient(180deg, rgba(252, 250, 247, 0.85) 0%, rgba(247, 243, 238, 0.85) 100%)",
+          "linear-gradient(180deg, rgba(247, 243, 236, 0.85) 0%, rgba(237, 228, 214, 0.85) 100%)",
         "hero-overlay":
-          "linear-gradient(110deg, rgba(245,220,192,0.85) 0%, rgba(247,232,213,0.75) 34%, rgba(255,255,255,0.3) 100%)",
+          "linear-gradient(110deg, rgba(247,243,236,0.85) 0%, rgba(237,228,214,0.75) 34%, rgba(255,255,255,0.3) 100%)",
         "btn-primary":
-          "linear-gradient(135deg, #E27229 0%, #EC9558 100%)",
+          "linear-gradient(135deg, #1E7A46 0%, #00E676 100%)", // Forest Green to Emerald Glow
         "btn-healing":
-          "linear-gradient(135deg, #2D6338 0%, #3D854B 100%)",
+          "linear-gradient(135deg, #0F2E1D 0%, #1E7A46 100%)", // Primary Dark to Accent
         "card-gradient":
-          "linear-gradient(160deg, rgba(255,255,255,0.92), rgba(247,232,213,0.82))",
+          "linear-gradient(160deg, rgba(255,255,255,0.92), rgba(247,243,236,0.82))",
         "sidebar-item-active":
           "linear-gradient(135deg, rgba(255,255,255,1), rgba(255,255,255,0.95))",
       },

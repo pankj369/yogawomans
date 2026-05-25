@@ -17,7 +17,7 @@ export default function WhyYoga() {
     >
       {/* Soft glow circle */}
       <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-wellness-orange/20 blur-[80px] transition-opacity duration-700 hover:opacity-75" />
-      <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-wellness-greenLight/20 blur-[80px] transition-opacity duration-700 hover:opacity-75" />
+      <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-wellness-glow/20 blur-[80px] transition-opacity duration-700 hover:opacity-75" />
 
       <div className="relative z-10">
         <motion.div 
@@ -61,7 +61,7 @@ export default function WhyYoga() {
               <benefit.icon size={20} />
             </div>
             <div>
-              <h4 className="font-bold text-white group-hover:text-wellness-orangeLight transition-colors duration-300">{benefit.title}</h4>
+              <h4 className="font-bold text-white group-hover:text-wellness-glow transition-colors duration-300">{benefit.title}</h4>
               <p className="mt-1 text-xs sm:text-sm text-white/60 leading-relaxed font-medium">{benefit.desc}</p>
             </div>
           </motion.div>

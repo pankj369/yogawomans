@@ -1,61 +1,86 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles, Smile, Heart, Menu } from "lucide-react";
 
 import heroImage from "../assets/images/hero1.png";
 import hero2 from "../assets/images/hero2.png";
+import AmbientGlow from "./ui/animations/AmbientGlow";
+import MagneticButton from "./ui/animations/MagneticButton";
+
+const textVariants = {
+  hidden: { opacity: 0, filter: "blur(10px)", y: 30 },
+  visible: (i) => ({
+    opacity: 1,
+    filter: "blur(0px)",
+    y: 0,
+    transition: {
+      delay: i * 0.15,
+      duration: 1,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+};
 
 function Hero() {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 1000], [0, 300]);
+  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
+
   return (
     <>
       {/* ========================================================= */}
       {/* 1. DESKTOP HERO SECTION                                    */}
       {/* ========================================================= */}
-      <section id="home" className="relative hidden min-h-screen overflow-hidden md:block">
-        {/* Background Image */}
-        <img
-          src={heroImage}
-          alt="Yoga Hero Desktop"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+      <section id="home" className="relative hidden min-h-screen overflow-hidden md:block bg-[#050505]">
+        {/* Parallax Background Image */}
+        <motion.div style={{ y, opacity }} className="absolute inset-0 h-full w-full">
+          <img
+            src={heroImage}
+            alt="Yoga Hero Desktop"
+            className="h-full w-full object-cover"
+          />
+          {/* Enhanced Cinematic Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-wellness-black via-transparent to-transparent opacity-90" />
+          <div className="absolute inset-0 bg-black/20" />
+        </motion.div>
 
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-black/10" />
+        {/* Ambient Floating Glows */}
+        <AmbientGlow color="rgba(0, 230, 118, 0.12)" size="60vw" top="-10%" right="-10%" />
+        <AmbientGlow color="rgba(233, 120, 31, 0.08)" size="50vw" bottom="10%" left="-10%" />
 
         {/* Content */}
-        <div className="relative z-10 flex min-h-screen flex-col justify-between px-10 pt-36 lg:px-16">
+        <div className="relative z-10 flex min-h-screen flex-col justify-between px-10 pt-36 lg:px-16 pb-12">
           {/* TEXT CONTENT */}
           <div className="max-w-[700px]">
-            {/* Heading (Updated to Match the Bold Impact Screenshot Style) */}
+            {/* Heading with Staggered Typography */}
             <motion.h1
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              initial="hidden"
+              animate="visible"
               className="
                 font-sans
                 font-extrabold 
                 tracking-tight 
                 leading-[1.1] 
-                drop-shadow-[0_8px_24px_rgba(0,0,0,0.15)] 
+                drop-shadow-[0_8px_24px_rgba(0,0,0,0.3)] 
                 text-5xl md:text-6xl lg:text-[5.5rem] xl:text-[6rem]
               "
             >
-              <span className="block text-wellness-orange [-webkit-text-stroke:1px_white]">
+              <motion.span custom={0} variants={textVariants} className="block text-wellness-orange [-webkit-text-stroke:1px_white]">
                 Find Balance.
-              </span>
-              <span className="block text-[#FAF8F5] [-webkit-text-stroke:1px_white]">
+              </motion.span>
+              <motion.span custom={1} variants={textVariants} className="block text-[#FAF8F5] [-webkit-text-stroke:1px_white]">
                 Inner Peace.
-              </span>
-              <span className="block text-wellness-green [-webkit-text-stroke:1px_white]">
+              </motion.span>
+              <motion.span custom={2} variants={textVariants} className="block text-wellness-green [-webkit-text-stroke:1px_white]">
                 Better You.
-              </span>
+              </motion.span>
             </motion.h1>
 
             {/* Paragraph */}
             <motion.p
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              initial={{ opacity: 0, filter: "blur(5px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
               className="mt-6 max-w-xl text-lg leading-relaxed text-white/90 drop-shadow-md"
             >
               Yoga and meditation for a healthier body, calmer mind, and happier life.
@@ -63,51 +88,50 @@ function Hero() {
 
             {/* Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 18 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.35 }}
+              transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
               className="mt-8 flex items-center gap-4"
             >
-              <motion.div whileTap={{ scale: 0.95 }}>
-                <Link
-                  to="/physicalHealth"
-                  className="btn-wellness-primary shadow-2xl"
-                >
+              <Link to="/physicalHealth">
+                <MagneticButton className="btn-wellness-primary shadow-[0_0_30px_rgba(30,122,70,0.4)] border border-wellness-glow/30 px-8 py-3.5 text-sm uppercase tracking-widest text-white backdrop-blur-md rounded-full bg-wellness-green">
                   Physical Health
-                </Link>
-              </motion.div>
+                </MagneticButton>
+              </Link>
 
-              <motion.div whileTap={{ scale: 0.95 }}>
-                <Link
-                  to="/mentalHealth"
-                  className="btn-wellness-secondary border-none bg-white/10 text-white backdrop-blur-md hover:bg-white hover:text-wellness-dark shadow-2xl"
-                >
+              <Link to="/mentalHealth">
+                <MagneticButton glowColor="rgba(255,255,255,0.2)" className="btn-wellness-secondary shadow-[0_0_30px_rgba(255,255,255,0.05)] border border-white/20 px-8 py-3.5 text-sm uppercase tracking-widest text-white backdrop-blur-md rounded-full bg-white/5 hover:bg-white/10 transition-colors">
                   Mental Health
-                </Link>
-              </motion.div>
+                </MagneticButton>
+              </Link>
             </motion.div>
           </div>
 
           {/* Bottom Strip */}
-          <div className="relative overflow-hidden border-t border-white/20 py-3">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 1 }}
+            className="relative overflow-hidden border-t border-white/10 pt-4"
+          >
             <div className="animate-marquee flex min-w-max items-center gap-10">
-              <span className="font-sans text-xs font-bold uppercase tracking-[0.3em] text-[#E25C1D]">
+              <span className="font-sans text-[0.65rem] font-bold uppercase tracking-[0.4em] text-wellness-orange">
                 Surya Namaskar Classes
               </span>
-              <span className="font-sans text-xs font-bold uppercase tracking-[0.3em] text-[#237A3B]">
+              <span className="font-sans text-[0.65rem] font-bold uppercase tracking-[0.4em] text-wellness-green">
                 Spiritual Wellness Journey
               </span>
-              <span className="font-sans text-xs font-bold uppercase tracking-[0.3em] text-[#E25C1D]">
+              <span className="font-sans text-[0.65rem] font-bold uppercase tracking-[0.4em] text-wellness-orange">
                 Sacred Flow
               </span>
-              <span className="font-sans text-xs font-bold uppercase tracking-[0.3em] text-[#237A3B]">
+              <span className="font-sans text-[0.65rem] font-bold uppercase tracking-[0.4em] text-wellness-green">
                 Breath • Balance • Harmony
               </span>
-              <span className="font-sans text-xs font-bold uppercase tracking-[0.3em] text-sky-400">
+              <span className="font-sans text-[0.65rem] font-bold uppercase tracking-[0.4em] text-wellness-glow">
                 Mindfulness & Meditation
               </span>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -203,10 +227,10 @@ function Hero() {
             <motion.div whileTap={{ scale: 0.95 }}>
               <Link
                 to="/physicalHealth"
-                className="group flex w-full items-center justify-between rounded-full border border-orange-400/30 bg-gradient-to-r from-[#E25C1D]/80 to-amber-600/70 p-1.5 pr-6 font-sans text-sm font-semibold text-white shadow-[0_8px_32px_rgba(226,92,29,0.2)] backdrop-blur-md transition-all duration-300 active:scale-95"
+                className="group flex w-full items-center justify-between rounded-full border border-wellness-orange/30 bg-gradient-to-r from-wellness-orange/80 to-amber-600/70 p-1.5 pr-6 font-sans text-sm font-semibold text-white shadow-[0_8px_32px_rgba(233,120,31,0.2)] backdrop-blur-md transition-all duration-300 active:scale-95"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#E25C1D] shadow-inner">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-wellness-orange shadow-inner">
                     <Sparkles size={18} />
                   </div>
                   <span className="tracking-wide">Physical Health</span>
@@ -219,10 +243,10 @@ function Hero() {
             <motion.div whileTap={{ scale: 0.95 }}>
               <Link
                 to="/mentalHealth"
-                className="group flex w-full items-center justify-between rounded-full border border-emerald-500/30 bg-gradient-to-r from-[#237A3B]/70 to-teal-800/60 p-1.5 pr-6 font-sans text-sm font-semibold text-white shadow-[0_8px_32px_rgba(35,122,59,0.15)] backdrop-blur-md transition-all duration-300 active:scale-95"
+                className="group flex w-full items-center justify-between rounded-full border border-wellness-green/30 bg-gradient-to-r from-wellness-green/70 to-teal-800/60 p-1.5 pr-6 font-sans text-sm font-semibold text-white shadow-[0_8px_32px_rgba(30,122,70,0.15)] backdrop-blur-md transition-all duration-300 active:scale-95"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#237A3B] shadow-inner">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-wellness-green shadow-inner">
                     <Smile size={18} />
                   </div>
                   <span className="tracking-wide">Mental Health</span>

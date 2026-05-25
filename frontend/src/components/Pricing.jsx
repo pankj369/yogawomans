@@ -1,6 +1,8 @@
 // src/components/Pricing.jsx
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import ScrollReveal from "./ui/animations/ScrollReveal";
+import StaggerGroup from "./ui/animations/StaggerGroup";
 
 const plans = [
   {
@@ -75,10 +77,6 @@ if (!document.head.querySelector("[data-pricing]")) {
   const s = document.createElement("style");
   s.setAttribute("data-pricing", "true");
   s.textContent = `
-    @keyframes pr-up {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
     @keyframes pr-badge-pulse {
       0%, 100% { transform: scale(1); }
       50%       { transform: scale(1.06); }
@@ -93,7 +91,7 @@ if (!document.head.querySelector("[data-pricing]")) {
     }
     .pr-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
 
-    .pr-header { text-align: center; margin-bottom: 48px; animation: pr-up 0.6s ease both; }
+    .pr-header { text-align: center; margin-bottom: 48px; }
     .pr-badge {
       display: inline-flex; align-items: center; gap: 8px;
       background: rgba(46,125,50,0.09); color: #2E7D32;
@@ -137,12 +135,8 @@ if (!document.head.querySelector("[data-pricing]")) {
       border-radius: 24px; padding: 36px 28px;
       backdrop-filter: blur(24px); box-shadow: 0 14px 35px rgba(0,0,0,0.03);
       transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-      animation: pr-up 0.6s ease both;
       position: relative; overflow: hidden;
     }
-    .pr-card:nth-child(1) { animation-delay: 0.1s; }
-    .pr-card:nth-child(2) { animation-delay: 0.2s; }
-    .pr-card:nth-child(3) { animation-delay: 0.3s; }
     .pr-card.popular {
       border-color: rgba(226,114,41,0.4);
       box-shadow: 0 20px 60px rgba(226,114,41,0.08);
@@ -197,7 +191,6 @@ if (!document.head.querySelector("[data-pricing]")) {
     .pr-footer-note {
       text-align: center; margin-top: 40px;
       font-size: 13px; color: #aaa;
-      animation: pr-up 0.6s 0.5s ease both;
     }
 
     @media (max-width: 900px) {
@@ -215,25 +208,27 @@ export default function Pricing() {
   return (
     <section className="pr-section">
       <div className="pr-inner">
-        <div className="pr-header">
-          <div className="pr-badge">💎 Simple Pricing</div>
-          <h2 className="pr-title">Choose Your <span className="ot">Path</span></h2>
-          <p className="pr-subtitle">
-            Transparent pricing. No hidden fees. Cancel anytime. Start your free 7-day trial on any plan.
-          </p>
-          <div className="pr-toggle-wrap">
-            <span className={`pr-toggle-label ${!yearly ? "active" : ""}`}>Monthly</span>
-            <button className="pr-toggle" onClick={() => setYearly(!yearly)} type="button" aria-label="Toggle billing">
-              <div className={`pr-toggle-thumb ${yearly ? "yearly" : ""}`} />
-            </button>
-            <span className={`pr-toggle-label ${yearly ? "active" : ""}`}>Yearly</span>
-            <span className="pr-save-badge">Save 20%</span>
+        <ScrollReveal>
+          <div className="pr-header">
+            <div className="pr-badge">💎 Simple Pricing</div>
+            <h2 className="pr-title">Choose Your <span className="ot">Path</span></h2>
+            <p className="pr-subtitle">
+              Transparent pricing. No hidden fees. Cancel anytime. Start your free 7-day trial on any plan.
+            </p>
+            <div className="pr-toggle-wrap">
+              <span className={`pr-toggle-label ${!yearly ? "active" : ""}`}>Monthly</span>
+              <button className="pr-toggle" onClick={() => setYearly(!yearly)} type="button" aria-label="Toggle billing">
+                <div className={`pr-toggle-thumb ${yearly ? "yearly" : ""}`} />
+              </button>
+              <span className={`pr-toggle-label ${yearly ? "active" : ""}`}>Yearly</span>
+              <span className="pr-save-badge">Save 20%</span>
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
-        <div className="pr-grid">
+        <StaggerGroup className="pr-grid" staggerDelay={0.15}>
           {plans.map((plan) => (
-            <div className={`pr-card ${plan.popular ? "popular" : ""}`} key={plan.name}>
+            <div className={`pr-card ${plan.popular ? "popular" : ""} h-full flex flex-col`} key={plan.name}>
               {plan.popular && <div className="pr-popular-ribbon">Most Popular</div>}
               <div className="pr-plan-emoji">{plan.emoji}</div>
               <h3 className="pr-plan-name">{plan.name}</h3>
@@ -247,7 +242,7 @@ export default function Pricing() {
                 {yearly ? "Billed annually" : "Billed monthly"}
               </p>
               <div className="pr-divider" />
-              <ul className="pr-features">
+              <ul className="pr-features flex-1">
                 {plan.features.map((f) => (
                   <li className="pr-feat-item" key={f}>
                     <span className="pr-feat-icon">✅</span> {f}
@@ -261,18 +256,20 @@ export default function Pricing() {
               </ul>
               <Link
                 to="/auth"
-                className={`pr-cta-btn ${plan.popular ? "primary" : "secondary"}`}
+                className={`pr-cta-btn mt-auto text-center ${plan.popular ? "primary" : "secondary"}`}
                 style={{display: 'inline-block'}}
               >
                 {plan.cta}
               </Link>
             </div>
           ))}
-        </div>
+        </StaggerGroup>
 
-        <p className="pr-footer-note">
-          🔒 Secure payment · 7-day free trial · Cancel anytime · No credit card required to start
-        </p>
+        <ScrollReveal delay={0.4}>
+          <p className="pr-footer-note">
+            🔒 Secure payment · 7-day free trial · Cancel anytime · No credit card required to start
+          </p>
+        </ScrollReveal>
       </div>
     </section>
   );

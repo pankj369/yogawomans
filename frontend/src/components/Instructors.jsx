@@ -1,9 +1,9 @@
-// src/components/Instructors.jsx
-
 import priyaImg from "../assets/images/priya.png";
 import ananyaImg from "../assets/images/ananya.png";
 import meeraImg from "../assets/images/meera.png";
 import kavithaImg from "../assets/images/kavitha.png";
+import ScrollReveal from "./ui/animations/ScrollReveal";
+import StaggerGroup from "./ui/animations/StaggerGroup";
 
 const instructors = [
   {
@@ -58,19 +58,6 @@ if (!document.head.querySelector("[data-instructors]")) {
   s.setAttribute("data-instructors", "true");
 
   s.textContent = `
-  
-    @keyframes ins-up {
-      from {
-        opacity: 0;
-        transform: translateY(24px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     .ins-section{
       font-family:'Poppins',sans-serif;
       background:linear-gradient(180deg,#f6fbf3 0%,#ffffff 100%);
@@ -101,7 +88,6 @@ if (!document.head.querySelector("[data-instructors]")) {
     .ins-header{
       text-align:center;
       margin-bottom:56px;
-      animation:ins-up 0.6s ease both;
     }
 
     .ins-badge{
@@ -173,8 +159,6 @@ if (!document.head.querySelector("[data-instructors]")) {
       transform 0.32s ease,
       box-shadow 0.32s ease,
       border-color 0.32s ease;
-
-      animation:ins-up 0.6s ease both;
 
       position:relative;
       overflow:hidden;
@@ -296,30 +280,31 @@ export default function Instructors() {
       <div className="ins-inner">
 
         {/* HEADER */}
-        <div className="ins-header">
+        <ScrollReveal>
+          <div className="ins-header">
 
-          <div className="ins-badge">
-            🌸 Meet the Team
+            <div className="ins-badge">
+              🌸 Meet the Team
+            </div>
+
+            <h2 className="ins-title">
+              Learn From the <span className="ot">Best Guru</span>
+            </h2>
+
+            <p className="ins-subtitle">
+              Our certified instructors bring decades of experience,
+              compassion, and deep yogic knowledge to guide your transformation.
+            </p>
+
           </div>
-
-          <h2 className="ins-title">
-            Learn From the <span className="ot">Best Guru</span>
-          </h2>
-
-          <p className="ins-subtitle">
-            Our certified instructors bring decades of experience,
-            compassion, and deep yogic knowledge to guide your transformation.
-          </p>
-
-        </div>
+        </ScrollReveal>
 
         {/* GRID */}
-        <div className="ins-grid">
-
+        <StaggerGroup className="ins-grid" staggerDelay={0.15}>
           {instructors.map((ins) => (
 
             <div
-              className="ins-card"
+              className="ins-card h-full"
               key={ins.name}
               style={{ "--ins-accent": ins.color }}
             >
@@ -435,8 +420,7 @@ export default function Instructors() {
             </div>
 
           ))}
-
-        </div>
+        </StaggerGroup>
 
       </div>
 
