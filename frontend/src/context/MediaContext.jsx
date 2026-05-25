@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState, useCallback } f
 import { useAuth } from "./AuthContext";
 import { useProgress } from "../hooks/useProgress";
 import { usePlaylists } from "../hooks/usePlaylists";
+import { useSavedMedia } from "../hooks/useSavedMedia";
 
 const MediaContext = createContext(null);
 
@@ -31,14 +32,15 @@ export function MediaProvider({ children }) {
 
   // Backend Hooks
   const { continueWatching, saveProgress } = useProgress();
-  const { savedPlaylists, toggleFavorite, isSaved } = usePlaylists();
+  const { savedPlaylists } = usePlaylists();
+  const { toggleSavedMedia, isSaved, savedMedia } = useSavedMedia();
   
   // Local state for instant UI feedback before backend syncs
   const [localHistory, setLocalHistory] = useState([]);
   
   // We'll merge backend history and local optimistic history
   const watchHistory = continueWatching.length > 0 ? continueWatching : localHistory;
-  const bookmarks = savedPlaylists;
+  const bookmarks = savedMedia;
 
   const audioRef = useRef(null);
   const ambientRef = useRef(null);
@@ -383,7 +385,7 @@ export function MediaProvider({ children }) {
 
   // Bookmarking / Save features
   const toggleBookmark = (item) => {
-    toggleFavorite(item.id);
+    toggleSavedMedia(item.id);
   };
 
   const isBookmarked = (itemId) => {

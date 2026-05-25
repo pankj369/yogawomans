@@ -12,6 +12,27 @@ const initialState = {
   },
   recentActivity: [],      // Log of recent user actions (e.g., completed a phase)
   generatedHistory: [],    // Historical log of sessions
+  dashboardState: {
+    lastSessionId: "m1",
+    completedSessions: [],
+    sessionHistory: [],
+    completedRoutine: [],
+    favorites: [],
+    liveJoined: [],
+    meditationMinutes: 0,
+    yogaSessionsCompleted: 0,
+    streakDays: 0,
+    lastActiveDate: null,
+    wellnessScore: 0,
+    notificationsRead: [],
+    activePlan: "Basic",
+    settings: {
+      darkMode: false,
+      notifications: true,
+      language: "English",
+      privateProfile: true,
+    },
+  }
 };
 
 export const useWellnessStore = create(
@@ -59,6 +80,11 @@ export const useWellnessStore = create(
         wellnessPreferences: { ...state.wellnessPreferences, ...prefs }
       })),
 
+      // Dashboard Actions
+      setDashboardState: (updater) => set((state) => ({
+        dashboardState: typeof updater === "function" ? updater(state.dashboardState) : updater
+      })),
+
       // Reset
       resetStore: () => set(initialState)
     }),
@@ -71,10 +97,9 @@ export const useWellnessStore = create(
         wellnessPreferences: state.wellnessPreferences,
         recentActivity: state.recentActivity,
         generatedHistory: state.generatedHistory,
-        // We might choose NOT to persist activeSession if it should reset on reload,
-        // but persisting it allows seamless journey continuation. Let's persist it.
         activeSession: state.activeSession,
-        currentPlan: state.currentPlan
+        currentPlan: state.currentPlan,
+        dashboardState: state.dashboardState
       }),
     }
   )

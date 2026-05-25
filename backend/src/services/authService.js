@@ -12,41 +12,15 @@ class AuthService {
 
     const newUser = {
       uid,
+      username: username || email.split("@")[0],
       email,
-      fullName: username || email.split("@")[0],
-      onboarding: {
-        completed: false,
-        skipped: false,
-        completedAt: null,
-      },
-      preferences: {
-        wellnessGoal: "",
-        yogaStyle: "",
-        ambientSound: "",
-        notificationsEnabled: true,
-      },
-      premiumStatus: {
-        isPremium: false,
-        planType: "free",
-        expiresAt: null,
-      },
-      wellnessStats: {
-        currentStreak: 0,
-        longestStreak: 0,
-        totalSessions: 0,
-        totalMinutes: 0,
-        calmScore: 0,
-        lastActiveAt: new Date().toISOString(),
-      },
-      personalization: {
-        recommendedLevel: "beginner",
-        recentMood: "",
-        aiPersona: "calm",
-      },
-      dashboardState: {
-        continueJourneyPlanId: null,
-        activeSessionId: null,
-      },
+      avatar: "",
+      premiumStatus: false,
+      onboardingCompleted: false,
+      wellnessGoals: [],
+      preferences: {},
+      streak: 0,
+      calmScore: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -63,13 +37,14 @@ class AuthService {
       throw new AppError("User not found", 404);
     }
 
+    // Extract goals separately and keep the rest in preferences
+    const { goals, ...restPreferences } = preferences;
+
     const updates = {
-      "onboarding.completed": true,
-      "onboarding.completedAt": new Date().toISOString(),
-      "preferences.wellnessGoal": preferences.goal || "",
-      "preferences.yogaStyle": preferences.style || "",
-      "preferences.ambientSound": preferences.ambient || "",
-      "updatedAt": new Date().toISOString()
+      onboardingCompleted: true,
+      wellnessGoals: goals || [],
+      preferences: restPreferences || {},
+      updatedAt: new Date().toISOString()
     };
 
     await userRef.update(updates);

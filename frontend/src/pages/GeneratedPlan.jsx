@@ -275,19 +275,23 @@ export default function GeneratedPlan() {
         // Enrich plan for UI specifics
         const uiPlanData = {
           ...generatedAIPlan,
+          title: generatedAIPlan.title || category.label || "Wellness Journey",
           goal: goalId,
           duration: durationId,
           level: levelId,
-          summary: getEmotionalSummary(goalId),
+          emotionalSummary: getEmotionalSummary(goalId),
           sessionCount: generatedAIPlan.schedule?.length || 0,
           calmScore: 85,
-          phases: generatedAIPlan.schedule?.map(day => ({
+          generatedPhases: generatedAIPlan.schedule?.map((day, idx) => ({
+            id: `phase-${idx + 1}`,
             name: `Day ${day.day}: ${day.theme}`,
             description: day.theme,
             duration: day.sessions?.[0]?.durationMin ? `${day.sessions[0].durationMin} min` : "15 min",
             type: day.sessions?.[0]?.type || "Practice",
             items: day.sessions?.map(s => s.title) || []
-          }))
+          })) || [],
+          progress: 0,
+          completed: false,
         };
 
         setPlanData(uiPlanData);
@@ -473,7 +477,7 @@ export default function GeneratedPlan() {
                 <motion.div variants={itemVariants} className="hidden sm:block relative w-full">
                   <div className="absolute -left-4 -top-8 text-8xl font-serif text-[#EFE7DC]/50 leading-none">"</div>
                   <p className="relative z-10 px-4 text-xl font-light leading-relaxed text-[#3a4a3d] italic sm:text-2xl">
-                    {planData?.summary}
+                    {planData?.emotionalSummary}
                   </p>
                 </motion.div>
               </div>
@@ -481,14 +485,14 @@ export default function GeneratedPlan() {
               {/* ================= MIDDLE SECTION ================= */}
               <motion.div variants={itemVariants} className="mb-24">
                 <div className="relative border-y border-[#EFE7DC]/50 py-10 sm:py-16">
-                  {planData?.phases?.map((step, index) => (
+                  {planData?.generatedPhases?.map((step, index) => (
                     <TimelinePhase
-                      key={step.id}
+                      key={step.id || `phase-${index}`}
                       step={step}
                       index={index}
-                      isExpanded={expandedPhaseId === step.id}
-                      onToggle={() => setExpandedPhaseId(expandedPhaseId === step.id ? null : step.id)}
-                      isLast={index === planData.phases.length - 1}
+                      isExpanded={expandedPhaseId === (step.id || `phase-${index}`)}
+                      onToggle={() => setExpandedPhaseId(expandedPhaseId === (step.id || `phase-${index}`) ? null : (step.id || `phase-${index}`))}
+                      isLast={index === planData.generatedPhases.length - 1}
                     />
                   ))}
                 </div>

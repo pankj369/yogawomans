@@ -52,6 +52,36 @@ class MediaService {
     const docRef = await db.collection("media").add(mediaItem);
     return { id: docRef.id, ...mediaItem };
   }
+
+  /**
+   * Save a media item for a user (Favorite)
+   */
+  async saveMediaItem(userId, mediaId) {
+    const savedRef = db.collection("saved_media").doc(`${userId}_${mediaId}`);
+    const savedData = { userId, mediaId, savedAt: new Date().toISOString() };
+    await savedRef.set(savedData, { merge: true });
+    return savedData;
+  }
+
+  /**
+   * Unsave a media item for a user
+   */
+  async unsaveMediaItem(userId, mediaId) {
+    await db.collection("saved_media").doc(`${userId}_${mediaId}`).delete();
+    return true;
+  }
+
+  /**
+   * Get all saved media items for a user
+   */
+  async getSavedMediaItems(userId) {
+    const snapshot = await db.collection("saved_media")
+      .where("userId", "==", userId)
+      .orderBy("savedAt", "desc")
+      .get();
+    
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
 }
 
 export default new MediaService();

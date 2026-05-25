@@ -1,7 +1,7 @@
 import {
   Activity, BookOpen, Clock, Droplets, Feather, Headphones,
   Heart, Moon, Music, Sun, Wind, Zap, Users, Briefcase,
-  Bookmark, Edit3, Settings, Cpu, Radio, Lock, Sparkles
+  Bookmark, Edit3, Settings, Cpu, Radio, Lock, Sparkles, HeartPulse, Globe
 } from "lucide-react";
 
 import ananyaImg from "../assets/images/ananya.png";
@@ -36,6 +36,7 @@ export const dashboardMenuGroups = [
     group: "Main",
     items: [
       { label: "Dashboard",       path: "/dashboard",              icon: Activity  },
+      { label: "Health Metrics",  path: "/dashboard/metrics",      icon: HeartPulse },
       { label: "Physical Health", path: "/physicalHealth",     icon: Zap       },
       { label: "Mental Health",   path: "/mentalHealth",       icon: Briefcase },
     ],
@@ -43,6 +44,7 @@ export const dashboardMenuGroups = [
   {
     group: "Wellness",
     items: [
+      { label: "Yoga World",      path: "/dashboard/yoga-world",   icon: Globe     },
       { label: "Meditation",      path: "/dashboard/meditation",   icon: Moon      },
       { label: "Sleep",           path: "/dashboard/sleep",        icon: Moon       },
       { label: "Breathwork",      path: "/dashboard/breathwork",   icon: Wind      },

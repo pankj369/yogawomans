@@ -40,6 +40,21 @@ export default function AICoachSection() {
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
 
+  // Hydrate history from backend
+  useEffect(() => {
+    const loadHistory = async () => {
+      try {
+        const res = await apiClient.get("/coach/history");
+        if (res.data?.success && res.data.data?.length > 0) {
+          setMessages(res.data.data);
+        }
+      } catch (err) {
+        console.error("Failed to load coach history:", err);
+      }
+    };
+    loadHistory();
+  }, []);
+
   // Auto Scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

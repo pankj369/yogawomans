@@ -17,6 +17,7 @@ import {
 import {
   completeOnboarding,
 } from "../services/authService";
+import { getMyProfile } from "../services/userService";
 
 const stepVariants = {
   enter: (direction) => ({
@@ -200,9 +201,9 @@ useEffect(() => {
     setError("");
 
     const payload = {
-      goal: state.data.goals?.[0] || "",
+      goals: state.data.goals || [],
       style: state.data.yogaStyle || "",
-      ambient: "nature" // default or from state
+      ambient: state.data.ambient || "nature"
     };
 
     const response = await completeOnboarding(payload);

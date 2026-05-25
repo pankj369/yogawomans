@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, isConfigured } from "../config/firebase";
+import { auth } from "../config/firebase";
 import { readStorage, removeStorage, writeStorage } from "../utils/storage";
 import { loadProfileSetupState } from "../pages/profileSetupStorage";
-import { getCurrentUser } from "../services/authService";
+import { getCurrentUser, logoutUser } from "../services/authService";
 
 const AUTH_STORAGE_KEY = "yogawomans_auth_session";
 const AuthContext = createContext(null);
@@ -52,17 +52,6 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let isMounted = true;
 
-    if (!isConfigured) {
-      const profile = loadProfileSetupState();
-      setAuthState((current) => ({
-        ...current,
-        profileSetupComplete: profile.completed || current.profileSetupComplete || false,
-        profileSetupSkipped: profile.skipped || current.profileSetupSkipped || false,
-      }));
-      setInitialized(true);
-      return;
-    }
-
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!isMounted) return;
       
@@ -75,8 +64,8 @@ export function AuthProvider({ children }) {
             setBackendProfile(profileData);
             setAuthState((current) => ({
               ...current,
-              isPremium: profileData.premiumStatus?.isPremium || current.isPremium,
-              profileSetupComplete: profileData.onboarding?.completed || current.profileSetupComplete,
+              isPremium: profileData.premiumStatus || current.isPremium,
+              profileSetupComplete: profileData.onboardingCompleted || current.profileSetupComplete,
             }));
           }
         } catch (error) {
@@ -124,19 +113,12 @@ export function AuthProvider({ children }) {
       ...authState,
       rememberMe,
       profileSetupComplete:
-        payload.backendUser?.onboarding?.completed ?? payload.profileSetupComplete ?? profile.completed ?? authState.profileSetupComplete ?? false,
+        payload.backendUser?.onboardingCompleted ?? payload.profileSetupComplete ?? profile.completed ?? authState.profileSetupComplete ?? false,
       profileSetupSkipped:
         payload.profileSetupSkipped ?? profile.skipped ?? authState.profileSetupSkipped ?? false,
     };
-    if (!isConfigured) {
-      setFirebaseUser({
-        uid: payload.id || payload.email || "user-1",
-        email: payload.email,
-        displayName: payload.name || payload.email,
-      });
-    }
+    
     setAuthState(snapshot);
-    // If backend profile data is passed directly during login, sync it
     if (payload.backendUser) {
        setBackendProfile(payload.backendUser);
     }
@@ -144,28 +126,10 @@ export function AuthProvider({ children }) {
   };
 
   const register = (payload) => {
-    const profile = loadProfileSetupState();
-    const snapshot = {
-      ...authState,
-      rememberMe: Boolean(payload.rememberMe),
-      profileSetupComplete: payload.profileSetupComplete ?? profile.completed ?? false,
-      profileSetupSkipped: payload.profileSetupSkipped ?? profile.skipped ?? false,
-    };
-    if (!isConfigured) {
-      setFirebaseUser({
-        uid: payload.id || payload.email || "user-1",
-        email: payload.email,
-        displayName: payload.name || payload.email,
-      });
-    }
-    setAuthState(snapshot);
-    if (payload.backendUser) {
-       setBackendProfile(payload.backendUser);
-    }
-    return { ...snapshot, authenticated: true };
+    return login(payload);
   };
 
-  const logout = () => {
+  const logout = async () => {
     if (typeof window !== "undefined") {
       removeStorage(window.localStorage, AUTH_STORAGE_KEY);
       removeStorage(window.sessionStorage, AUTH_STORAGE_KEY);
@@ -176,8 +140,8 @@ export function AuthProvider({ children }) {
       profileSetupSkipped: false,
       isPremium: false,
     });
-    if (!isConfigured) setFirebaseUser(null);
     setBackendProfile(null);
+    await logoutUser();
   };
 
   const completeProfileSetup = (profileData) => {
@@ -219,13 +183,14 @@ export function AuthProvider({ children }) {
       ? {
           id: backendProfile?.uid || firebaseUser.uid,
           email: backendProfile?.email || firebaseUser.email,
-          name: backendProfile?.fullName || authState.profile?.fullName || firebaseUser.displayName || firebaseUser.email?.split("@")[0],
+          name: backendProfile?.username || authState.profile?.fullName || firebaseUser.displayName || firebaseUser.email?.split("@")[0],
           avatar: backendProfile?.avatar || authState.profile?.avatar || firebaseUser.photoURL || "",
           role: "member",
           premiumStatus: backendProfile?.premiumStatus || authState.isPremium,
-          wellnessStats: backendProfile?.wellnessStats || { currentStreak: 0, calmScore: 0, totalSessions: 0, totalMinutes: 0 },
+          wellnessStats: { currentStreak: backendProfile?.streak || 0, calmScore: backendProfile?.calmScore || 0 },
+          wellnessGoals: backendProfile?.wellnessGoals || [],
           preferences: backendProfile?.preferences || {},
-          onboardingCompleted: backendProfile?.onboarding?.completed || authState.profileSetupComplete || false,
+          onboardingCompleted: backendProfile?.onboardingCompleted || authState.profileSetupComplete || false,
         }
       : null;
 

@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { Sparkles, Play } from "lucide-react";
+import { Sparkles, Play, X } from "lucide-react";
 import { fadeUp } from "../../utils/animations";
 import { useRecommendations } from "../../hooks/useRecommendations";
 
 export default function AIRecommendations({ onSelect }) {
-  const { recommendations, loading } = useRecommendations();
+  const { recommendations, loading, dismissRecommendation } = useRecommendations();
 
   if (loading) {
     return (
@@ -45,6 +45,14 @@ export default function AIRecommendations({ onSelect }) {
             <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-wellness-greenLight text-wellness-green transition-transform group-hover:scale-110`}>
               <Play size={20} className="ml-1" />
             </div>
+
+            <button 
+              onClick={(e) => { e.stopPropagation(); dismissRecommendation(rec.id); }}
+              className="absolute top-4 right-4 rounded-full bg-white/50 p-2 text-[#8FA68E] hover:bg-white hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+              aria-label="Dismiss recommendation"
+            >
+              <X size={14} />
+            </button>
             
             <div className="flex items-center gap-2 mb-2">
               <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#11281d]">

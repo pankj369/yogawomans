@@ -23,36 +23,26 @@ export const updateProfile = asyncHandler(async (req, res, next) => {
   const userId = req.user.uid;
 
   const {
-    full_name,
     username,
     avatar,
-    phone,
-    age,
-    gender,
-    height,
-    weight,
-    wellness_goal,
-    experience_level,
-    preferred_yoga_style,
-    onboarding_completed,
-    isPremium, // Optional explicit triggers
+    wellnessGoals,
+    preferences,
+    onboardingCompleted,
+    premiumStatus,
+    streak,
+    calmScore,
   } = req.body;
 
   const updateData = {
-    full_name,
     username,
     avatar,
-    phone,
-    age,
-    gender,
-    height,
-    weight,
-    wellness_goal,
-    experience_level,
-    preferred_yoga_style,
-    onboarding_completed,
-    isPremium,
-    updated_at: new Date().toISOString(),
+    wellnessGoals,
+    preferences,
+    onboardingCompleted,
+    premiumStatus,
+    streak,
+    calmScore,
+    updatedAt: new Date().toISOString(),
   };
 
   // Remove undefined values

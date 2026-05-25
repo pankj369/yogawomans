@@ -11,3 +11,11 @@ export const unsavePlaylist = async (playlistId) => {
 export const getSavedPlaylists = async () => {
   return await apiClient.get("/playlists/saved");
 };
+
+export const createPlaylist = async (playlistData) => {
+  return await apiClient.post("/playlists", playlistData);
+};
+
+export const getUserPlaylists = async () => {
+  return await apiClient.get("/playlists/user");
+};

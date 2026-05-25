@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import apiClient from "../services/apiClient";
 import { useAuth } from "../context/AuthContext";
+import { sessionCatalog } from "../data/wellnessData";
 
 export function useRecommendations() {
   const { user } = useAuth();
@@ -21,7 +22,14 @@ export function useRecommendations() {
       setLoading(true);
       const res = await apiClient.get("/recommendations/dashboard");
       if (res?.data?.success) {
-        setRecommendations(res.data.data.recommendedSessions || []);
+        // Map backend recommendations to rich catalog data
+        const backendRecs = res.data.data.recommendedSessions || [];
+        const mappedRecs = backendRecs.map(rec => {
+          const catalogItem = sessionCatalog.find(item => item.id === rec.id);
+          return catalogItem ? { ...catalogItem, recommendationScore: rec.recommendationScore } : rec;
+        });
+
+        setRecommendations(mappedRecs);
         setInsights(res.data.data.insight || null);
       }
     } catch (err) {
@@ -36,11 +44,23 @@ export function useRecommendations() {
     fetchRecommendations();
   }, [fetchRecommendations]);
 
+  const dismissRecommendation = async (mediaId) => {
+    // Optimistic UI update
+    setRecommendations(prev => prev.filter(r => r.id !== mediaId));
+    try {
+      await apiClient.post(`/recommendations/dismiss/${mediaId}`);
+    } catch (err) {
+      console.error("Failed to dismiss recommendation:", err);
+      fetchRecommendations();
+    }
+  };
+
   return {
     recommendations,
     insights,
     loading,
     error,
+    dismissRecommendation,
     refreshRecommendations: fetchRecommendations,
   };
 }

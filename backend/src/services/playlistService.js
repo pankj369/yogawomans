@@ -65,6 +65,38 @@ class PlaylistService {
       playlist: playlistMap[item.playlistId] || null,
     }));
   }
+
+  /**
+   * Create a new custom playlist
+   */
+  async createPlaylist(userId, playlistData) {
+    const playlistRef = db.collection("playlists").doc();
+    const newPlaylist = {
+      id: playlistRef.id,
+      userId,
+      title: playlistData.title || "My Healing Collection",
+      description: playlistData.description || "",
+      mediaItems: playlistData.mediaItems || [],
+      category: playlistData.category || "custom",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      favorites: 0
+    };
+    await playlistRef.set(newPlaylist);
+    return newPlaylist;
+  }
+
+  /**
+   * Get all custom playlists created by a user
+   */
+  async getUserPlaylists(userId) {
+    const snapshot = await db.collection("playlists")
+      .where("userId", "==", userId)
+      .orderBy("createdAt", "desc")
+      .get();
+    
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
 }
 
 export default new PlaylistService();

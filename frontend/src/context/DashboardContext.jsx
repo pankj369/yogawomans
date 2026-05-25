@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import useLocalStorage from "../hooks/useLocalStorage";
+import { useWellnessStore } from "../stores/useWellnessStore";
 import {
   dashboardNotifications,
   dailyRoutine,
@@ -16,29 +16,8 @@ import { useWellnessStats } from "../hooks/useWellnessStats";
 import { useProgress } from "../hooks/useProgress";
 
 const DashboardContext = createContext(null);
-const DASHBOARD_STATE_KEY = "yogawomans_dashboard_state";
-
-const defaultDashboardState = {
-  lastSessionId: featuredSessions[0].id,
-  completedSessions: [],
-  sessionHistory: [], // { sessionId, timestamp, progress }
-  completedRoutine: [],
-  favorites: [],
-  liveJoined: [],
-  meditationMinutes: 220,
-  yogaSessionsCompleted: 18,
-  streakDays: 6,
-  lastActiveDate: new Date(Date.now() - 86400000).toLocaleDateString('en-CA'), // yesterday
-  wellnessScore: 84,
-  notificationsRead: [],
-  activePlan: "Basic",
-  settings: {
-    darkMode: false,
-    notifications: true,
-    language: "English",
-    privateProfile: true,
-  },
-};
+// Legacy DASHBOARD_STATE_KEY removed
+// defaultDashboardState migrated to useWellnessStore
 
 function buildRecommendationSeed(profile, dashboardState, backendGoals = []) {
   const goals = profile?.data?.goals || backendGoals || [];
@@ -70,7 +49,8 @@ export function DashboardProvider({ children }) {
   const { stats, logSession: logSessionApi, activityHistory } = useWellnessStats();
   const { continueWatching, saveProgress: saveProgressApi } = useProgress();
 
-  const [state, setState] = useLocalStorage(DASHBOARD_STATE_KEY, defaultDashboardState, "localStorage");
+  const state = useWellnessStore((s) => s.dashboardState);
+  const setState = useWellnessStore((s) => s.setDashboardState);
   const [modalSession, setModalSession] = useState(null);
   const [meetingClass, setMeetingClass] = useState(null);
 
@@ -84,12 +64,12 @@ export function DashboardProvider({ children }) {
   // Compute active favorites based on real backend data if available
   const activeFavorites = savedPlaylists.length > 0 
     ? savedPlaylists.map(p => p.playlistId) 
-    : state.favorites;
+    : (state.favorites || []);
 
   // Compute session history based on backend continueWatching if available
   const activeHistory = continueWatching.length > 0 
     ? continueWatching.map(cw => ({ sessionId: cw.mediaId, timestamp: cw.lastWatchedAt }))
-    : state.sessionHistory;
+    : (state.sessionHistory || []);
 
   // Determine last session
   let lastSessionId = state.lastSessionId;
@@ -111,19 +91,21 @@ export function DashboardProvider({ children }) {
     
     // Also keep local storage in sync as fallback
     setState((current) => {
-      const exists = current.favorites.includes(session.id);
+      const favorites = current.favorites || [];
+      const exists = favorites.includes(session.id);
       return {
         ...current,
         favorites: exists
-          ? current.favorites.filter((id) => id !== session.id)
-          : [...current.favorites, session.id],
+          ? favorites.filter((id) => id !== session.id)
+          : [...favorites, session.id],
       };
     });
   };
 
   const openSession = (session) => {
     setState((current) => {
-      const filteredHistory = current.sessionHistory ? current.sessionHistory.filter(h => h.sessionId !== session.id) : [];
+      const sessionHistory = current.sessionHistory || [];
+      const filteredHistory = sessionHistory.filter(h => h.sessionId !== session.id);
       return {
         ...current,
         lastSessionId: session.id,
@@ -144,12 +126,15 @@ export function DashboardProvider({ children }) {
 
     // 2. Keep local fallback in sync
     setState((current) => {
-      const completedSessions = current.completedSessions.includes(sessionId)
-        ? current.completedSessions
-        : [...current.completedSessions, sessionId];
+      const completedSessions = current.completedSessions || [];
+      const isAlreadyCompleted = completedSessions.includes(sessionId);
+      
+      const newCompletedSessions = isAlreadyCompleted
+        ? completedSessions
+        : [...completedSessions, sessionId];
 
       const todayStr = new Date().toLocaleDateString('en-CA');
-      let newStreak = current.streakDays;
+      let newStreak = current.streakDays || 0;
 
       if (!current.lastActiveDate) {
         newStreak = 1;
@@ -158,56 +143,65 @@ export function DashboardProvider({ children }) {
         const today = new Date(todayStr);
         const diffDays = Math.round((today - lastActive) / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 1) newStreak = current.streakDays + 1;
+        if (diffDays === 1) newStreak = (current.streakDays || 0) + 1;
         else newStreak = 1; 
       }
 
       return {
         ...current,
-        completedSessions,
-        meditationMinutes: current.meditationMinutes + (sessionType === 'meditation' ? minutes : 0),
-        yogaSessionsCompleted: current.yogaSessionsCompleted + (sessionType === 'yoga' ? 1 : 0),
+        completedSessions: newCompletedSessions,
+        meditationMinutes: (current.meditationMinutes || 0) + (sessionType === 'meditation' ? minutes : 0),
+        yogaSessionsCompleted: (current.yogaSessionsCompleted || 0) + (sessionType === 'yoga' ? 1 : 0),
         streakDays: Math.min(newStreak, 30),
         lastActiveDate: todayStr,
-        wellnessScore: Math.min(current.wellnessScore + 1, 100),
+        wellnessScore: Math.min((current.wellnessScore || 0) + 1, 100),
       };
     });
   };
 
   const completeRoutine = (routineId) => {
-    setState((current) => ({
-      ...current,
-      completedRoutine: current.completedRoutine.includes(routineId)
-        ? current.completedRoutine
-        : [...current.completedRoutine, routineId],
-      wellnessScore: Math.min(current.wellnessScore + 0.5, 100),
-    }));
+    setState((current) => {
+      const completedRoutine = current.completedRoutine || [];
+      return {
+        ...current,
+        completedRoutine: completedRoutine.includes(routineId)
+          ? completedRoutine
+          : [...completedRoutine, routineId],
+        wellnessScore: Math.min((current.wellnessScore || 0) + 0.5, 100),
+      };
+    });
   };
 
   const joinClass = (liveClass) => {
-    setState((current) => ({
-      ...current,
-      liveJoined: current.liveJoined.includes(liveClass.id)
-        ? current.liveJoined
-        : [...current.liveJoined, liveClass.id],
-    }));
+    setState((current) => {
+      const liveJoined = current.liveJoined || [];
+      return {
+        ...current,
+        liveJoined: liveJoined.includes(liveClass.id)
+          ? liveJoined
+          : [...liveJoined, liveClass.id],
+      };
+    });
     setMeetingClass(liveClass);
   };
 
   const markNotificationRead = (id) => {
-    setState((current) => ({
-      ...current,
-      notificationsRead: current.notificationsRead.includes(id)
-        ? current.notificationsRead
-        : [...current.notificationsRead, id],
-    }));
+    setState((current) => {
+      const notificationsRead = current.notificationsRead || [];
+      return {
+        ...current,
+        notificationsRead: notificationsRead.includes(id)
+          ? notificationsRead
+          : [...notificationsRead, id],
+      };
+    });
   };
 
   const updateSetting = (key, value) => {
     setState((current) => ({
       ...current,
       settings: {
-        ...current.settings,
+        ...(current.settings || {}),
         [key]: value,
       },
     }));
@@ -233,21 +227,41 @@ export function DashboardProvider({ children }) {
       .slice(0, 5);
   }, [activeHistory]);
 
-  const isReturningUser = activeStreak > 0 || state.completedSessions.length > 0;
+  const completedSessions = state.completedSessions || [];
+  const isReturningUser = activeStreak > 0 || completedSessions.length > 0;
 
+  const notificationsRead = state.notificationsRead || [];
   const unreadNotifications = dashboardNotifications.filter(
-    (item) => !state.notificationsRead.includes(item.id)
+    (item) => !notificationsRead.includes(item.id)
   );
 
   const dynamicInsights = useMemo(() => [
     { id: "streak", label: "Weekly streak", value: activeStreak, total: 7, color: "#E8651A", icon: Flame },
     { id: "meditation", label: "Meditation minutes", value: totalMeditation, total: 300, color: "#2E7D32", icon: Clock },
     { id: "sessions", label: "Yoga sessions completed", value: totalYoga, total: 25, color: "#1565C0", icon: Activity },
-    { id: "score", label: "Wellness score", value: Math.round(state.wellnessScore), total: 100, color: "#8a6a3c", icon: Sparkles },
+    { id: "score", label: "Wellness score", value: Math.round(state.wellnessScore || 0), total: 100, color: "#8a6a3c", icon: Sparkles },
   ], [activeStreak, totalMeditation, totalYoga, state.wellnessScore]);
 
   // Inject backend favorites into state for components that access it directly
-  const finalState = { ...state, favorites: activeFavorites };
+  const finalState = { 
+    ...state, 
+    favorites: activeFavorites,
+    notificationsRead: state.notificationsRead || [],
+    completedSessions: state.completedSessions || [],
+    completedRoutine: state.completedRoutine || [],
+    liveJoined: state.liveJoined || [],
+    sessionHistory: state.sessionHistory || [],
+    wellnessScore: state.wellnessScore || 0,
+    streakDays: state.streakDays || 0,
+    meditationMinutes: state.meditationMinutes || 0,
+    yogaSessionsCompleted: state.yogaSessionsCompleted || 0,
+    settings: state.settings || {
+      darkMode: false,
+      notifications: true,
+      language: "English",
+      privateProfile: true,
+    }
+  };
 
   const value = useMemo(
     () => ({

@@ -16,3 +16,19 @@ export const getDashboardRecommendations = asyncHandler(async (req, res) => {
     data,
   });
 });
+
+/**
+ * Dismiss a recommendation
+ * POST /api/recommendations/dismiss/:mediaId
+ */
+export const dismissRecommendation = asyncHandler(async (req, res) => {
+  const { uid } = req.user;
+  const { mediaId } = req.params;
+
+  await recommendationService.dismissRecommendation(uid, mediaId);
+
+  res.status(200).json({
+    success: true,
+    message: "Recommendation dismissed",
+  });
+});

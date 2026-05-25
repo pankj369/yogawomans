@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getAnalytics, isSupported } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -12,17 +13,25 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase only if a valid API key is provided
 const isConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.apiKey !== '""' && firebaseConfig.apiKey.trim() !== "");
 
-const app = isConfigured ? initializeApp(firebaseConfig) : null;
-const auth = isConfigured ? getAuth(app) : null;
-const db = isConfigured ? getFirestore(app) : null;
-const storage = isConfigured ? getStorage(app) : null;
-
 if (!isConfigured) {
-  console.warn("Firebase is not configured. Please add valid VITE_FIREBASE_API_KEY and other variables to your .env file. Running in offline/mock mode.");
+  console.error("Firebase is not configured. Please add valid VITE_FIREBASE_API_KEY and other variables to your .env file.");
 }
 
-export { app, auth, db, storage, isConfigured };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+let analytics = null;
+if (isConfigured && typeof window !== "undefined") {
+  isSupported().then(supported => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  });
+}
+
+export { app, auth, db, storage, analytics, isConfigured };
 

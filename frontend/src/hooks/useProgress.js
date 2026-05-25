@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import * as progressApi from "../services/progressApi";
 import { useAuth } from "../context/AuthContext";
+import { sessionCatalog } from "../data/wellnessData";
 
 export function useProgress() {
   const { user } = useAuth();
@@ -19,7 +20,20 @@ export function useProgress() {
       setLoading(true);
       const res = await progressApi.getProgress();
       if (res.success) {
-        setContinueWatching(res.data);
+        const mappedData = res.data.map(item => {
+          const staticMedia = sessionCatalog.find(m => m.id === item.mediaId);
+          const mediaObj = item.media || staticMedia;
+          if (!mediaObj) return null;
+          
+          return {
+            ...mediaObj,
+            progress: item.progressSeconds,
+            percentage: Math.min(100, Math.round((item.progressSeconds / (mediaObj.duration * 60 || 1)) * 100)),
+            timestamp: new Date(item.lastWatchedAt).getTime()
+          };
+        }).filter(Boolean);
+        
+        setContinueWatching(mappedData);
       }
     } catch (err) {
       console.error("Failed to fetch progress:", err);

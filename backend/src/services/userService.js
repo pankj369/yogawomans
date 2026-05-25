@@ -17,16 +17,14 @@ class UserService {
       uid: data.uid,
       username: data.username,
       email: data.email,
-      avatar: data.avatar,
+      avatar: data.avatar || "",
       premiumStatus: data.premiumStatus || false,
-      streak: data.streak || 0,
-      meditationMinutes: data.meditationMinutes || 0,
-      goals: data.goals || [],
-      preferences: data.preferences || {},
-      savedPlaylists: data.savedPlaylists || [],
-      recentActivity: data.recentActivity || [],
       onboardingCompleted: data.onboardingCompleted || false,
-      recentActivitySummary: [], // To be populated by progress APIs
+      wellnessGoals: data.wellnessGoals || [],
+      preferences: data.preferences || {},
+      streak: data.streak || 0,
+      calmScore: data.calmScore || 0,
+      createdAt: data.createdAt,
     };
   }
 }

@@ -53,3 +53,32 @@ export const getSavedPlaylists = asyncHandler(async (req, res, next) => {
     data: savedPlaylists,
   });
 });
+
+/**
+ * Create a new custom playlist
+ * POST /api/playlists
+ */
+export const createPlaylist = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
+  const newPlaylist = await playlistService.createPlaylist(userId, req.body);
+
+  res.status(201).json({
+    success: true,
+    message: "Playlist created",
+    data: newPlaylist,
+  });
+});
+
+/**
+ * Get all user created custom playlists
+ * GET /api/playlists/user
+ */
+export const getUserPlaylists = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
+  const playlists = await playlistService.getUserPlaylists(userId);
+
+  res.status(200).json({
+    success: true,
+    data: playlists,
+  });
+});

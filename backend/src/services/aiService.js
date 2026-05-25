@@ -1,5 +1,6 @@
 import { openai } from "../config/aiConfig.js";
 import { AppError } from "../middleware/errorMiddleware.js";
+import { getWellnessPlanPrompt, getInsightPrompt, getCoachSystemPrompt } from "../utils/aiPrompts.js";
 
 class AIService {
   /**
@@ -9,36 +10,7 @@ class AIService {
    * @param {String} focus E.g., 'Stress Relief'
    */
   async generateWellnessPlan(preferences, duration, focus) {
-    const prompt = `
-You are an expert, emotionally intelligent holistic wellness architect for 'YogaWomans', a premium wellness platform.
-Create a personalized ${duration} wellness plan focusing on '${focus}'.
-The user has the following preferences:
-- Fitness Level: ${preferences.fitnessLevel || 'Beginner'}
-- Primary Goals: ${(preferences.goals || []).join(", ")}
-- Current Stress Level (1-10): ${preferences.stressLevel || 5}
-
-Return ONLY a valid JSON object matching this schema, with NO markdown formatting or code blocks:
-{
-  "title": "String - A beautiful, inspiring title for the plan",
-  "description": "String - An empathetic overview of what this journey entails",
-  "duration": "String - the duration requested",
-  "focus": "String - the focus requested",
-  "schedule": [
-    {
-      "day": "Number",
-      "theme": "String - e.g., Grounding & Breath",
-      "sessions": [
-        {
-          "title": "String - Name of the session",
-          "type": "String - e.g., Yoga, Meditation, Breathwork",
-          "durationMin": "Number",
-          "reason": "String - Why this session is helpful today"
-        }
-      ]
-    }
-  ]
-}
-`;
+    const prompt = getWellnessPlanPrompt(preferences, duration, focus);
 
     try {
       const response = await openai.chat.completions.create({
@@ -60,17 +32,7 @@ Return ONLY a valid JSON object matching this schema, with NO markdown formattin
    * Generates dynamic, emotionally intelligent dashboard insights.
    */
   async generateInsights(profile, stats, history) {
-    const prompt = `
-You are a calming, emotionally intelligent wellness guide.
-Analyze the following user state and provide a SINGLE, short (1-2 sentences) insight to display on their dashboard.
-- Name: ${profile.name || 'User'}
-- Streak: ${stats.currentStreak || 0} days
-- Calm Score (0-100): ${stats.calmScore || 50}
-- Recent Activity: ${history.length} sessions completed recently.
-- Current Goals: ${(profile.preferences?.goals || []).join(', ')}
-
-Provide a warm, empathetic, and premium-sounding observation or suggestion. Do not use quotes around the output.
-    `;
+    const prompt = getInsightPrompt(profile, stats, history);
 
     try {
       const response = await openai.chat.completions.create({
@@ -90,7 +52,7 @@ Provide a warm, empathetic, and premium-sounding observation or suggestion. Do n
         message: "Take a deep breath and reconnect with your inner stillness.",
         calmScore: 50,
         momentum: "Resting"
-      }; // Fallback
+      }; // Graceful Fallback
     }
   }
 
@@ -100,10 +62,7 @@ Provide a warm, empathetic, and premium-sounding observation or suggestion. Do n
   async chatWithCoach(messageHistory, profile) {
     const systemPrompt = {
       role: "system",
-      content: `You are 'YogaWomans AI Coach', an emotionally intelligent, empathetic, and calming wellness guide.
-You help users with mindfulness, stress relief, yoga advice, and emotional support.
-Keep your responses concise, warm, and highly supportive. Avoid clinical or robotic language.
-The user's name is ${profile.name || 'friend'}. Their goals are: ${(profile.preferences?.goals || []).join(', ')}.`
+      content: getCoachSystemPrompt(profile)
     };
 
     try {
@@ -119,7 +78,11 @@ The user's name is ${profile.name || 'friend'}. Their goals are: ${(profile.pref
       };
     } catch (error) {
       console.error("OpenAI Chat Error:", error);
-      throw new AppError("Failed to communicate with AI Coach", 500);
+      // Fallback response for safety and UX
+      return {
+        role: "assistant",
+        content: "I'm having a little trouble connecting right now, but please remember to take a deep breath. I'll be right here when the connection stabilizes."
+      };
     }
   }
 }

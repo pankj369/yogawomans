@@ -51,3 +51,42 @@ export const createMedia = asyncHandler(async (req, res, next) => {
     data: newMedia,
   });
 });
+
+/**
+ * Save a media item to user's favorites
+ * POST /api/media/save
+ */
+export const saveMediaItem = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
+  const { mediaId } = req.body;
+
+  if (!mediaId) {
+    res.status(400);
+    throw new Error("Please provide a mediaId");
+  }
+
+  const savedData = await mediaService.saveMediaItem(userId, mediaId);
+  res.status(200).json({ success: true, message: "Media saved", data: savedData });
+});
+
+/**
+ * Unsave a media item
+ * DELETE /api/media/save/:mediaId
+ */
+export const unsaveMediaItem = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
+  const { mediaId } = req.params;
+
+  await mediaService.unsaveMediaItem(userId, mediaId);
+  res.status(200).json({ success: true, message: "Media unsaved" });
+});
+
+/**
+ * Get all saved media for user
+ * GET /api/media/saved
+ */
+export const getSavedMediaItems = asyncHandler(async (req, res, next) => {
+  const userId = req.user.uid;
+  const savedItems = await mediaService.getSavedMediaItems(userId);
+  res.status(200).json({ success: true, data: savedItems });
+});

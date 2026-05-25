@@ -14,34 +14,47 @@ class GeneratedPlanService {
     // 2. Attach ID and standard metadata
     const planToSave = {
       id: crypto.randomBytes(16).toString("hex"),
-      ...aiPlan,
       userId: uid,
+      title: aiPlan.title || focus || "Wellness Journey",
+      goal: focus || "",
+      duration: duration || "",
+      level: preferences?.recommendedLevel || "beginner",
+      emotionalSummary: aiPlan.emotionalSummary || aiPlan.summary || "A personalized journey generated for your wellbeing.",
+      generatedPhases: aiPlan.schedule || aiPlan.phases || [],
+      progress: 0,
+      completed: false,
+      saved: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      saved: true,
-      completed: false,
-      progress: {
-        completionPercentage: 0,
-      }
+      lastOpenedAt: new Date().toISOString(),
     };
 
     // 3. Save to Firestore
     await db.collection("generatedPlans").doc(planToSave.id).set(planToSave);
     return planToSave;
   }
+
   /**
-   * Save a newly generated plan for a user
+   * Save a newly generated plan for a user (Frontend mapping)
    */
   async savePlan(uid, planData) {
     const planRef = db.collection("generatedPlans").doc(planData.id);
     
     const planToSave = {
-      ...planData,
+      id: planData.id,
       userId: uid,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      title: planData.title || planData.goal || "Wellness Journey",
+      goal: planData.goal || "",
+      duration: planData.duration || "",
+      level: planData.level || "beginner",
+      emotionalSummary: planData.emotionalSummary || planData.summary || "",
+      generatedPhases: planData.generatedPhases || planData.phases || [],
+      progress: planData.progress || 0,
+      completed: planData.completed || false,
       saved: true,
-      completed: false,
+      createdAt: planData.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      lastOpenedAt: new Date().toISOString(),
     };
 
     await planRef.set(planToSave);
@@ -100,7 +113,7 @@ class GeneratedPlanService {
     }
 
     const updates = {
-      "progress.completionPercentage": completionPercentage,
+      progress: completionPercentage,
       updatedAt: new Date().toISOString(),
       lastOpenedAt: new Date().toISOString(),
       completed: completionPercentage >= 100,

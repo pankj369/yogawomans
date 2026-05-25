@@ -30,7 +30,7 @@ export default function ProtectedRoute({ requireProfileSetup = false }) {
   if (!isAuthenticated) {
     // Only redirect if we are not already on the login page (defensive)
     if (location.pathname === "/login") return null;
-    return <Navigate to="/login" replace state={{ from: location }} />;
+    return <Navigate to="/login" replace state={{ returnTo: location.pathname + location.search }} />;
   }
 
   // 3. User is authenticated, but route requires profile setup

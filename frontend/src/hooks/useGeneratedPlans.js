@@ -24,9 +24,12 @@ export const useGeneratedPlans = () => {
     }
   }, [user?.id, isLoaded]);
 
+  const unfinishedPlan = generatedPlans.find((plan) => !plan.completed) || generatedPlans[0] || null;
+
   return {
     generatedPlans,
     currentPlan,
-    setCurrentPlan
+    setCurrentPlan,
+    unfinishedPlan
   };
 };

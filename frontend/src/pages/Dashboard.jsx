@@ -29,11 +29,13 @@ import KidsYogaSection from "../components/dashboard/KidsYogaSection";
 import JournalSection from "../components/dashboard/JournalSection";
 import AICoachSection from "../components/dashboard/AICoachSection";
 import DashboardPlansSection from "../components/dashboard/DashboardPlansSection";
+import HealthMetricsSection from "../components/dashboard/metrics/HealthMetricsSection";
+import YogaWorldSection from "../components/dashboard/yogaWorld/YogaWorldSection";
 import EmptyState from "../components/ui/states/EmptyState";
 import { Search } from "lucide-react";
 
 // Premium Wellness OS Components
-import WellnessHero from "../components/dashboard/WellnessHero";
+import DashboardHero from "../components/dashboard/dashboardHero/DashboardHero";
 import WellnessInsights from "../components/dashboard/WellnessInsights";
 import ContinueJourney from "../components/dashboard/ContinueJourney";
 import RecentPlans from "../components/dashboard/RecentPlans";
@@ -55,6 +57,8 @@ const sectionMeta = {
   kids: { title: "Kids Yoga", hero: "Family flow", focus: "Gentle movement for younger yogis." },
   saved: { title: "Saved Sanctuary", hero: "Your Sanctuary", focus: "Return to the practices that center you." },
   plans: { title: "AI Generated Plans", hero: "Your Healing Journeys", focus: "Continue your personalized wellness paths." },
+  metrics: { title: "Health Metrics", hero: "Wellness Dashboard", focus: "Immersive tracking of your vital health stats." },
+  "yoga-world": { title: "Yoga World", hero: "Global Wellness", focus: "Connect with the latest in mindfulness and yoga science." },
 };
 
 function SessionModal({ session, onClose, onPreview, onStart }) {
@@ -191,7 +195,7 @@ export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const DASHBOARD_CATEGORIES = ["All", "Meditation", "Yoga", "Sleep", "Breathwork"];
-  const { generatedPlans } = useGeneratedPlans();
+  const { generatedPlans, unfinishedPlan } = useGeneratedPlans();
   
   if (!auth.isAuthReady) {
     return (
@@ -206,6 +210,15 @@ export default function Dashboard() {
   const calmScore = auth.user?.wellnessStats?.calmScore || 0;
   const hasProPlan = auth.isPremium || state.activePlan === "Pro";
   const activeSection = sectionMeta[section] || sectionMeta.home;
+
+  const continueJourneySession = unfinishedPlan ? {
+    id: unfinishedPlan.id,
+    title: unfinishedPlan.title,
+    duration: unfinishedPlan.duration,
+    progress: unfinishedPlan.progress || 0,
+    category: unfinishedPlan.goal || "Journey",
+    originalPlan: unfinishedPlan
+  } : lastSession;
 
   const handleSessionOpen = (session) => {
     if (session.premium && !hasProPlan) {
@@ -243,7 +256,7 @@ export default function Dashboard() {
       <div className="flex flex-col gap-10 lg:gap-14 pb-10">
         
         {section === "home" ? (
-          <WellnessHero userName={userName} streak={currentStreak} calmScore={calmScore} />
+          <DashboardHero userName={userName} streak={currentStreak} calmScore={calmScore} />
         ) : (
           <HeroBanner 
             userName={userName}
@@ -322,16 +335,30 @@ export default function Dashboard() {
         {section === "journal" && <JournalSection />}
         {section === "ai-coach" && <AICoachSection />}
         {section === "plans" && <DashboardPlansSection />}
+        {section === "metrics" && <HealthMetricsSection />}
+        {section === "yoga-world" && <YogaWorldSection />}
 
         {section === "home" && (
           <div className="flex flex-col gap-10 lg:gap-14">
             {/* Mobile: Priority ordering (Continue first) */}
             <div className="flex flex-col gap-10 lg:gap-14">
               <div className="order-1 lg:order-none">
-                {lastSession && (
+                {continueJourneySession && (
                   <ContinueJourney 
-                    lastSession={lastSession} 
-                    onContinue={() => handleSessionOpen(lastSession)} 
+                    lastSession={continueJourneySession} 
+                    onContinue={() => {
+                      if (continueJourneySession.originalPlan) {
+                        navigate("/generated-plan", {
+                          state: { 
+                            goalId: continueJourneySession.originalPlan.goal, 
+                            durationId: continueJourneySession.originalPlan.duration, 
+                            levelId: continueJourneySession.originalPlan.level 
+                          }
+                        });
+                      } else {
+                        handleSessionOpen(continueJourneySession);
+                      }
+                    }} 
                   />
                 )}
               </div>
@@ -340,7 +367,12 @@ export default function Dashboard() {
                 <WellnessInsights />
               </div>
 
-              <div className="order-3 lg:order-none grid gap-10 lg:grid-cols-12">
+              <div className="order-3 lg:order-none space-y-10 lg:space-y-14">
+                <ContinueWatchingSection />
+                <RecentlyPlayedSection />
+              </div>
+
+              <div className="order-4 lg:order-none grid gap-10 lg:grid-cols-12">
                 <div className="lg:col-span-7">
                   <RecentPlans 
                     plans={generatedPlans} 
