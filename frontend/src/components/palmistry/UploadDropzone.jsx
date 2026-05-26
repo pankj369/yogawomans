@@ -19,16 +19,16 @@ export default function UploadDropzone() {
         />
 
         {/* Dropzone Container */}
-        <div className="relative w-full py-8 md:py-10 rounded-2xl border border-dashed border-[#00E676]/60 bg-transparent flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:border-[#00E676] group-hover:bg-[#00E676]/5">
+        <div className="relative w-full py-3.5 xl:py-4.5 rounded-2xl border border-dashed border-[#00E676]/60 bg-transparent flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:border-[#00E676] group-hover:bg-[#00E676]/5">
           
-          <div className="relative z-10 flex flex-col items-center gap-3">
+          <div className="relative z-10 flex flex-col items-center gap-2">
             {/* Upload Icon */}
             <motion.div 
-              animate={{ y: isHovered ? -3 : 0 }}
+              animate={{ y: isHovered ? -2 : 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="text-[#00E676] drop-shadow-[0_0_10px_rgba(0,230,118,0.5)]"
+              className="text-[#00E676] drop-shadow-[0_0_8px_rgba(0,230,118,0.4)]"
             >
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="17 8 12 3 7 8" />
                 <line x1="12" y1="3" x2="12" y2="15" />
@@ -36,10 +36,10 @@ export default function UploadDropzone() {
             </motion.div>
 
             <div>
-              <p className="text-[#F7F3EC] text-sm md:text-base font-medium group-hover:text-white transition-colors">
+              <p className="text-[#F7F3EC] text-xs xl:text-sm font-medium group-hover:text-white transition-colors">
                 Drag & Drop your palm image here <br/> or click to upload
               </p>
-              <p className="text-[#888] text-xs mt-2 group-hover:text-gray-400 transition-colors uppercase tracking-wider">
+              <p className="text-[#888] text-[10px] mt-1 group-hover:text-gray-400 transition-colors uppercase tracking-wider">
                 JPG, PNG up to 10MB
               </p>
             </div>
