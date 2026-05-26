@@ -58,19 +58,23 @@ if (!document.head.querySelector("[data-sacred-orbit]")) {
   document.head.appendChild(s);
 }
 
-export default function SacredOrbitSection() {
+export default function SacredOrbitSection({ isDashboard = false }) {
   const [activeNode, setActiveNode] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <section className="relative w-full min-h-screen bg-[#0A0A0A] overflow-hidden py-12 md:py-20 xl:py-16 flex flex-col justify-center">
-      {/* Background Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0F2E1D] via-[#0A0A0A] to-[#0A0A0A] opacity-90 z-0" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] xl:w-[800px] h-[600px] xl:h-[800px] bg-[#1E7A46]/10 rounded-full blur-[120px] xl:blur-[150px] pointer-events-none z-0" />
+    <section className={`relative w-full overflow-hidden flex flex-col justify-center ${
+      isDashboard ? "py-4 bg-transparent" : "min-h-screen bg-[#0A0A0A] py-12 md:py-20 xl:py-16"
+    }`}>
+      {/* Background Gradients (only on standalone page) */}
+      {!isDashboard && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0F2E1D] via-[#0A0A0A] to-[#0A0A0A] opacity-90 z-0" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] xl:w-[800px] h-[600px] xl:h-[800px] bg-[#1E7A46]/10 rounded-full blur-[120px] xl:blur-[150px] pointer-events-none z-0" />
+          <AmbientParticles />
+        </>
+      )}
       
-      {/* Floating Particles */}
-      <AmbientParticles />
-
       <div className={`relative w-full max-w-[1500px] mx-auto px-4 sm:px-6 md:px-8 xl:px-12 z-10 flex flex-col sacred-orbit-container ${isHovered ? 'sacred-orbit-hovered' : ''}`}>
         
         {/* Top 3-Column Layout */}

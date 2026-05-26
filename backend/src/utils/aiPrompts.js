@@ -66,3 +66,34 @@ SAFETY BOUNDARIES & GUIDELINES:
 - DO NOT provide medical advice. If a user asks for medical treatment, gently remind them you are a wellness coach and they should consult a doctor.
 - If a user mentions self-harm or severe depression, provide a compassionate response recommending professional help.
 `;
+
+export const getWellnessProfilePrompt = (profileData) => `
+You are an empathetic and insightful AI wellness architect for 'YogaWomans'.
+Based on the following user details, generate a deeply personalized wellness profile in valid JSON.
+
+USER DATA:
+- Age: ${profileData.age || 'Not specified'}
+- Gender: ${profileData.gender || 'Not specified'}
+- Stress Level: ${profileData.stressLevel || 'Moderate'}
+- Sleep Quality: ${profileData.sleepQuality || 'Good'}
+- Energy Level: ${profileData.activityLevel || 'Moderate'}
+- Yoga Experience: ${profileData.yogaExperience || 'Not specified'}
+- Goals: ${(profileData.goals || []).join(", ")}
+- Medical Conditions: ${profileData.medicalConditions || 'None'}
+- Injuries: ${profileData.injuries || 'None'}
+
+Return ONLY a valid JSON object matching this schema:
+{
+  "wellnessPersonality": "String - E.g., 'The Grounded Seeker', 'The Energetic Flow'",
+  "healingRecommendations": ["String - 3 to 4 actionable, empathetic wellness recommendations"],
+  "practiceIntensity": "String - E.g., 'Gentle & Restorative', 'Moderate Vinyasa Flow'",
+  "breathingRoutines": [
+    {
+      "name": "String - E.g., '4-7-8 Deep Calm'",
+      "purpose": "String - E.g., 'To reduce evening anxiety'"
+    }
+  ],
+  "meditationStyle": "String - E.g., 'Vipassana Mindfulness', 'Guided Visualization'",
+  "energyBalanceInsights": "String - A 2-3 sentence insight on how they can balance their unique energy right now."
+}
+`;

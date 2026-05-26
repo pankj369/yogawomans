@@ -11,7 +11,7 @@ export default function Footer() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="mt-8 rounded-[2.5rem] border border-white/60 bg-white/55 px-6 py-8 shadow-glass backdrop-blur-2xl sm:px-10"
+      className="mt-8 rounded-[2.5rem] border border-wellness-border bg-[rgba(10,15,25,0.72)] px-6 py-8 shadow-glass backdrop-blur-[18px] sm:px-10"
     >
       <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         
@@ -21,7 +21,7 @@ export default function Footer() {
             <img
               src={fotlogo}
               alt="YogaWomans Logo"
-              className="h-8 w-auto object-contain"
+              className="h-8 w-auto object-contain brightness-0 invert opacity-90"
             />
           </div>
           <p className="text-sm text-wellness-muted">
@@ -35,7 +35,7 @@ export default function Footer() {
             <a 
               key={link} 
               href="#" 
-              className="text-xs font-bold uppercase tracking-wide text-wellness-muted transition hover:text-wellness-green"
+              className="text-xs font-bold uppercase tracking-wide text-wellness-muted transition hover:text-wellness-glow"
             >
               {link}
             </a>
@@ -48,7 +48,7 @@ export default function Footer() {
             <a
               href="#"
               key={index}
-              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/70 text-wellness-muted shadow-sm transition hover:-translate-y-1 hover:bg-wellness-green hover:text-white"
+              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/5 text-wellness-muted shadow-sm transition hover:-translate-y-1 hover:bg-wellness-glow hover:text-black hover:shadow-[0_0_15px_rgba(0,230,118,0.3)]"
             >
               <Icon className="text-base" />
             </a>

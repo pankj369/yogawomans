@@ -92,7 +92,7 @@ export default function SleepSection() {
       <DashboardSection id="sleep-sanctuary">
         <div className="grid gap-6 md:grid-cols-2">
           {/* Sleep Welcome Card */}
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-[#0E1326] p-8 text-white border border-white/10 shadow-heroCard">
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-8 text-white shadow-glass backdrop-blur-[18px]">
             {/* Soft decorative stars */}
             <div className="absolute inset-0 opacity-30">
               <Star className="absolute top-8 left-12 text-yellow-200 animate-pulse" size={12} />
@@ -102,11 +102,11 @@ export default function SleepSection() {
             
             <div className="relative z-10 flex flex-col h-full justify-between">
               <div>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-purple-300 backdrop-blur-md">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-wellness-border px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-purple-300 backdrop-blur-md">
                   <Moon size={12} /> Sleep Sanctuary
                 </span>
                 <h3 className="font-heading text-3xl font-extrabold mt-6 leading-tight">Time to rest your mind.</h3>
-                <p className="mt-3 text-sm text-purple-200/70 leading-relaxed max-w-sm">
+                <p className="mt-3 text-sm text-purple-200/70 leading-relaxed max-w-sm font-medium">
                   Drift into high-quality sleep with comforting, immersive storytelling and deep ambient wave loops.
                 </p>
               </div>
@@ -118,22 +118,22 @@ export default function SleepSection() {
           </div>
 
           {/* Interactive Sleep Timer */}
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-white/40 p-8 border border-white/60 shadow-glass backdrop-blur-md">
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-8 shadow-glass backdrop-blur-[18px]">
             <div className="flex flex-col h-full justify-between">
               <div>
                 <span className="inline-flex items-center gap-1.5 text-[0.65rem] font-bold uppercase tracking-wider text-wellness-orange">
                   <Clock size={12} /> Auto-Pause Helper
                 </span>
-                <h3 className="font-heading text-2xl font-extrabold text-wellness-dark mt-2">Sleep Timer</h3>
-                <p className="text-xs text-wellness-muted mt-1">Set a timer to automatically pause your playback when you fall asleep.</p>
+                <h3 className="font-heading text-2xl font-extrabold text-white mt-2">Sleep Timer</h3>
+                <p className="text-xs text-wellness-muted mt-1 font-medium">Set a timer to automatically pause your playback when you fall asleep.</p>
               </div>
 
               <div className="my-6">
                 {timerActive ? (
-                  <div className="flex flex-col items-center justify-center py-4 bg-white/60 rounded-3xl border border-white/50 shadow-sm">
+                  <div className="flex flex-col items-center justify-center py-4 bg-white/5 rounded-3xl border border-wellness-border shadow-sm">
                     <p className="text-[0.65rem] font-bold uppercase tracking-widest text-wellness-orange animate-pulse">Timer Active</p>
-                    <p className="font-heading text-4xl font-extrabold text-wellness-dark mt-1">{formatTime(secondsLeft)}</p>
-                    <p className="text-xs text-wellness-muted mt-1">Rest easy • Autopauses playbacks</p>
+                    <p className="font-heading text-4xl font-extrabold text-white mt-1">{formatTime(secondsLeft)}</p>
+                    <p className="text-xs text-wellness-muted mt-1 font-medium">Rest easy • Autopauses playbacks</p>
                   </div>
                 ) : (
                   <div className="flex justify-center gap-3">
@@ -143,8 +143,8 @@ export default function SleepSection() {
                         onClick={() => setTimerMinutes(min)}
                         className={`flex h-12 w-12 items-center justify-center rounded-2xl border text-sm font-bold transition-all ${
                           timerMinutes === min
-                            ? "bg-wellness-orange border-wellness-orange text-white shadow-md shadow-wellness-orange/20"
-                            : "bg-white/50 border-white/40 text-wellness-muted hover:bg-white hover:text-wellness-dark"
+                            ? "bg-wellness-orange border-wellness-orange text-white shadow-md"
+                            : "bg-white/5 border-wellness-border text-wellness-muted hover:bg-white/10 hover:text-white"
                         }`}
                       >
                         {min}m
@@ -157,10 +157,10 @@ export default function SleepSection() {
               <div className="flex gap-3">
                 <button
                   onClick={handleStartTimer}
-                  className={`flex-1 rounded-full py-3.5 text-sm font-bold transition-all text-center flex items-center justify-center ${
+                  className={`flex-1 rounded-full py-3.5 text-sm font-extrabold transition-all text-center flex items-center justify-center ${
                     timerActive
                       ? "bg-red-500 hover:bg-red-600 text-white shadow-sm"
-                      : "bg-wellness-dark hover:bg-black text-white shadow-sm"
+                      : "bg-wellness-glow hover:bg-wellness-glow/90 text-black shadow-sm"
                   }`}
                 >
                   {timerActive ? "Stop Timer" : "Start Sleep Timer"}
@@ -168,7 +168,7 @@ export default function SleepSection() {
                 {timerActive && (
                   <button
                     onClick={handleResetTimer}
-                    className="px-6 rounded-full bg-white/80 border border-wellness-muted/20 text-wellness-dark text-sm font-bold hover:bg-wellness-cream transition-colors"
+                    className="px-6 rounded-full bg-white/5 border border-wellness-border text-white text-sm font-bold hover:bg-white/10 transition-colors"
                   >
                     Reset
                   </button>

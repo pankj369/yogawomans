@@ -66,7 +66,7 @@ export default function MeditationSection() {
           title="What is your mind state right now?"
           className="mb-8"
         />
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-white/40 p-8 border border-white/60 shadow-glass backdrop-blur-md">
+        <div className="relative overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-8 shadow-glass backdrop-blur-[18px]">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap gap-4">
               {moodOptions.map((mood) => {
@@ -81,8 +81,8 @@ export default function MeditationSection() {
                     onClick={() => handleMoodSelect(mood)}
                     className={`flex flex-col items-center gap-3 rounded-3xl border p-4 transition-all duration-300 w-24 sm:w-28 ${
                       isSelected
-                        ? "bg-white shadow-lg border-white shadow-black/5"
-                        : "bg-white/50 border-white/40 hover:bg-white/80"
+                        ? "bg-wellness-glow/20 border-wellness-glow/30 text-white shadow-[0_0_15px_rgba(0,230,118,0.15)]"
+                        : "bg-white/5 border-wellness-border text-wellness-muted hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     <div
@@ -94,7 +94,7 @@ export default function MeditationSection() {
                     >
                       <Icon size={24} />
                     </div>
-                    <span className={`text-xs font-bold ${isSelected ? "text-wellness-dark" : "text-wellness-muted"}`}>
+                    <span className={`text-xs font-bold ${isSelected ? "text-white" : "text-wellness-muted"}`}>
                       {mood.label}
                     </span>
                   </motion.button>
@@ -108,7 +108,7 @@ export default function MeditationSection() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="flex-1 max-w-md rounded-3xl bg-gradient-to-br from-wellness-orange/5 to-wellness-green/5 border border-wellness-orange/20 p-5 flex items-center gap-4"
+                  className="flex-1 max-w-md rounded-3xl bg-wellness-glass border border-wellness-orange/30 p-5 flex items-center gap-4 shadow-glass backdrop-blur-md"
                 >
                   <div className="h-16 w-16 rounded-2xl overflow-hidden flex-shrink-0 relative">
                     <img src={recommendedSession.image} alt={recommendedSession.title} className="h-full w-full object-cover" />
@@ -122,14 +122,14 @@ export default function MeditationSection() {
                     <span className="inline-flex items-center gap-1 text-[0.65rem] font-bold uppercase tracking-wider text-wellness-orange">
                       <Sparkles size={10} /> Recommended for you
                     </span>
-                    <h4 className="font-heading text-sm font-bold text-wellness-dark truncate mt-0.5">{recommendedSession.title}</h4>
-                    <p className="text-xs text-wellness-muted truncate">{recommendedSession.instructor} • {recommendedSession.duration} mins</p>
+                    <h4 className="font-heading text-sm font-bold text-white truncate mt-0.5">{recommendedSession.title}</h4>
+                    <p className="text-xs text-wellness-muted truncate font-medium">{recommendedSession.instructor} • {recommendedSession.duration} mins</p>
                   </div>
                   <button
                     onClick={() => handleSessionClick(recommendedSession)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-wellness-dark text-white hover:bg-black transition-colors"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-wellness-glow hover:bg-wellness-glow/90 text-black shadow-[0_0_12px_rgba(0,230,118,0.25)] transition-colors"
                   >
-                    <Play size={14} fill="white" className="ml-0.5" />
+                    <Play size={14} fill="currentColor" className="ml-0.5" />
                   </button>
                 </motion.div>
               )}

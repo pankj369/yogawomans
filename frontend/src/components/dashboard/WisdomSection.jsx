@@ -83,7 +83,7 @@ export default function WisdomSection() {
       <DashboardSection id="wisdom-essence">
         <div className="grid gap-6 lg:grid-cols-5 items-start">
           {/* Quote Card (Left 3 cols on lg) */}
-          <div className="lg:col-span-3 relative overflow-hidden rounded-[2.5rem] bg-white/40 p-8 sm:p-10 border border-white/60 shadow-glass backdrop-blur-md flex flex-col justify-between min-h-[300px]">
+          <div className="lg:col-span-3 relative overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-8 sm:p-10 shadow-glass backdrop-blur-[18px] flex flex-col justify-between min-h-[300px]">
             <div>
               <span className="inline-flex items-center gap-1.5 text-[0.65rem] font-bold uppercase tracking-wider text-wellness-orange">
                 <Sparkles size={12} /> Quote of the Day
@@ -96,7 +96,7 @@ export default function WisdomSection() {
                   exit={{ opacity: 0, y: -15 }}
                   className="mt-6"
                 >
-                  <blockquote className="font-heading text-xl sm:text-2xl font-bold text-wellness-dark leading-relaxed">
+                  <blockquote className="font-heading text-xl sm:text-2xl font-bold text-white leading-relaxed">
                     "{currentQuote.text}"
                   </blockquote>
                   <cite className="block text-sm font-semibold text-wellness-muted mt-4 not-italic">
@@ -106,10 +106,10 @@ export default function WisdomSection() {
               </AnimatePresence>
             </div>
 
-            <div className="mt-8 flex gap-3 pt-6 border-t border-wellness-muted/10">
+            <div className="mt-8 flex gap-3 pt-6 border-t border-wellness-border">
               <button
                 onClick={generateNewQuote}
-                className="rounded-full bg-wellness-dark hover:bg-black text-white px-6 py-3 text-xs font-bold transition-all shadow-sm"
+                className="rounded-full bg-wellness-glow hover:bg-wellness-glow/90 text-black px-6 py-3 text-xs font-extrabold transition-all shadow-sm"
               >
                 Reflect Again
               </button>
@@ -118,7 +118,7 @@ export default function WisdomSection() {
                 className={`rounded-full px-5 py-3 text-xs font-bold transition-all flex items-center gap-2 border ${
                   isQuoteBookmarked
                     ? "bg-wellness-orange border-wellness-orange text-white"
-                    : "bg-white/60 border-white/40 text-wellness-dark hover:bg-white"
+                    : "bg-white/5 border-wellness-border text-white hover:bg-white/10"
                 }`}
               >
                 <Bookmark size={14} fill={isQuoteBookmarked ? "white" : "none"} />
@@ -128,15 +128,15 @@ export default function WisdomSection() {
           </div>
 
           {/* Saved Wisdom Bookmarks (Right 2 cols on lg) */}
-          <div className="lg:col-span-2 rounded-[2.5rem] bg-white/40 border border-white/60 shadow-glass p-6 sm:p-8 backdrop-blur-md h-full min-h-[300px] flex flex-col">
-            <h3 className="font-heading text-lg font-bold text-wellness-dark flex items-center gap-2">
+          <div className="lg:col-span-2 rounded-[2.5rem] border border-wellness-border bg-wellness-glass shadow-glass p-6 sm:p-8 backdrop-blur-[18px] h-full min-h-[300px] flex flex-col">
+            <h3 className="font-heading text-lg font-bold text-white flex items-center gap-2">
               <BookMarked size={18} className="text-wellness-orange" />
               Wisdom Journal ({savedQuotes.length})
             </h3>
             <div className="mt-4 flex-1 overflow-y-auto max-h-56 no-scrollbar space-y-3">
               {savedQuotes.map((q) => (
-                <div key={q.id} className="p-3 bg-white/60 border border-white/50 rounded-2xl relative group">
-                  <p className="text-xs text-wellness-dark font-medium italic pr-6">"{q.text}"</p>
+                <div key={q.id} className="p-3 bg-white/5 border border-wellness-border rounded-2xl relative group">
+                  <p className="text-xs text-white font-medium italic pr-6">"{q.text}"</p>
                   <p className="text-[10px] text-wellness-muted font-bold mt-1.5">— {q.author}</p>
                   <button
                     onClick={() => handleSaveQuote(q)}
@@ -172,19 +172,19 @@ export default function WisdomSection() {
             <div
               key={art.id}
               onClick={() => setReadingArticle(art)}
-              className="p-6 rounded-3xl border border-white/60 bg-white/50 hover:bg-white transition-all cursor-pointer flex flex-col justify-between shadow-card hover:shadow-liftSm group"
+              className="p-6 rounded-3xl border border-wellness-border bg-wellness-glass hover:bg-white/5 hover:border-wellness-glow/30 transition-all duration-300 cursor-pointer flex flex-col justify-between shadow-glass group"
             >
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-wellness-orange bg-wellness-orange/5 px-2.5 py-1 rounded-md">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-wellness-orange bg-white/5 border border-wellness-border px-2.5 py-1 rounded-md">
                   {art.readTime} min read
                 </span>
-                <h4 className="font-heading text-lg font-bold text-wellness-dark mt-4 group-hover:text-wellness-orange transition-colors">
+                <h4 className="font-heading text-lg font-bold text-white mt-4 group-hover:text-wellness-glow transition-colors">
                   {art.title}
                 </h4>
-                <p className="text-xs text-wellness-muted mt-2 leading-relaxed">{art.excerpt}</p>
+                <p className="text-xs text-wellness-muted mt-2 leading-relaxed font-medium">{art.excerpt}</p>
               </div>
 
-              <div className="mt-5 flex items-center gap-1.5 text-xs font-bold text-wellness-orange border-t border-wellness-softcream pt-4">
+              <div className="mt-5 flex items-center gap-1.5 text-xs font-bold text-wellness-orange border-t border-wellness-border pt-4">
                 Open Article <ChevronRight size={14} />
               </div>
             </div>
@@ -205,27 +205,27 @@ export default function WisdomSection() {
               initial={{ y: 30, opacity: 0, scale: 0.98 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 30, opacity: 0, scale: 0.98 }}
-              className="mx-auto w-full max-w-2xl overflow-hidden rounded-[2.5rem] border border-white/30 bg-wellness-cream2 p-8 shadow-glass relative max-h-[90vh] flex flex-col"
+              className="mx-auto w-full max-w-2xl overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-8 shadow-glass relative max-h-[90vh] flex flex-col backdrop-blur-xl"
             >
               <button
                 onClick={() => setReadingArticle(null)}
-                className="absolute right-5 top-5 p-2.5 rounded-full bg-white/70 hover:bg-white text-wellness-muted transition-all"
+                className="absolute right-5 top-5 p-2.5 rounded-full bg-white/5 border border-wellness-border text-wellness-muted hover:text-white transition-all"
               >
                 <X size={18} />
               </button>
 
               <div className="overflow-y-auto no-scrollbar pr-2 mt-4 space-y-4">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-wellness-orange bg-wellness-orange/10 px-2.5 py-1 rounded-md">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-wellness-orange bg-white/5 border border-wellness-border px-2.5 py-1 rounded-md">
                   {readingArticle.readTime} min read • Wisdom Lecture
                 </span>
-                <h3 className="font-heading text-3xl font-extrabold text-wellness-dark leading-tight">{readingArticle.title}</h3>
-                <p className="text-sm text-wellness-muted leading-relaxed whitespace-pre-line pt-2">{readingArticle.content}</p>
+                <h3 className="font-heading text-3xl font-extrabold text-white leading-tight">{readingArticle.title}</h3>
+                <p className="text-sm text-wellness-muted leading-relaxed whitespace-pre-line pt-2 font-medium">{readingArticle.content}</p>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-wellness-muted/10 flex justify-end">
+              <div className="mt-8 pt-4 border-t border-wellness-border flex justify-end">
                 <button
                   onClick={() => setReadingArticle(null)}
-                  className="rounded-full bg-wellness-dark hover:bg-black text-white px-6 py-2.5 text-xs font-bold transition-all"
+                  className="rounded-full bg-wellness-glow hover:bg-wellness-glow/90 text-black px-6 py-2.5 text-xs font-extrabold transition-all"
                 >
                   Done Reading
                 </button>

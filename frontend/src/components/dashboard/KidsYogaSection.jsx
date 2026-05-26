@@ -97,41 +97,41 @@ export default function KidsYogaSection() {
             <motion.div
               key={session.id}
               whileHover={{ y: -6 }}
-              className="relative overflow-hidden rounded-[2.5rem] border border-white/60 bg-white/50 p-5 flex flex-col justify-between shadow-card hover:shadow-liftSm transition-all duration-300"
+              className="group relative overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-5 flex flex-col justify-between shadow-glass hover:border-wellness-glow/30 transition-all duration-300"
             >
               <div>
                 <div className="relative h-44 w-full overflow-hidden rounded-2xl">
                   <img src={session.image} alt={session.title} className="h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   {session.premium && (
-                    <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[0.6rem] font-bold uppercase tracking-wider text-wellness-orange">
+                    <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-black/60 border border-white/10 px-2.5 py-1 text-[0.6rem] font-bold uppercase tracking-wider text-wellness-orange backdrop-blur-md">
                       <Lock size={10} /> Premium
                     </div>
                   )}
-                  <div className="absolute right-3 top-3 flex items-center justify-center rounded-full bg-white/30 backdrop-blur-md h-8 w-8 text-white">
+                  <div className="absolute right-3 top-3 flex items-center justify-center rounded-full bg-black/60 border border-white/10 backdrop-blur-md h-8 w-8 text-white">
                     <Star size={14} className="fill-current text-yellow-300" />
                   </div>
                 </div>
 
-                <h3 className="font-heading text-lg font-bold text-wellness-dark mt-4">
+                <h3 className="font-heading text-lg font-bold text-white mt-4 group-hover:text-wellness-glow transition-colors">
                   {session.title}
                 </h3>
                 <p className="text-xs text-wellness-muted font-bold mt-0.5">with {session.instructor}</p>
-                <p className="text-xs text-wellness-muted mt-2 leading-relaxed line-clamp-2">
+                <p className="text-xs text-wellness-muted mt-2 leading-relaxed line-clamp-2 font-medium">
                   {session.description}
                 </p>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-wellness-softcream flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase text-wellness-orange bg-wellness-orange/5 px-2.5 py-1 rounded-md">
+              <div className="mt-5 pt-4 border-t border-wellness-border flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase text-wellness-orange bg-white/5 border border-wellness-border px-2.5 py-1 rounded-md">
                   {session.duration} mins • {session.level}
                 </span>
 
                 <button
                   onClick={() => handleStart(session)}
-                  className="h-9 w-9 rounded-full bg-wellness-dark text-white hover:bg-black flex items-center justify-center transition-colors"
+                  className="h-9 w-9 rounded-full bg-wellness-glow text-black hover:bg-wellness-glow/90 flex items-center justify-center transition-colors shadow-glow2"
                 >
-                  <Play size={14} fill="white" className="ml-0.5" />
+                  <Play size={14} fill="currentColor" className="ml-0.5" />
                 </button>
               </div>
             </motion.div>

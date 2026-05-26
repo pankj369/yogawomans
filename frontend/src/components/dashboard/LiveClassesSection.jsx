@@ -57,29 +57,29 @@ export default function LiveClassesSection() {
               <motion.div
                 key={cls.id}
                 whileHover={{ y: -6 }}
-                className="relative overflow-hidden rounded-[2.5rem] border border-white/60 bg-white/50 p-6 flex flex-col justify-between shadow-card hover:shadow-liftSm transition-all duration-300"
+                className="relative overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-6 flex flex-col justify-between shadow-glass hover:border-wellness-glow/30 transition-all duration-300"
               >
                 <div>
                   {/* Instructor Avatar and Category */}
                   <div className="flex items-center gap-3">
-                    <img src={cls.image} alt={cls.instructor} className="h-11 w-11 rounded-full border border-white/60 object-cover" />
+                    <img src={cls.image} alt={cls.instructor} className="h-11 w-11 rounded-full border border-wellness-border object-cover" />
                     <div>
-                      <h4 className="text-xs font-bold text-wellness-dark">{cls.instructor}</h4>
+                      <h4 className="text-xs font-bold text-white">{cls.instructor}</h4>
                       <p className="text-[10px] text-wellness-muted font-semibold uppercase tracking-wider">{cls.category}</p>
                     </div>
                   </div>
 
-                  <h3 className="font-heading text-lg font-bold text-wellness-dark mt-4 line-clamp-1">
+                  <h3 className="font-heading text-lg font-bold text-white mt-4 line-clamp-1">
                     {cls.title}
                   </h3>
 
-                  <div className="mt-4 space-y-2 border-t border-wellness-softcream pt-4 text-xs font-semibold text-wellness-muted">
+                  <div className="mt-4 space-y-2 border-t border-wellness-border pt-4 text-xs font-semibold text-wellness-muted">
                     <div className="flex items-center gap-2">
                       <Clock size={14} className="text-wellness-orange" />
                       <span>Starts at {cls.time} today</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Users size={14} className="text-wellness-orange" />
+                      <Users size={14} className="text-wellness-glow" />
                       <span>{cls.seatsLeft} seats remaining</span>
                     </div>
                   </div>
@@ -90,8 +90,8 @@ export default function LiveClassesSection() {
                     onClick={() => handleBook(cls)}
                     className={`flex-1 rounded-full py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
                       isBooked
-                        ? "bg-wellness-greenLight border-wellness-greenLight text-wellness-green"
-                        : "bg-white border-wellness-muted/20 text-wellness-dark hover:bg-wellness-cream"
+                        ? "bg-wellness-glow/20 border-wellness-glow/40 text-wellness-glow"
+                        : "bg-white/5 border-wellness-border text-white hover:bg-white/10"
                     }`}
                   >
                     {isBooked ? (
@@ -105,7 +105,7 @@ export default function LiveClassesSection() {
 
                   <button
                     onClick={() => handleJoin(cls)}
-                    className="rounded-full bg-wellness-dark hover:bg-black text-white px-5 py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-1"
+                    className="rounded-full bg-wellness-glow hover:bg-wellness-glow/90 text-black px-5 py-2.5 text-xs font-extrabold transition-all flex items-center justify-center gap-1"
                   >
                     <Video size={13} /> Join Room
                   </button>
@@ -129,11 +129,11 @@ export default function LiveClassesSection() {
               initial={{ y: 30, opacity: 0, scale: 0.98 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 30, opacity: 0, scale: 0.98 }}
-              className="mx-auto w-full max-w-md overflow-hidden rounded-[2.5rem] border border-white/30 bg-wellness-cream2 p-8 shadow-glass relative text-center flex flex-col items-center"
+              className="mx-auto w-full max-w-md overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-8 shadow-glass relative text-center flex flex-col items-center backdrop-blur-xl"
             >
               <button
                 onClick={() => setJoiningClass(null)}
-                className="absolute right-5 top-5 p-2 rounded-full bg-white/70 hover:bg-white text-wellness-muted transition-all"
+                className="absolute right-5 top-5 p-2 rounded-full bg-white/5 border border-wellness-border text-wellness-muted hover:text-white transition-all"
               >
                 <X size={16} />
               </button>
@@ -143,8 +143,8 @@ export default function LiveClassesSection() {
               </div>
 
               <span className="text-[10px] font-bold uppercase tracking-wider text-wellness-orange animate-pulse">Connecting Stream</span>
-              <h3 className="font-heading text-2xl font-extrabold text-wellness-dark mt-2 leading-snug">{joiningClass.title}</h3>
-              <p className="text-xs text-wellness-muted mt-2 max-w-xs">
+              <h3 className="font-heading text-2xl font-extrabold text-white mt-2 leading-snug">{joiningClass.title}</h3>
+              <p className="text-xs text-wellness-muted mt-2 max-w-xs font-medium">
                 Redirecting to class broadcast room. Ensure your video source is working correctly.
               </p>
 
@@ -154,13 +154,13 @@ export default function LiveClassesSection() {
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => setJoiningClass(null)}
-                  className="block w-full text-center rounded-full bg-wellness-dark hover:bg-black text-white py-3 text-xs font-bold transition-all shadow-sm"
+                  className="block w-full text-center rounded-full bg-wellness-glow hover:bg-wellness-glow/90 text-black py-3 text-xs font-extrabold transition-all shadow-sm"
                 >
                   Open Stream Link (Meet)
                 </a>
                 <button
                   onClick={() => setJoiningClass(null)}
-                  className="w-full rounded-full bg-white/80 border border-wellness-muted/20 text-wellness-dark py-3 text-xs font-bold hover:bg-wellness-cream transition-colors"
+                  className="w-full rounded-full bg-white/5 border border-wellness-border text-white py-3 text-xs font-bold hover:bg-white/10 transition-colors"
                 >
                   Cancel Connection
                 </button>

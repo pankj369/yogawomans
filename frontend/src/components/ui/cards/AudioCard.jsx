@@ -8,7 +8,7 @@ export default function AudioCard({ track, isPlaying, onPlayToggle }) {
       variants={hoverLift}
       initial="rest"
       whileHover="hover"
-      className="group relative flex items-center justify-between overflow-hidden rounded-3xl border border-white/60 bg-white/55 p-4 shadow-card transition-colors hover:bg-white cursor-pointer"
+      className="group relative flex items-center justify-between overflow-hidden rounded-3xl border border-wellness-border bg-wellness-glass p-4 shadow-glass backdrop-blur-[18px] transition-all duration-300 hover:bg-white/5 hover:border-wellness-glow/30 cursor-pointer"
       onClick={() => onPlayToggle?.(track)}
     >
       <div className="flex items-center gap-4">
@@ -29,12 +29,12 @@ export default function AudioCard({ track, isPlaying, onPlayToggle }) {
         </div>
         
         <div>
-          <h4 className="font-heading text-base font-bold text-wellness-dark line-clamp-1">{track.title}</h4>
+          <h4 className="font-heading text-base font-bold text-white group-hover:text-wellness-glow transition-colors line-clamp-1">{track.title}</h4>
           <p className="text-xs font-semibold text-wellness-muted">{track.category} • {track.duration}m</p>
         </div>
       </div>
 
-      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-wellness-softcream text-wellness-muted transition-colors hover:bg-wellness-orange hover:text-white">
+      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 border border-wellness-border text-wellness-muted transition-colors hover:bg-wellness-orange hover:border-wellness-orange hover:text-white">
         <Headphones size={16} />
       </button>
     </motion.div>

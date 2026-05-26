@@ -1,6 +1,6 @@
 import { openai } from "../config/aiConfig.js";
 import { AppError } from "../middleware/errorMiddleware.js";
-import { getWellnessPlanPrompt, getInsightPrompt, getCoachSystemPrompt } from "../utils/aiPrompts.js";
+import { getWellnessPlanPrompt, getInsightPrompt, getCoachSystemPrompt, getWellnessProfilePrompt } from "../utils/aiPrompts.js";
 
 class AIService {
   /**
@@ -25,6 +25,28 @@ class AIService {
     } catch (error) {
       console.error("OpenAI Plan Generation Error:", error);
       throw new AppError("Failed to generate AI wellness plan", 500);
+    }
+  }
+
+  /**
+   * Generates an AI Wellness Profile based on user onboarding data.
+   */
+  async generateWellnessProfile(profileData) {
+    const prompt = getWellnessProfilePrompt(profileData);
+
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [{ role: "system", content: prompt }],
+        temperature: 0.7,
+        response_format: { type: "json_object" }
+      });
+
+      const jsonContent = response.choices[0].message.content;
+      return JSON.parse(jsonContent);
+    } catch (error) {
+      console.error("OpenAI Wellness Profile Generation Error:", error);
+      throw new AppError("Failed to generate AI wellness profile", 500);
     }
   }
 

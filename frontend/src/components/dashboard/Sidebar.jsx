@@ -28,7 +28,12 @@ function SidebarPanel({ onClose, isMobile = false }) {
   const streakDays = state?.streakDays ?? 6;
 
   return (
-    <aside className="glass-sidebar flex h-full w-[268px] flex-col px-4 py-5 shadow-sidebar">
+    <aside className={`flex h-full flex-col px-6 py-6 transition-all duration-300
+      ${isMobile 
+        ? "w-full border-0 bg-[rgba(5,8,22,0.96)] backdrop-blur-[28px] overflow-y-auto no-scrollbar" 
+        : "rounded-[2.5rem] border border-wellness-border bg-[rgba(10,15,25,0.68)] backdrop-blur-[20px] shadow-glass w-[245px]"
+      }`}
+    >
       {/* ── Logo ── */}
       <div className="mb-8 flex items-center justify-between gap-3 px-2">
         <div className="flex items-center gap-3">
@@ -37,6 +42,9 @@ function SidebarPanel({ onClose, isMobile = false }) {
             alt="YogaWomans Logo"
             className="h-10 w-auto object-contain brightness-0 invert opacity-90"
           />
+          <span className="text-sm font-bold uppercase tracking-[0.25em] text-white">
+            YogaWomans
+          </span>
         </div>
 
         {isMobile && (
@@ -44,9 +52,9 @@ function SidebarPanel({ onClose, isMobile = false }) {
             type="button"
             onClick={onClose}
             aria-label="Close menu"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/5 border border-white/10 text-white transition hover:bg-white/10 hover:scale-105"
           >
-            <X className="text-lg" />
+            <X size={20} />
           </button>
         )}
       </div>
@@ -151,8 +159,8 @@ function SidebarPanel({ onClose, isMobile = false }) {
 export default function Sidebar({ open, onClose }) {
   return (
     <>
-      {/* Desktop — fixed */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block">
+      {/* Desktop — fixed & floating */}
+      <div className="hidden lg:fixed lg:inset-y-0 lg:left-4 lg:py-4 lg:z-40 lg:block">
         <SidebarPanel onClose={() => {}} isMobile={false} />
       </div>
 
@@ -179,7 +187,7 @@ export default function Sidebar({ open, onClose }) {
               initial="closed"
               animate="open"
               exit="closed"
-              className="fixed inset-y-0 left-0 z-50 lg:hidden"
+              className="fixed inset-0 z-50 lg:hidden w-full h-full"
             >
               <SidebarPanel onClose={onClose} isMobile={true} />
             </motion.div>

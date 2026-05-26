@@ -1,6 +1,23 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
+import { suryaService } from "../../services/suryaService";
 
 export default function RightInfoPanel() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { showToast } = useToast();
+
+  const handleStartFlow = async () => {
+    if (user) {
+      showToast({ title: "Practice Started", message: "Your 12-step flow is beginning." });
+      await suryaService.saveSession(user.uid, { title: "Surya Namaskar 12-Step", duration: 20 });
+      navigate("/dashboard");
+    } else {
+      navigate("/login", { state: { returnTo: "/dashboard" } });
+    }
+  };
   const benefits = [
     "Improves flexibility & strength",
     "Enhances energy & immunity",
@@ -59,7 +76,10 @@ export default function RightInfoPanel() {
           </div>
         </div>
 
-        <button className="w-full py-3.5 xl:py-4 rounded-full bg-gradient-to-r from-[#1E7A46] to-[#00E676] text-[#0A0A0A] font-bold text-xs xl:text-sm uppercase tracking-widest shadow-[0_0_15px_rgba(0,230,118,0.2)] hover:shadow-[0_0_25px_rgba(0,230,118,0.5)] transition-all duration-300 mb-3 xl:mb-4">
+        <button 
+          onClick={handleStartFlow}
+          className="w-full py-3.5 xl:py-4 rounded-full bg-gradient-to-r from-[#1E7A46] to-[#00E676] text-[#0A0A0A] font-bold text-xs xl:text-sm uppercase tracking-widest shadow-[0_0_15px_rgba(0,230,118,0.2)] hover:shadow-[0_0_25px_rgba(0,230,118,0.5)] transition-all duration-300 mb-3 xl:mb-4"
+        >
           Start Your Flow
         </button>
 

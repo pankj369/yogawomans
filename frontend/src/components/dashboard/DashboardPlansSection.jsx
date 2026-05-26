@@ -33,26 +33,26 @@ export default function DashboardPlansSection() {
     <section className="mb-10">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="font-heading text-2xl font-extrabold text-wellness-dark">Your Healing Journeys</h2>
+          <h2 className="font-heading text-2xl font-extrabold text-white">Your Healing Journeys</h2>
           <p className="mt-1 text-sm text-wellness-muted">Resume your personalized wellness plans.</p>
         </div>
         <PremiumButton 
           onClick={() => navigate("/")}
           variant="secondary"
           icon={Sparkles}
-          className="px-5 py-2.5 !text-[10px]"
+          className="px-5 py-2.5 !text-[10px] !bg-wellness-glow hover:!bg-wellness-glow/90 !text-black !font-extrabold !border-none"
         >
           New Plan
         </PremiumButton>
       </div>
 
       {plans.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-[2.5rem] border border-[#EFE7DC] bg-white/40 p-12 text-center backdrop-blur-md shadow-sm">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-wellness-cream mb-4">
+        <div className="flex flex-col items-center justify-center rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-12 text-center backdrop-blur-[18px] shadow-glass">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/5 border border-wellness-border mb-4">
             <Sparkles size={24} className="text-[#E27229]" />
           </div>
-          <h3 className="font-heading text-xl font-bold text-wellness-dark">No active journeys</h3>
-          <p className="mt-2 text-sm text-wellness-muted max-w-sm">
+          <h3 className="font-heading text-xl font-bold text-white">No active journeys</h3>
+          <p className="mt-2 text-sm text-wellness-muted max-w-sm font-medium">
             Generate your first personalized wellness plan to start transforming your routine.
           </p>
         </div>
@@ -64,14 +64,14 @@ export default function DashboardPlansSection() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="group relative overflow-hidden rounded-3xl border border-[#EFE7DC] bg-white/60 p-5 backdrop-blur-md transition-all duration-300 hover:bg-white hover:shadow-[0_15px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1"
+              className="group relative overflow-hidden rounded-3xl border border-wellness-border bg-wellness-glass p-5 backdrop-blur-[18px] transition-all duration-300 hover:bg-white/5 hover:border-wellness-glow/30 hover:shadow-cardHover hover:-translate-y-1"
             >
               {/* Background accent glow */}
               <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#E27229]/5 blur-2xl transition-all duration-500 group-hover:bg-[#E27229]/10" />
 
               <div className="relative z-10">
                 <div className="mb-4 flex items-center justify-between">
-                  <span className="inline-flex items-center rounded-full bg-[#EFE7DC] px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-[#E27229]">
+                  <span className="inline-flex items-center rounded-full bg-white/5 border border-wellness-border px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-[#E27229]">
                     {plan.goal}
                   </span>
                   <span className="flex items-center gap-1.5 text-[10px] font-semibold text-wellness-muted">
@@ -80,7 +80,7 @@ export default function DashboardPlansSection() {
                   </span>
                 </div>
                 
-                <h3 className="font-heading text-xl font-bold text-wellness-dark leading-tight group-hover:text-[#E27229] transition-colors duration-300">
+                <h3 className="font-heading text-xl font-bold text-white leading-tight group-hover:text-wellness-glow transition-colors duration-300">
                   {plan.title}
                 </h3>
                 
@@ -89,7 +89,7 @@ export default function DashboardPlansSection() {
                   <span className="flex items-center gap-1.5"><CheckCircle2 size={14} className="text-[#E27229]" /> {plan.progress}%</span>
                 </div>
                 
-                <div className="mt-5 pt-5 border-t border-[#EFE7DC]/50">
+                <div className="mt-5 pt-5 border-t border-wellness-border">
                   <PremiumButton 
                     onClick={() => handleContinue(plan)}
                     variant="ghost"
@@ -105,7 +105,7 @@ export default function DashboardPlansSection() {
               {/* Subtle Progress Bar at very bottom edge */}
               <div className="absolute bottom-0 left-0 h-1 w-full bg-transparent">
                 <div 
-                  className="h-full bg-[#E27229]/80 transition-all duration-1000" 
+                  className="h-full bg-gradient-to-r from-wellness-orange to-wellness-gold transition-all duration-1000" 
                   style={{ width: `${plan.progress}%` }} 
                 />
               </div>

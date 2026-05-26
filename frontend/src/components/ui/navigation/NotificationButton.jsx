@@ -14,19 +14,19 @@ function NotificationItem({ notification, onRead }) {
     <button
       type="button"
       onClick={() => onRead(notification.id)}
-      className="group flex w-full items-start gap-3 rounded-2xl p-3 text-left transition hover:bg-wellness-cream"
+      className="group flex w-full items-start gap-3 rounded-2xl p-3.5 text-left transition duration-300 hover:bg-white/10 hover:shadow-glass border border-transparent hover:border-white/5"
     >
       <span
         className={[
-          "mt-1.5 h-2 w-2 flex-shrink-0 rounded-full transition",
-          notification.unread ? "bg-wellness-orange" : "bg-wellness-sage/40",
+          "mt-2 h-2 w-2 flex-shrink-0 rounded-full transition-all duration-300 group-hover:scale-110",
+          notification.unread ? "bg-wellness-orange shadow-[0_0_8px_#FF8A3D]" : "bg-wellness-muted/30",
         ].join(" ")}
       />
       <div className="min-w-0">
-        <p className="text-sm font-semibold text-wellness-dark group-hover:text-wellness-green">
+        <p className="text-sm font-semibold text-white group-hover:text-wellness-glow transition-colors duration-300">
           {notification.title}
         </p>
-        <p className="mt-0.5 text-xs text-wellness-muted">{notification.time}</p>
+        <p className="mt-0.5 text-xs text-wellness-muted/80">{notification.time}</p>
       </div>
     </button>
   );
@@ -44,7 +44,7 @@ export default function NotificationButton({
       <button
         type="button"
         onClick={onToggle}
-        className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-white/50 bg-white/65 text-wellness-dark shadow-liftSm transition hover:-translate-y-0.5 hover:bg-white hover:shadow-card"
+        className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-wellness-border bg-white/5 text-white shadow-glass transition hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-cardHover"
         aria-label="Notifications"
       >
         <Bell size={19} />
@@ -55,7 +55,7 @@ export default function NotificationButton({
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="absolute right-2 top-2 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-wellness-orange text-[0.5rem] font-bold text-white border-2 border-white"
+              className="absolute right-2 top-2 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-wellness-orange text-[0.5rem] font-bold text-white border-2 border-wellness-bg shadow-sm"
             >
               <span className="sr-only">New alerts</span>
             </motion.span>
@@ -70,12 +70,12 @@ export default function NotificationButton({
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute right-0 top-[calc(100%+8px)] z-50 w-80 rounded-3xl border border-white/60 bg-white/96 p-4 shadow-heroCard backdrop-blur-2xl"
+            className="absolute right-0 top-[calc(100%+8px)] z-50 w-80 rounded-[2rem] border border-wellness-border bg-wellness-glass p-5 shadow-glass backdrop-blur-[24px]"
           >
             <div className="mb-3 flex items-center justify-between px-1">
-              <p className="text-label">Notifications</p>
+              <p className="text-label text-[0.65rem] text-wellness-gold">Notifications</p>
               {unreadCount > 0 && (
-                <span className="rounded-full bg-wellness-orange/10 px-2.5 py-0.5 text-xs font-bold text-wellness-orange">
+                <span className="rounded-full bg-wellness-orange/15 px-2.5 py-0.5 text-xs font-bold text-wellness-orange border border-wellness-orange/10">
                   {unreadCount} new
                 </span>
               )}
@@ -86,7 +86,7 @@ export default function NotificationButton({
                   <NotificationItem key={n.id} notification={n} onRead={onRead} />
                 ))
               ) : (
-                <p className="py-4 text-center text-sm text-wellness-muted">
+                <p className="py-6 text-center text-sm text-wellness-muted font-medium">
                   All caught up ✨
                 </p>
               )}

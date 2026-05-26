@@ -40,11 +40,11 @@ function PremiumUpgradeModal({ isOpen, onClose }) {
           initial={{ y: 30, opacity: 0, scale: 0.98 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
           exit={{ y: 30, opacity: 0, scale: 0.98 }}
-          className="mx-auto w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-white/20 bg-[#0B1020] text-white shadow-2xl relative"
+          className="mx-auto w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass text-white shadow-glass backdrop-blur-xl relative"
         >
-          <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-purple-900/30 to-transparent" />
+          <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-purple-500/15 to-transparent pointer-events-none" />
           
-          <button onClick={onClose} className="absolute right-5 top-5 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 transition backdrop-blur-sm">
+          <button onClick={onClose} className="absolute right-5 top-5 z-10 p-2 rounded-full bg-white/5 border border-wellness-border hover:bg-white/10 transition backdrop-blur-sm">
             <X size={20} />
           </button>
 
@@ -55,20 +55,20 @@ function PremiumUpgradeModal({ isOpen, onClose }) {
             
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.25em] text-purple-300 mb-2">Premium Healing</p>
             <h3 className="font-heading text-3xl font-extrabold mb-4">Deepen Your Journey</h3>
-            <p className="text-sm text-white/70 leading-relaxed max-w-sm mb-8">
+            <p className="text-sm text-wellness-muted leading-relaxed max-w-sm mb-8 font-medium">
               This session is locked. Upgrade to our Premium tier to access advanced meditations, sleep stories, and personalized emotional wellness routines.
             </p>
             
             <div className="w-full space-y-3">
               <button 
                 onClick={() => navigate("/pricing")}
-                className="w-full rounded-full bg-purple-600 text-white py-4 text-sm font-bold transition hover:bg-purple-500 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                className="w-full rounded-full bg-purple-600 hover:bg-purple-500 text-white py-4 text-sm font-extrabold transition shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 View Plans & Upgrade
               </button>
               <button 
                 onClick={onClose}
-                className="w-full rounded-full bg-white/10 py-4 text-sm font-bold transition hover:bg-white/20"
+                className="w-full rounded-full bg-white/5 border border-wellness-border py-4 text-sm font-bold transition hover:bg-white/10"
               >
                 Maybe Later
               </button>

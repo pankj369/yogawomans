@@ -33,39 +33,36 @@ import videoHeroBg from "../assets/videos/hero-bg.mp4";
 // Grouped sidebar navigation — each group has a label and an items array
 export const dashboardMenuGroups = [
   {
-    group: "Main",
+    group: "Overview",
     items: [
       { label: "Dashboard",       path: "/dashboard",              icon: Activity  },
+    ],
+  },
+  {
+    group: "Wellness & Flow",
+    items: [
+      { label: "Physical Health", path: "/physicalHealth",         icon: Zap       },
+      { label: "Mental Health",   path: "/mentalHealth",           icon: Briefcase },
+      { label: "Palmistry",       path: "/dashboard/palmistry",    icon: Sparkles  },
       { label: "Health Metrics",  path: "/dashboard/metrics",      icon: HeartPulse },
-      { label: "Physical Health", path: "/physicalHealth",     icon: Zap       },
-      { label: "Mental Health",   path: "/mentalHealth",       icon: Briefcase },
-    ],
-  },
-  {
-    group: "Wellness",
-    items: [
-      { label: "Yoga World",      path: "/dashboard/yoga-world",   icon: Globe     },
-      { label: "Meditation",      path: "/dashboard/meditation",   icon: Moon      },
-      { label: "Sleep",           path: "/dashboard/sleep",        icon: Moon       },
       { label: "Breathwork",      path: "/dashboard/breathwork",   icon: Wind      },
-      { label: "Wisdom",          path: "/dashboard/wisdom",       icon: BookOpen   },
+      { label: "Meditation",      path: "/dashboard/meditation",   icon: Moon      },
+      { label: "Surya Sessions",  path: "/dashboard/surya",        icon: Sun       },
+      { label: "Wellness Insights", path: "/dashboard/insights",   icon: BookOpen  },
     ],
   },
   {
-    group: "Programs",
+    group: "Sanctuary",
     items: [
-      { label: "Live Classes",    path: "/dashboard/live",         icon: Radio      },
-      { label: "Kids Yoga",       path: "/dashboard/kids",         icon: Heart      },
-      { label: "Saved",           path: "/dashboard/saved",        icon: Bookmark },
-      { label: "Journal",         path: "/dashboard/journal",      icon: Edit3    },
+      { label: "My History",      path: "/dashboard/history",      icon: Clock     },
+      { label: "Saved Reports",   path: "/dashboard/saved",        icon: Bookmark  },
     ],
   },
   {
-    group: "AI & Settings",
+    group: "Preferences",
     items: [
-      { label: "AI Wellness Coach",path: "/dashboard/ai-coach",    icon: Cpu      },
-      { label: "Generated Plans",  path: "/dashboard/plans",       icon: Sparkles },
-      { label: "Settings",        path: "/settings",               icon: Settings },
+      { label: "Settings",        path: "/settings",               icon: Settings  },
+      { label: "Support",         path: "/dashboard/support",      icon: Headphones },
     ],
   },
 ];

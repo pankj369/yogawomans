@@ -8,26 +8,26 @@ export default function WellnessInsights() {
   const momentum = aiInsights?.momentum === "Active" ? 92 : 78;
 
   const insights = [
-    { label: "Calm Score", value: calmScore, color: "#8FA68E" },
-    { label: "Emotional Recovery", value: 92, color: "#E27229" },
-    { label: "Consistency", value: momentum, color: "#C89B63" },
-    { label: "Energy Balance", value: 88, color: "#2F6B3B" },
+    { label: "Calm Score", value: calmScore, color: "#00E676" }, // Emerald Glow
+    { label: "Emotional Recovery", value: 92, color: "#FF8A3D" }, // Deep Orange
+    { label: "Consistency", value: momentum, color: "#D4A64F" }, // Gold
+    { label: "Energy Balance", value: 88, color: "#00E676" }, // Emerald Glow
   ];
 
   if (loading) {
     return (
-      <div className="w-full animate-pulse rounded-[2.5rem] bg-white/40 p-8 sm:p-10 h-48 backdrop-blur-md border border-[#EFE7DC] shadow-sm"></div>
+      <div className="w-full animate-pulse rounded-[2.5rem] bg-wellness-glass p-8 sm:p-10 h-48 backdrop-blur-[18px] border border-wellness-border shadow-glass"></div>
     );
   }
 
   return (
     <motion.section 
       variants={fadeUp}
-      className="rounded-[2.5rem] bg-white/40 p-8 sm:p-10 backdrop-blur-md border border-[#EFE7DC] shadow-sm"
+      className="rounded-[2.5rem] bg-wellness-glass p-8 sm:p-10 backdrop-blur-[18px] border border-wellness-border shadow-glass"
     >
       <div className="mb-8">
-        <h2 className="font-heading text-2xl font-extrabold text-[#11281d]">Wellness State</h2>
-        <p className="mt-2 text-sm text-[#8FA68E] font-medium tracking-wide italic border-l-2 border-[#E27229] pl-3">
+        <h2 className="font-heading text-2xl font-extrabold text-white">Wellness State</h2>
+        <p className="mt-2 text-sm text-wellness-muted font-medium tracking-wide italic border-l-2 border-wellness-orange pl-3">
           "{aiInsights?.message || "Your weekly holistic overview"}"
         </p>
       </div>
@@ -42,16 +42,16 @@ export default function WellnessInsights() {
             className="flex flex-col"
           >
             <div className="flex justify-between items-end mb-3">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#3a4a3d]">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-wellness-muted">
                 {insight.label}
               </span>
-              <span className="font-serif text-2xl font-light text-[#11281d]">
+              <span className="font-heading text-xl font-bold text-white">
                 {insight.value}
               </span>
             </div>
             
             {/* Animated Progress Bar */}
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#EFE7DC]/50">
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${insight.value}%` }}

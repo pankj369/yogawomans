@@ -31,16 +31,16 @@ export default function TrackCard({ track }) {
       variants={hoverLift}
       initial="rest"
       whileHover="hover"
-      className={`group relative flex items-center justify-between overflow-hidden rounded-3xl border p-4 shadow-card transition-all cursor-pointer ${
+      className={`group relative flex items-center justify-between overflow-hidden rounded-3xl border p-4 shadow-glass backdrop-blur-[18px] transition-all duration-300 cursor-pointer ${
         isCurrent
-          ? "border-wellness-orange/50 bg-white/95 shadow-liftSm"
-          : "border-white/70 bg-white/55 hover:bg-white/90"
+          ? "border-wellness-orange bg-wellness-glow/10 shadow-[0_0_15px_rgba(0,230,118,0.05)]"
+          : "border-wellness-border bg-wellness-glass hover:bg-white/5 hover:border-wellness-glow/30"
       }`}
       onClick={handlePlayClick}
     >
       <div className="flex items-center gap-4">
         {/* Cover Art */}
-        <div className="relative h-14 w-14 overflow-hidden rounded-2xl bg-wellness-cream shadow-sm flex-shrink-0">
+        <div className="relative h-14 w-14 overflow-hidden rounded-2xl bg-white/5 border border-wellness-border shadow-sm flex-shrink-0">
           <img
             src={track.image}
             alt={track.title}
@@ -56,13 +56,13 @@ export default function TrackCard({ track }) {
               className={`h-8 w-8 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all duration-200 ${
                 isCurrent
                   ? "bg-wellness-orange text-white"
-                  : "bg-white/90 text-wellness-dark hover:bg-white hover:scale-105"
+                  : "bg-wellness-glow/20 border border-wellness-glow/40 text-wellness-glow hover:bg-wellness-glow hover:text-black"
               }`}
             >
               {isCurrentlyPlaying ? (
-                <Pause fill="currentColor" size={12} className={isCurrent ? "text-white" : "text-wellness-dark"} />
+                <Pause fill="currentColor" size={12} className={isCurrent ? "text-white" : "text-wellness-glow"} />
               ) : (
-                <Play fill="currentColor" size={12} className={`ml-0.5 ${isCurrent ? "text-white" : "text-wellness-dark"}`} />
+                <Play fill="currentColor" size={12} className={`ml-0.5 ${isCurrent ? "text-white" : "text-wellness-glow"}`} />
               )}
             </button>
           </div>
@@ -71,7 +71,7 @@ export default function TrackCard({ track }) {
         {/* Info */}
         <div className="min-w-0 pr-2">
           <h4 className={`font-heading text-sm sm:text-base font-bold truncate leading-snug transition-colors duration-200 ${
-            isCurrent ? "text-wellness-orange" : "text-wellness-dark group-hover:text-wellness-orange"
+            isCurrent ? "text-wellness-orange" : "text-white group-hover:text-wellness-orange"
           }`}>
             {track.title}
           </h4>
@@ -90,7 +90,7 @@ export default function TrackCard({ track }) {
         className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
           bookmarked
             ? "bg-wellness-orange/15 text-wellness-orange hover:bg-wellness-orange hover:text-white"
-            : "bg-wellness-softcream/70 text-wellness-muted hover:bg-wellness-orange hover:text-white"
+            : "bg-white/5 border border-wellness-border text-wellness-muted hover:bg-wellness-orange hover:text-white"
         }`}
         title={bookmarked ? "Bookmarked" : "Bookmark track"}
       >

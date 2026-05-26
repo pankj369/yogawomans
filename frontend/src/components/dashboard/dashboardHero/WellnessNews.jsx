@@ -32,10 +32,10 @@ export default function WellnessNews() {
   return (
     <div className="space-y-6 h-full flex flex-col">
       <div className="flex items-center gap-3 px-2">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-wellness-dark text-white shadow-liftSm">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-wellness-surface border border-wellness-border text-wellness-glow shadow-liftSm">
           <Calendar size={20} />
         </div>
-        <h2 className="font-heading text-2xl font-bold text-wellness-dark">Latest in Yoga World</h2>
+        <h2 className="font-heading text-2xl font-bold text-white">Latest in Yoga World</h2>
       </div>
       
       <div className="grid gap-4 flex-1">
@@ -45,7 +45,7 @@ export default function WellnessNews() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: idx * 0.15 }}
-            className="group relative flex flex-col justify-between overflow-hidden rounded-[2rem] border border-white/60 bg-white/60 p-6 shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:bg-white/90 hover:border-white sm:flex-row sm:items-center gap-4 h-full"
+            className="group relative flex flex-col justify-between overflow-hidden rounded-[2rem] border border-wellness-border bg-wellness-glass p-6 shadow-glass backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-wellness-glow/30 hover:shadow-cardHover sm:flex-row sm:items-center gap-4 h-full"
           >
             <div className={`absolute inset-0 bg-gradient-to-r ${item.color} opacity-0 transition-opacity duration-500 group-hover:opacity-100`} />
             
@@ -56,12 +56,12 @@ export default function WellnessNews() {
                 </span>
                 <span className="text-xs font-semibold text-wellness-muted">{item.date}</span>
               </div>
-              <h3 className="font-heading text-lg font-bold leading-snug text-wellness-dark group-hover:text-black transition-colors duration-300">
+              <h3 className="font-heading text-lg font-bold leading-snug text-white group-hover:text-wellness-glow transition-colors duration-300">
                 {item.title}
               </h3>
             </div>
 
-            <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white border border-wellness-muted/10 text-wellness-dark shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-wellness-dark group-hover:text-white group-hover:shadow-md sm:mt-0">
+            <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/5 border border-wellness-border text-white shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-wellness-glow group-hover:text-black group-hover:shadow-md sm:mt-0">
               <ArrowUpRight size={20} />
             </div>
           </motion.div>

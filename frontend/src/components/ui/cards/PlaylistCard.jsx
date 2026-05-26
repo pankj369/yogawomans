@@ -22,11 +22,11 @@ export default function PlaylistCard({ playlist }) {
       variants={hoverLift}
       initial="rest"
       whileHover="hover"
-      className="group relative flex flex-col rounded-5xl overflow-hidden border border-white/60 bg-white/45 backdrop-blur-xl p-5 shadow-card transition-all cursor-pointer hover:border-white/80 hover:bg-white/75"
+      className="group relative flex flex-col rounded-3xl overflow-hidden border border-wellness-border bg-wellness-glass backdrop-blur-[18px] p-5 shadow-glass transition-all duration-300 cursor-pointer hover:border-wellness-glow/30 hover:bg-white/5 hover:shadow-cardHover"
       onClick={handlePlay}
     >
       {/* Cover Image */}
-      <div className="relative aspect-video w-full overflow-hidden rounded-3xl bg-wellness-cream shadow-sm mb-4">
+      <div className="relative aspect-video w-full overflow-hidden rounded-3xl bg-white/5 border border-wellness-border shadow-sm mb-4">
         <img
           src={playlist.image}
           alt={playlist.title}
@@ -37,8 +37,8 @@ export default function PlaylistCard({ playlist }) {
 
         {/* Hover play button */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/25 backdrop-blur-md border border-white/40 text-white shadow-glow2 transform transition-transform duration-300 scale-90 group-hover:scale-100">
-            <Play fill="white" size={24} className="ml-1" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-wellness-glow/20 backdrop-blur-md border border-wellness-glow/40 text-wellness-glow shadow-glow2 transform transition-transform duration-300 scale-90 group-hover:scale-100">
+            <Play fill="currentColor" size={24} className="ml-1" />
           </div>
         </div>
 
@@ -52,10 +52,10 @@ export default function PlaylistCard({ playlist }) {
       {/* Details */}
       <div className="flex-1 flex flex-col justify-between">
         <div>
-          <span className="text-[10px] font-bold text-wellness-orange tracking-widest uppercase bg-wellness-cream2/60 px-2.5 py-1 rounded-full inline-block mb-2">
+          <span className="text-[10px] font-bold text-wellness-orange tracking-widest uppercase bg-white/5 border border-wellness-border px-2.5 py-1 rounded-full inline-block mb-2">
             {playlist.category}
           </span>
-          <h4 className="font-heading text-lg font-bold text-wellness-dark leading-snug">
+          <h4 className="font-heading text-lg font-bold text-white group-hover:text-wellness-glow transition-colors leading-snug">
             {playlist.title}
           </h4>
           <p className="text-xs font-semibold text-wellness-muted mt-1.5 line-clamp-2">

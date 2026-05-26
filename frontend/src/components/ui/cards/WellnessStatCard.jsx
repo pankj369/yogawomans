@@ -8,17 +8,17 @@ export default function WellnessStatCard({ stat }) {
   
   return (
     <motion.div variants={hoverLift} whileHover="hover" initial="rest">
-      <GlassCard className="p-5">
+      <GlassCard className="p-5 transition-all duration-300 hover:border-wellness-glow/30 hover:bg-white/5">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-wellness-muted">{stat.label}</p>
-            <p className="mt-2 font-heading text-3xl font-bold text-wellness-dark">
+            <p className="mt-2 font-heading text-3xl font-bold text-white">
               {stat.value}
             </p>
           </div>
           {Icon && (
             <div 
-              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-sm"
+              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/5 border border-wellness-border shadow-sm"
               style={{ color: stat.color }}
             >
               <Icon size={18} />

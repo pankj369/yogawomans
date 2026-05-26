@@ -6,8 +6,8 @@ export default function HeroOverlay({
     dark: "bg-black/60",
     gradient: "bg-gradient-to-t from-black/80 via-black/30 to-transparent",
     blur: "backdrop-blur-sm bg-black/40",
-    cinematic: "bg-[linear-gradient(110deg,rgba(245,220,192,0.85)_0%,rgba(247,232,213,0.75)_34%,rgba(255,255,255,0.3)_100%)]",
-    cinematicDark: "bg-[linear-gradient(110deg,rgba(0,0,0,0.65)_0%,rgba(0,0,0,0.25)_45%,rgba(0,0,0,0.05)_100%)]",
+    cinematic: "bg-hero-overlay",
+    cinematicDark: "bg-hero-overlay",
   };
 
   return (

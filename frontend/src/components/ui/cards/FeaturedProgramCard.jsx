@@ -9,7 +9,7 @@ export default function FeaturedProgramCard({ program, onExplore }) {
       variants={hoverLift}
       initial="rest"
       whileHover="hover"
-      className="relative overflow-hidden rounded-5xl bg-black text-white shadow-heroCard group cursor-pointer"
+      className="relative overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass text-white shadow-glass group cursor-pointer hover:border-wellness-glow/30 hover:shadow-cardHover transition-all duration-300"
       onClick={() => onExplore?.(program)}
     >
       <img
@@ -23,7 +23,7 @@ export default function FeaturedProgramCard({ program, onExplore }) {
         <p className="text-[0.65rem] font-bold uppercase tracking-[0.25em] text-wellness-gold/90 mb-2">
           Featured Program
         </p>
-        <h3 className="font-heading text-3xl sm:text-4xl font-bold leading-tight tracking-tight drop-shadow-sm mb-3">
+        <h3 className="font-heading text-3xl sm:text-4xl font-bold leading-tight tracking-tight drop-shadow-sm mb-3 group-hover:text-wellness-glow transition-colors">
           {program.title}
         </h3>
         <p className="max-w-md text-sm text-white/80 leading-relaxed font-medium mb-6 line-clamp-2">
@@ -33,7 +33,7 @@ export default function FeaturedProgramCard({ program, onExplore }) {
         <div className="flex items-center gap-3 mt-auto">
           <PremiumButton
             variant="outline"
-            className="!border-white/40 !bg-white/10 !text-white hover:!bg-white/20 backdrop-blur-md"
+            className="!border-wellness-border hover:!border-wellness-glow/30 !bg-white/5 !text-white hover:!bg-white/10 backdrop-blur-md transition-all"
             onClick={(e) => {
               e.stopPropagation();
               onExplore?.(program);

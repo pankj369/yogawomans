@@ -14,7 +14,7 @@ export default function DashboardHero({ userName, streak, calmScore }) {
         transition={{ duration: 0.6 }}
         className="flex flex-col gap-2"
       >
-        <h1 className="font-heading text-3xl sm:text-4xl font-extrabold text-wellness-dark">
+        <h1 className="font-heading text-3xl sm:text-4xl font-extrabold text-white">
           Welcome back, <span className="text-wellness-orange">{userName}</span>
         </h1>
         <p className="text-wellness-muted font-medium text-sm sm:text-base">

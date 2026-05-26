@@ -12,7 +12,6 @@ export default function ProtectedRoute({ requireProfileSetup = false }) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#FDFBF7]">
         <div className="flex flex-col items-center gap-6">
-          {/* Elegant premium spinner replacing the basic one */}
           <Skeleton variant="circular" className="h-20 w-20 bg-wellness-orange/10" />
           <motion.p
             animate={{ opacity: [0.4, 1, 0.4] }}
@@ -28,17 +27,18 @@ export default function ProtectedRoute({ requireProfileSetup = false }) {
 
   // 2. Auth is resolved, user is explicitly NOT authenticated
   if (!isAuthenticated) {
-    // Only redirect if we are not already on the login page (defensive)
-    if (location.pathname === "/login") return null;
+    // Avoid double redirect if we are somehow rendering this on the login route
+    if (location.pathname === "/login") return <Outlet />;
     return <Navigate to="/login" replace state={{ returnTo: location.pathname + location.search }} />;
   }
 
   // 3. User is authenticated, but route requires profile setup
   if (requireProfileSetup && !profileSetupComplete && !profileSetupSkipped) {
+    // Defensive check to avoid navigating to a route we are already on
     if (location.pathname === "/profile-setup") return <Outlet />;
     return <Navigate to="/profile-setup" replace />;
   }
 
-  // 4. All checks passed
+  // 4. All checks passed safely
   return <Outlet />;
 }

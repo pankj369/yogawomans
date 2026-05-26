@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Play, X } from "lucide-react";
+import { Play, X, Headphones, Clock } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 import HeroBanner from "../components/dashboard/HeroBanner";
@@ -33,6 +33,8 @@ import HealthMetricsSection from "../components/dashboard/metrics/HealthMetricsS
 import YogaWorldSection from "../components/dashboard/yogaWorld/YogaWorldSection";
 import EmptyState from "../components/ui/states/EmptyState";
 import { Search } from "lucide-react";
+import PalmistryDashboard from "../components/dashboard/palmistry/PalmistryDashboard";
+import SacredOrbitSection from "../components/sacred-orbit/SacredOrbitSection";
 
 // Premium Wellness OS Components
 import DashboardHero from "../components/dashboard/dashboardHero/DashboardHero";
@@ -41,6 +43,7 @@ import ContinueJourney from "../components/dashboard/ContinueJourney";
 import RecentPlans from "../components/dashboard/RecentPlans";
 import AIRecommendations from "../components/dashboard/AIRecommendations";
 import { useGeneratedPlans } from "../hooks/useGeneratedPlans";
+import { suryaService } from "../services/suryaService";
 
 import { useAuth } from "../context/AuthContext";
 import { useDashboard } from "../context/DashboardContext";
@@ -59,6 +62,11 @@ const sectionMeta = {
   plans: { title: "AI Generated Plans", hero: "Your Healing Journeys", focus: "Continue your personalized wellness paths." },
   metrics: { title: "Health Metrics", hero: "Wellness Dashboard", focus: "Immersive tracking of your vital health stats." },
   "yoga-world": { title: "Yoga World", hero: "Global Wellness", focus: "Connect with the latest in mindfulness and yoga science." },
+  palmistry: { title: "AI Palmistry", hero: "Spiritual Insights", focus: "Analyze your palm for energetic wellness insights." },
+  surya: { title: "Surya Sessions", hero: "Sun Salutations", focus: "Flow through the 12 postures of Surya Namaskar." },
+  insights: { title: "Wellness Insights", hero: "Your Energy State", focus: "Understand your sleep, consistency, and recovery patterns." },
+  history: { title: "Practice History", hero: "Your Practice History", focus: "Look back at your completed wellness sessions." },
+  support: { title: "Support", hero: "Mindful Support", focus: "We are here to assist and guide your wellness practice." },
 };
 
 function SessionModal({ session, onClose, onPreview, onStart }) {
@@ -75,15 +83,15 @@ function SessionModal({ session, onClose, onPreview, onStart }) {
         initial={{ y: 30, opacity: 0, scale: 0.98 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 30, opacity: 0, scale: 0.98 }}
-        className="mx-auto max-w-3xl overflow-hidden rounded-[2.5rem] border border-white/40 bg-white shadow-[0_30px_100px_rgba(0,0,0,0.4)]"
+        className="mx-auto max-w-3xl overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass shadow-[0_30px_100px_rgba(0,0,0,0.4)] backdrop-blur-xl"
       >
         <div className="relative h-72">
           <img src={session.image} alt={session.title} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
           <button
             type="button"
             onClick={onClose}
-            className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-white/30 text-white backdrop-blur-md transition hover:bg-white/50 hover:scale-105"
+            className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-white/5 border border-wellness-border text-white backdrop-blur-md transition hover:bg-white/10 hover:scale-105"
           >
             <X size={20} />
           </button>
@@ -94,11 +102,11 @@ function SessionModal({ session, onClose, onPreview, onStart }) {
           </div>
         </div>
 
-        <div className="space-y-6 p-6 sm:p-8 bg-wellness-cream2">
-          <p className="text-base leading-relaxed text-wellness-muted">{session.preview || session.description}</p>
+        <div className="space-y-6 p-6 sm:p-8 bg-transparent">
+          <p className="text-base leading-relaxed text-wellness-muted font-medium">{session.preview || session.description}</p>
           <div className="flex flex-wrap gap-2">
             {(session.tags || []).map((tag) => (
-              <span key={tag} className="rounded-full bg-wellness-greenLight px-3 py-1.5 text-xs font-semibold text-wellness-green">
+              <span key={tag} className="rounded-full bg-white/5 border border-wellness-border px-3 py-1.5 text-xs font-semibold text-wellness-glow">
                 {tag}
               </span>
             ))}
@@ -107,14 +115,14 @@ function SessionModal({ session, onClose, onPreview, onStart }) {
             <button
               type="button"
               onClick={() => onStart(session)}
-              className="rounded-full bg-wellness-dark px-6 py-3 text-sm font-bold text-white transition hover:bg-black shadow-sm"
+              className="rounded-full bg-wellness-glow hover:bg-wellness-glow/90 text-black px-6 py-3 text-sm font-extrabold transition hover:shadow-glow2"
             >
               Start session
             </button>
             <button
               type="button"
               onClick={() => onPreview(session)}
-              className="rounded-full bg-white border border-wellness-muted/30 px-6 py-3 text-sm font-bold text-wellness-dark transition hover:bg-wellness-cream flex items-center justify-center gap-2"
+              className="rounded-full bg-white/5 border border-wellness-border px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10 flex items-center justify-center gap-2"
             >
               <Play size={16} /> Play preview
             </button>
@@ -138,31 +146,31 @@ function MeetingModal({ liveClass, onClose }) {
         initial={{ y: 30, opacity: 0, scale: 0.98 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 30, opacity: 0, scale: 0.98 }}
-        className="mx-auto w-full max-w-2xl rounded-[2.5rem] border border-white/60 bg-wellness-cream2 p-8 shadow-glass"
+        className="mx-auto w-full max-w-2xl rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-8 shadow-glass backdrop-blur-xl"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-wellness-gold">Live class</p>
-            <h3 className="mt-1 font-heading text-3xl font-extrabold text-wellness-dark">{liveClass.title}</h3>
-            <p className="mt-1 text-sm text-wellness-muted">with {liveClass.instructor}</p>
+            <h3 className="mt-1 font-heading text-3xl font-extrabold text-white">{liveClass.title}</h3>
+            <p className="mt-1 text-sm text-wellness-muted font-medium">with {liveClass.instructor}</p>
           </div>
-          <button type="button" onClick={onClose} className="rounded-full bg-white/70 p-3 text-wellness-muted transition hover:bg-white hover:text-wellness-dark hover:scale-105">
+          <button type="button" onClick={onClose} className="rounded-full bg-white/5 border border-wellness-border p-3 text-wellness-muted transition hover:bg-white/10 hover:text-white hover:scale-105">
             <X size={20} />
           </button>
         </div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-3xl bg-white/60 p-5 shadow-sm border border-white/50">
+          <div className="rounded-3xl bg-white/5 p-5 shadow-glass border border-wellness-border">
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-wellness-gold">Starts at</p>
-            <p className="mt-1 font-heading text-3xl font-extrabold text-wellness-dark">{liveClass.time}</p>
+            <p className="mt-1 font-heading text-3xl font-extrabold text-white">{liveClass.time}</p>
           </div>
-          <div className="rounded-3xl bg-white/60 p-5 shadow-sm border border-white/50">
+          <div className="rounded-3xl bg-white/5 p-5 shadow-glass border border-wellness-border">
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-wellness-gold">Seats left</p>
-            <p className="mt-1 font-heading text-3xl font-extrabold text-wellness-dark">{liveClass.seatsLeft}</p>
+            <p className="mt-1 font-heading text-3xl font-extrabold text-white">{liveClass.seatsLeft}</p>
           </div>
         </div>
 
-        <div className="mt-8 rounded-3xl border border-wellness-green/30 bg-wellness-greenLight p-5 text-sm text-wellness-greenDark text-center font-medium">
+        <div className="mt-8 rounded-3xl border border-wellness-glow/20 bg-wellness-glow/10 p-5 text-sm text-wellness-glow text-center font-semibold shadow-[0_0_15px_rgba(0,230,118,0.1)]">
           Meeting room is ready. Your instructor will admit you shortly.
         </div>
       </motion.div>
@@ -193,20 +201,29 @@ export default function Dashboard() {
   
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [suryaStreak, setSuryaStreak] = useState(0);
+
+  // Fetch Surya Namaskar streak
+  useEffect(() => {
+    if (auth.user?.id || auth.user?.uid) {
+      suryaService.getStreak(auth.user.id || auth.user.uid).then(setSuryaStreak).catch(console.error);
+    }
+  }, [auth.user]);
 
   const DASHBOARD_CATEGORIES = ["All", "Meditation", "Yoga", "Sleep", "Breathwork"];
   const { generatedPlans, unfinishedPlan } = useGeneratedPlans();
   
   if (!auth.isAuthReady) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-xl font-semibold bg-wellness-bg text-wellness-dark">
+      <div className="flex min-h-screen items-center justify-center text-xl font-semibold bg-wellness-bg text-white">
         Loading dashboard...
       </div>
     );
   }
   
   const userName = auth.user?.name || "Yogi";
-  const currentStreak = auth.user?.wellnessStats?.currentStreak || 0;
+  // Combine base streak with Surya streak for demonstration
+  const currentStreak = (auth.user?.wellnessStats?.currentStreak || 0) + suryaStreak;
   const calmScore = auth.user?.wellnessStats?.calmScore || 0;
   const hasProPlan = auth.isPremium || state.activePlan === "Pro";
   const activeSection = sectionMeta[section] || sectionMeta.home;
@@ -257,7 +274,7 @@ export default function Dashboard() {
         
         {section === "home" ? (
           <DashboardHero userName={userName} streak={currentStreak} calmScore={calmScore} />
-        ) : (
+        ) : section === "plans" ? (
           <HeroBanner 
             userName={userName}
             lastSession={lastSession}
@@ -266,28 +283,30 @@ export default function Dashboard() {
             sectionTitle={activeSection.hero}
             videoSrc={getVideoSrc(section)}
           />
+        ) : null}
+
+        {section !== "palmistry" && (
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide px-2">
+            {DASHBOARD_CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`whitespace-nowrap rounded-full px-5 py-2 text-sm font-bold border transition-all duration-300 ${
+                  selectedCategory === cat 
+                    ? "bg-wellness-glow/25 border-wellness-glow/40 text-wellness-glow shadow-[0_0_15px_rgba(0,230,118,0.15)]" 
+                    : "bg-white/5 border-wellness-border text-wellness-muted hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         )}
 
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide px-2">
-          {DASHBOARD_CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`whitespace-nowrap rounded-full px-5 py-2 text-sm font-bold shadow-sm transition-all duration-300 ${
-                selectedCategory === cat 
-                  ? "bg-wellness-dark text-white hover:bg-black" 
-                  : "bg-white/60 border border-white/50 text-wellness-muted hover:bg-white hover:text-wellness-dark"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
         {(query.trim() || selectedCategory !== "All") && (
-          <section className="bg-white/40 p-6 rounded-3xl border border-white/50 backdrop-blur-sm">
+          <section className="bg-wellness-glass p-6 rounded-3xl border border-wellness-border shadow-glass backdrop-blur-md">
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="font-heading text-2xl font-extrabold text-wellness-dark">Search results</h2>
+              <h2 className="font-heading text-2xl font-extrabold text-white">Search results</h2>
               <p className="text-sm font-semibold text-wellness-muted">{filteredResults.length} matches</p>
             </div>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -296,13 +315,13 @@ export default function Dashboard() {
                   key={session.id}
                   type="button"
                   onClick={() => handleSessionOpen(session)}
-                  className="group flex gap-4 rounded-3xl border border-white/60 bg-white/70 p-3 text-left transition hover:bg-white hover:shadow-card"
+                  className="group flex gap-4 rounded-3xl border border-wellness-border bg-white/5 p-3 text-left transition hover:bg-white/10 hover:border-wellness-glow/30 hover:shadow-card"
                 >
                   <div className="relative h-20 w-24 flex-shrink-0 overflow-hidden rounded-2xl">
                     <img src={session.image} alt={session.title} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
                   </div>
                   <div className="py-1">
-                    <p className="font-heading text-sm font-bold text-wellness-dark line-clamp-2">{session.title}</p>
+                    <p className="font-heading text-sm font-bold text-white group-hover:text-wellness-glow line-clamp-2">{session.title}</p>
                     <p className="text-[0.65rem] uppercase tracking-wider text-wellness-muted mt-1">{session.instructor}</p>
                   </div>
                 </button>
@@ -337,6 +356,56 @@ export default function Dashboard() {
         {section === "plans" && <DashboardPlansSection />}
         {section === "metrics" && <HealthMetricsSection />}
         {section === "yoga-world" && <YogaWorldSection />}
+        {section === "palmistry" && <PalmistryDashboard />}
+        {section === "surya" && <SacredOrbitSection isDashboard />}
+        {section === "insights" && <WellnessInsights />}
+        {section === "history" && (
+          <div className="space-y-10">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-wellness-glow/20 border border-wellness-glow/30 text-wellness-glow shadow-glow2">
+                <Clock size={20} />
+              </div>
+              <h2 className="font-heading text-2xl font-bold text-white">Practice History</h2>
+            </div>
+            <div className="grid gap-10 lg:grid-cols-12">
+              <div className="lg:col-span-6">
+                <RecentPlans plans={generatedPlans} onContinue={(plan) => navigate("/generated-plan", { state: { goalId: plan.goal, durationId: plan.duration, levelId: plan.level } })} />
+              </div>
+              <div className="lg:col-span-6">
+                <RecentlyPlayedSection onOpenSession={handleSessionOpen} />
+              </div>
+            </div>
+          </div>
+        )}
+        {section === "support" && (
+          <div className="max-w-2xl mx-auto space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-wellness-gold/20 border border-wellness-gold/30 text-wellness-gold shadow-[0_0_15px_rgba(212,166,79,0.2)]">
+                <Headphones size={20} />
+              </div>
+              <h2 className="font-heading text-2xl font-bold text-white">YogaWomans Support</h2>
+            </div>
+            <div className="rounded-[2rem] border border-wellness-border bg-wellness-glass p-8 shadow-glass backdrop-blur-[18px] space-y-6">
+              <div>
+                <h3 className="font-heading text-lg font-bold text-white">How can we help your practice?</h3>
+                <p className="text-sm text-wellness-muted mt-1 font-medium">Send a message to our mindful support team, and we will get back to you shortly.</p>
+              </div>
+              <form onSubmit={(e) => { e.preventDefault(); toast.showToast({ type: "success", title: "Message Sent", message: "Thank you. Our support team will contact you soon." }); }} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-wellness-muted mb-2">Subject</label>
+                  <input required className="w-full bg-white/5 border border-wellness-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-wellness-glow/40 transition-colors font-medium" placeholder="How can we assist you today?" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-wellness-muted mb-2">Message</label>
+                  <textarea required rows={4} className="w-full bg-white/5 border border-wellness-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-wellness-glow/40 transition-colors resize-none font-medium" placeholder="Share your thoughts or questions here..." />
+                </div>
+                <button type="submit" className="w-full py-3.5 rounded-full bg-wellness-glow hover:bg-wellness-glow/95 text-black font-extrabold shadow-[0_0_15px_rgba(0,230,118,0.25)] transition-all hover:scale-[1.01]">
+                  Send Message
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
 
         {section === "home" && (
           <div className="flex flex-col gap-10 lg:gap-14">

@@ -7,8 +7,9 @@ import SearchBar from "../ui/navigation/SearchBar";
 import NotificationButton from "../ui/navigation/NotificationButton";
 import ProfileDropdown from "../ui/navigation/ProfileDropdown";
 import PremiumButton from "../ui/buttons/PremiumButton";
+import fotlogo from "../../assets/images/fotlogo.png";
 
-export default function TopNavbar({ onMenuClick, query, onQueryChange, title }) {
+export default function TopNavbar({ onMenuClick, query, onQueryChange, title, isScrolled }) {
   const navigate = useNavigate();
   const auth = useAuth();
   const { notifications, markNotificationRead, state, isReturningUser } = useDashboard();
@@ -55,94 +56,148 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title }) 
   const togglePanel = (name) =>
     setActivePanel((current) => (current === name ? null : name));
 
+  const headerStyles = isScrolled
+    ? {
+        background: "rgba(5,8,22,0.85)",
+        backdropFilter: "blur(32px)",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: "0 10px 40px rgba(0,0,0,0.45)",
+      }
+    : {
+        background: "rgba(5,8,22,0.58)",
+        backdropFilter: "blur(24px)",
+        borderBottom: "1px solid rgba(255,255,255,0.05)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+      };
+
   return (
-    <header className="glass-navbar sticky top-0 z-30 transition-all duration-300">
-      <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8" ref={panelRef}>
+    <header 
+      style={headerStyles}
+      className="sticky top-0 z-30 transition-all duration-300 w-full"
+    >
+      <div className="w-full" ref={panelRef}>
         
-        {/* ── Left — menu + title ── */}
-        <div className="flex items-center gap-4">
-          <button
-            type="button"
-            onClick={onMenuClick}
-            id="navbar-menu-btn"
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white shadow-liftSm transition hover:-translate-y-0.5 hover:bg-white/10 lg:hidden hover:shadow-card"
-            aria-label="Open menu"
-          >
-            <Menu size={20} />
-          </button>
-
-          <div className="hidden sm:block">
-            <div className="flex items-center gap-2">
-              <p className="text-[0.6rem] font-bold uppercase tracking-[0.32em] text-wellness-glow">
+        {/* ── Desktop Header (visible only on lg viewports and up) ── */}
+        <div className="hidden lg:flex items-center justify-between gap-6 px-8 py-4 w-full">
+          {/* LEFT: Logo & Glow */}
+          <div className="flex items-center gap-4 shrink-0">
+            <div className="relative group flex items-center gap-2.5 cursor-pointer" onClick={() => navigate("/dashboard")}>
+              <div className="absolute inset-0 bg-[#00E676]/10 blur-md rounded-full scale-110 opacity-70 group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none" />
+              <img
+                src={fotlogo}
+                alt="YogaWomans Logo"
+                className="relative h-9 w-auto object-contain brightness-0 invert opacity-90 transition-transform duration-500 group-hover:scale-105"
+              />
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-white">
                 YogaWomans
-              </p>
-              {streakDays > 0 && (
-                <span className="flex items-center gap-1 rounded-full bg-wellness-orange/10 px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-wellness-orange">
-                  <Flame size={10} /> {streakDays} Day Streak
-                </span>
-              )}
+              </span>
             </div>
-            <p className="text-sm font-bold text-white leading-tight mt-0.5">
-              {title || dynamicGreeting}
-            </p>
+            {streakDays > 0 && (
+              <span className="flex items-center gap-1 rounded-full bg-wellness-orange/10 px-2.5 py-1 text-[0.6rem] font-bold uppercase tracking-wider text-wellness-orange border border-wellness-orange/20 animate-pulse">
+                <Flame size={10} /> {streakDays} Day Streak
+              </span>
+            )}
           </div>
-        </div>
 
-        {/* ── Center — Search ── */}
-        <div className="hidden flex-1 max-w-sm md:flex transition-all duration-300">
-          <SearchBar query={query} onQueryChange={onQueryChange} />
-        </div>
+          {/* CENTER: Floating Search Bar */}
+          <div className="flex-1 max-w-md">
+            <SearchBar query={query} onQueryChange={onQueryChange} />
+          </div>
 
-        {/* ── Right — actions ── */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          
-          {/* Upgrade badge */}
-          {!isPro && (
-            <div className="hidden sm:block">
+          {/* RIGHT: Upgrade button + Notifications + Profile */}
+          <div className="flex items-center gap-4 shrink-0">
+            {!isPro && (
               <PremiumButton
-                variant="primary"
+                variant="upgrade"
                 icon={Award}
                 onClick={() => navigate("/pricing")}
-                className="!px-4 !py-2 !text-xs !gap-1.5"
+                className="!px-5 !py-2.5 !text-xs !gap-1.5"
               >
                 Upgrade
               </PremiumButton>
-            </div>
-          )}
+            )}
 
-          {/* Mobile Resume Journey shortcut */}
-          {state?.lastSessionId && (
+            <NotificationButton
+              notifications={panelNotifications}
+              unreadCount={unreadCount}
+              isOpen={activePanel === "notifications"}
+              onToggle={() => togglePanel("notifications")}
+              onRead={markNotificationRead}
+            />
+
+            <ProfileDropdown
+              userInitials={userInitials}
+              userName={userName}
+              userEmail={userEmail}
+              isOpen={activePanel === "profile"}
+              onToggle={() => togglePanel("profile")}
+              onLogout={handleLogout}
+              onClose={() => setActivePanel(null)}
+            />
+          </div>
+        </div>
+
+        {/* ── Mobile/Tablet Header (visible on viewports below lg) ── */}
+        <div className="flex w-full items-center justify-between gap-3 lg:hidden px-4 py-3.5">
+          {/* LEFT: hamburger menu + logo */}
+          <div className="flex items-center gap-3 shrink-0">
             <button
               type="button"
-              onClick={() => navigate("/dashboard")}
-              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-wellness-glow shadow-liftSm border border-white/10 transition hover:-translate-y-0.5 hover:bg-white/20 hover:shadow-card md:hidden"
-              aria-label="Resume Journey"
+              onClick={onMenuClick}
+              className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white shadow-liftSm transition hover:bg-white/10"
+              aria-label="Open menu"
             >
-              <Play fill="currentColor" size={14} className="ml-0.5" />
+              <Menu size={20} />
             </button>
-          )}
+            
+            <img
+              src={fotlogo}
+              alt="YogaWomans Logo"
+              className="h-8 w-auto object-contain brightness-0 invert opacity-90"
+              onClick={() => navigate("/dashboard")}
+            />
+          </div>
 
-          {/* Notifications */}
-          <NotificationButton
-            notifications={panelNotifications}
-            unreadCount={unreadCount}
-            isOpen={activePanel === "notifications"}
-            onToggle={() => togglePanel("notifications")}
-            onRead={markNotificationRead}
-          />
+          {/* CENTER: minimal page title */}
+          <div className="flex-1 text-center px-1">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-white/90 line-clamp-1">
+              {title || dynamicGreeting}
+            </span>
+          </div>
 
-          {/* Profile dropdown */}
-          <ProfileDropdown
-            userInitials={userInitials}
-            userName={userName}
-            userEmail={userEmail}
-            isOpen={activePanel === "profile"}
-            onToggle={() => togglePanel("profile")}
-            onLogout={handleLogout}
-            onClose={() => setActivePanel(null)}
-          />
-          
+          {/* RIGHT: notifications + profile avatar */}
+          <div className="flex items-center gap-2 shrink-0 relative">
+            <NotificationButton
+              notifications={panelNotifications}
+              unreadCount={unreadCount}
+              isOpen={activePanel === "notifications"}
+              onToggle={() => togglePanel("notifications")}
+              onRead={markNotificationRead}
+            />
+            
+            <button
+              onClick={() => togglePanel("profile")}
+              className="relative h-9 w-9 rounded-full border border-wellness-border bg-white/5 flex items-center justify-center text-xs font-bold text-white shadow-glass transition hover:bg-white/10"
+            >
+              {userInitials}
+              <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-wellness-glow border-2 border-wellness-bg"></span>
+            </button>
+
+            {/* Profile dropdown relative container positioning for mobile */}
+            <div className="absolute right-0 top-[calc(100%+8px)] z-50">
+              <ProfileDropdown
+                userInitials={userInitials}
+                userName={userName}
+                userEmail={userEmail}
+                isOpen={activePanel === "profile"}
+                onToggle={() => togglePanel("profile")}
+                onLogout={handleLogout}
+                onClose={() => setActivePanel(null)}
+              />
+            </div>
+          </div>
         </div>
+
       </div>
     </header>
   );

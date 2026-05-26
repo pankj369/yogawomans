@@ -1,8 +1,20 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function UploadDropzone() {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleStartReading = () => {
+    if (user) {
+      navigate("/dashboard/palmistry");
+    } else {
+      navigate("/login", { state: { returnTo: "/dashboard/palmistry" } });
+    }
+  };
 
   return (
     <div className="w-full">
@@ -10,6 +22,7 @@ export default function UploadDropzone() {
         className="relative group cursor-pointer"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onClick={handleStartReading}
       >
         {/* Animated Glow Behind Dropzone */}
         <motion.div 

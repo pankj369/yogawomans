@@ -22,7 +22,7 @@ export default function RecentlyPlayedSection({ onOpenSession }) {
           <button
             key={`recent-${session.id}`}
             onClick={() => onOpenSession(session)}
-            className="group relative flex w-[280px] shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-white/40 bg-white/50 p-3 shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-white/80 hover:shadow-card sm:w-[320px]"
+            className="group relative flex w-[280px] shrink-0 snap-start flex-col overflow-hidden rounded-[2rem] border border-wellness-border bg-wellness-glass p-3 shadow-glass backdrop-blur-[18px] transition-all duration-300 hover:-translate-y-1 hover:border-wellness-glow/30 hover:bg-white/5 hover:shadow-cardHover sm:w-[320px]"
           >
             <div className="relative h-36 w-full overflow-hidden rounded-2xl">
               <img
@@ -32,15 +32,15 @@ export default function RecentlyPlayedSection({ onOpenSession }) {
               />
               <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-110">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-wellness-dark shadow-lg backdrop-blur-sm">
-                  <Play size={20} className="ml-1" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-wellness-glow/20 text-wellness-glow border border-wellness-glow/40 shadow-lg backdrop-blur-sm">
+                  <Play size={20} className="ml-1" fill="currentColor" />
                 </div>
               </div>
             </div>
             
             <div className="mt-3 text-left">
-              <h4 className="font-heading text-sm font-bold text-wellness-dark line-clamp-1">{session.title}</h4>
-              <p className="mt-0.5 text-[0.7rem] uppercase tracking-wider text-wellness-muted">{session.instructor} • {session.duration} min</p>
+              <h4 className="font-heading text-sm font-bold text-white group-hover:text-wellness-glow line-clamp-1 transition-colors">{session.title}</h4>
+              <p className="mt-0.5 text-[0.7rem] uppercase tracking-wider text-wellness-muted font-medium">{session.instructor} • {session.duration} min</p>
             </div>
           </button>
         ))}

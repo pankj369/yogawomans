@@ -21,17 +21,17 @@ export default function DailyRoutine({ completedItems = [], onStartSession, onTo
         />
         
         {/* Overall progress indicator */}
-        <div className="flex items-center gap-4 bg-white/70 px-4 py-3 rounded-2xl border border-white/60 shadow-sm max-w-xs">
+        <div className="flex items-center gap-4 border border-wellness-border bg-wellness-glass px-4 py-3 rounded-2xl shadow-glass max-w-xs backdrop-blur-[18px]">
           <div className="flex-1">
             <p className="text-xs font-bold uppercase tracking-wider text-wellness-muted mb-1">Today's Progress</p>
-            <div className="h-1.5 w-full bg-wellness-softcream rounded-full overflow-hidden">
+            <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-wellness-orange to-wellness-green transition-all duration-1000"
+                className="h-full bg-gradient-to-r from-wellness-orange to-wellness-gold transition-all duration-1000"
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
-          <p className="font-heading text-xl font-bold text-wellness-dark">{progress}%</p>
+          <p className="font-heading text-xl font-bold text-white">{progress}%</p>
         </div>
       </div>
 

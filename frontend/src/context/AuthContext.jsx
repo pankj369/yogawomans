@@ -60,13 +60,18 @@ export function AuthProvider({ children }) {
         try {
           // Fetch real profile from backend safely
           const profileData = await getCurrentUser();
-          if (isMounted && profileData) {
-            setBackendProfile(profileData);
-            setAuthState((current) => ({
-              ...current,
-              isPremium: profileData.premiumStatus || current.isPremium,
-              profileSetupComplete: profileData.onboardingCompleted || current.profileSetupComplete,
-            }));
+          if (isMounted) {
+            if (profileData) {
+              setBackendProfile(profileData);
+              setAuthState((current) => ({
+                ...current,
+                isPremium: profileData.premiumStatus || current.isPremium,
+                profileSetupComplete: profileData.onboardingCompleted || current.profileSetupComplete,
+              }));
+            } else {
+              // Fallback to Firebase auth data if backend fetch fails
+              setBackendProfile(null);
+            }
           }
         } catch (error) {
           console.error("AuthContext: Failed to sync backend profile", error);
@@ -87,9 +92,20 @@ export function AuthProvider({ children }) {
       }
     });
 
+    const handleLogout = () => {
+      logout();
+    };
+    
+    if (typeof window !== "undefined") {
+      window.addEventListener("auth:logout", handleLogout);
+    }
+
     return () => {
       isMounted = false;
       unsubscribe();
+      if (typeof window !== "undefined") {
+        window.removeEventListener("auth:logout", handleLogout);
+      }
     };
   }, []);
 
@@ -130,18 +146,31 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    if (typeof window !== "undefined") {
-      removeStorage(window.localStorage, AUTH_STORAGE_KEY);
-      removeStorage(window.sessionStorage, AUTH_STORAGE_KEY);
-    }
+    // 1. Synchronously drop authentication state to completely bypass the ProtectedRoute redirect loops
+    setFirebaseUser(null);
+    setBackendProfile(null);
+
+    // 2. Reset local auth state
     setAuthState({
       rememberMe: false,
       profileSetupComplete: false,
       profileSetupSkipped: false,
       isPremium: false,
     });
-    setBackendProfile(null);
-    await logoutUser();
+
+    // 3. Clear all storage to ensure clean state
+    if (typeof window !== "undefined") {
+      removeStorage(window.localStorage, AUTH_STORAGE_KEY);
+      removeStorage(window.sessionStorage, AUTH_STORAGE_KEY);
+      window.localStorage.removeItem("yogawomans_profile_setup_v1");
+    }
+    
+    // 4. Fire async backend logout safely
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   const completeProfileSetup = (profileData) => {

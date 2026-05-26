@@ -20,7 +20,7 @@ export default function ProgressRing({
         <circle 
           cx={size / 2} cy={size / 2} r={radius} 
           stroke="currentColor" 
-          className="text-wellness-softcream"
+          className="text-white/10"
           strokeWidth={strokeWidth} 
           fill="none" 
         />
@@ -40,7 +40,7 @@ export default function ProgressRing({
       </svg>
       <div className="absolute flex flex-col items-center justify-center text-center">
         <span 
-          className="font-heading font-bold text-wellness-dark leading-none tracking-tighter"
+          className="font-heading font-bold text-white leading-none tracking-tighter"
           style={{ fontSize: `${Math.max(9.5, size * 0.205)}px` }}
         >
           {percent}%

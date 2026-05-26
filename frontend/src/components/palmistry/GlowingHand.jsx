@@ -14,7 +14,7 @@ const OrbitRing = ({ sizeClass, duration, reverse = false, styleClass }) => (
 const EnergyPulse = () => (
   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
     <motion.div
-      className="w-[250px] sm:w-[350px] h-[250px] sm:h-[350px] rounded-full bg-gradient-to-tr from-[#1E7A46]/30 to-[#00E676]/10 blur-[60px] sm:blur-[80px]"
+      className="w-[200px] sm:w-[250px] md:w-[350px] h-[200px] sm:h-[250px] md:h-[350px] rounded-full bg-gradient-to-tr from-[#1E7A46]/30 to-[#00E676]/10 blur-[40px] sm:blur-[60px] md:blur-[80px]"
       animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }}
       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
     />
@@ -24,7 +24,7 @@ const EnergyPulse = () => (
 const ParticleLayer = () => (
   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
     <motion.div
-      className="w-[350px] sm:w-[450px] h-[350px] sm:h-[450px] rounded-full relative"
+      className="w-[250px] sm:w-[350px] md:w-[450px] h-[250px] sm:h-[350px] md:h-[450px] rounded-full relative"
       animate={{ rotate: 360 }}
       transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
     >
@@ -40,7 +40,7 @@ export default function GlowingHand() {
     <div className="relative w-full max-w-[500px] h-[480px] sm:h-[500px] xl:h-[540px] flex items-center justify-center mx-auto z-10">
       
       {/* Background Cinematic Orbit System */}
-      <div className="absolute inset-0 z-0 scale-75 sm:scale-90 xl:scale-100 flex items-center justify-center pointer-events-none">
+      <div className="absolute inset-0 z-0 scale-50 sm:scale-75 md:scale-90 xl:scale-100 flex items-center justify-center pointer-events-none">
         <EnergyPulse />
         
         {/* Deep background slow ring */}
@@ -70,17 +70,17 @@ export default function GlowingHand() {
 
       {/* Outer Sacred Circular Base */}
       <motion.div 
-        className="absolute bottom-[-20px] w-[300px] sm:w-[400px] h-[100px] sm:h-[140px] rounded-[100%] border border-[#D4A64F]/30 bg-gradient-to-t from-[#D4A64F]/10 to-transparent flex items-center justify-center pointer-events-none z-0"
+        className="absolute bottom-[-20px] w-[200px] sm:w-[300px] md:w-[400px] h-[80px] sm:h-[100px] md:h-[140px] rounded-[100%] border border-[#D4A64F]/30 bg-gradient-to-t from-[#D4A64F]/10 to-transparent flex items-center justify-center pointer-events-none z-0"
         animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.6, 0.3] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       >
-        <div className="w-[200px] sm:w-[260px] h-[50px] sm:h-[70px] rounded-[100%] border border-[#00E676]/40 flex items-center justify-center drop-shadow-[0_0_10px_rgba(0,230,118,0.3)]">
-           <div className="w-[80px] sm:w-[100px] h-[18px] sm:h-[24px] rounded-[100%] border border-[#E9781F]/50 bg-[#D4A64F]/50 blur-sm animate-pulse" />
+        <div className="w-[150px] sm:w-[200px] md:w-[260px] h-[40px] sm:h-[50px] md:h-[70px] rounded-[100%] border border-[#00E676]/40 flex items-center justify-center drop-shadow-[0_0_10px_rgba(0,230,118,0.3)]">
+           <div className="w-[60px] sm:w-[80px] md:w-[100px] h-[14px] sm:h-[18px] md:h-[24px] rounded-[100%] border border-[#E9781F]/50 bg-[#D4A64F]/50 blur-sm animate-pulse" />
         </div>
       </motion.div>
 
       {/* Main Hand Image Overlay */}
-      <div className="relative z-10 w-[280px] h-[420px] sm:w-[320px] sm:h-[480px] xl:w-[360px] xl:h-[540px] flex items-center justify-center">
+      <div className="relative z-10 w-[200px] h-[300px] sm:w-[280px] sm:h-[420px] md:w-[320px] md:h-[480px] xl:w-[360px] xl:h-[540px] flex items-center justify-center">
         {/* Palm Image */}
         <img 
           src={palmImage} 

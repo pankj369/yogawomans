@@ -38,7 +38,7 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       console.warn("⚠️ Unauthorized! Token may be expired.");
-      // Optional: Trigger a custom event to force global logout from AuthContext if desired
+      window.dispatchEvent(new CustomEvent("auth:logout"));
     }
     return Promise.reject(error);
   }

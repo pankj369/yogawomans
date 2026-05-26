@@ -21,7 +21,7 @@ export default function SessionCard({ session, onClick, onBookmark, isBookmarked
       variants={hoverLift}
       initial="rest"
       whileHover="hover"
-      className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/60 bg-wellness-cream2 shadow-card cursor-pointer"
+      className="group relative flex flex-col overflow-hidden rounded-[2rem] border border-wellness-border bg-wellness-glass shadow-glass backdrop-blur-[18px] transition-all duration-300 hover:border-wellness-glow/30 hover:bg-white/5 hover:shadow-cardHover cursor-pointer"
       onClick={() => onClick?.(session)}
     >
       <div className="relative h-48 w-full overflow-hidden">
@@ -36,12 +36,12 @@ export default function SessionCard({ session, onClick, onBookmark, isBookmarked
         {/* Top Badges */}
         <div className="absolute left-4 top-4 flex gap-2">
           {session.premium && (
-            <div className="flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-wellness-orange backdrop-blur-md">
+            <div className="flex items-center gap-1.5 rounded-full bg-black/60 border border-white/10 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-wellness-orange backdrop-blur-md">
               <Lock size={10} /> Premium
             </div>
           )}
           {session.category && (
-            <div className="rounded-full bg-black/40 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-white backdrop-blur-md">
+            <div className="rounded-full bg-black/60 border border-white/10 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-white backdrop-blur-md">
               {session.category}
             </div>
           )}
@@ -51,8 +51,8 @@ export default function SessionCard({ session, onClick, onBookmark, isBookmarked
         <button
           type="button"
           onClick={handleBookmark}
-          className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-md transition-colors ${
-            bookmarked ? "bg-wellness-orange text-white" : "bg-black/30 text-white hover:bg-wellness-orange"
+          className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border backdrop-blur-md transition-colors ${
+            bookmarked ? "bg-wellness-orange border-wellness-orange text-white" : "bg-black/60 border-white/10 text-white hover:bg-wellness-orange hover:border-wellness-orange"
           }`}
         >
           <Heart size={14} fill={bookmarked ? "currentColor" : "none"} />
@@ -61,20 +61,20 @@ export default function SessionCard({ session, onClick, onBookmark, isBookmarked
 
       <div className="flex flex-1 flex-col justify-between p-5">
         <div>
-          <h3 className="font-heading text-lg font-bold text-wellness-dark line-clamp-1 group-hover:text-wellness-green transition-colors">
+          <h3 className="font-heading text-lg font-bold text-white line-clamp-1 group-hover:text-wellness-glow transition-colors">
             {session.title}
           </h3>
-          <p className="mt-1 text-sm text-wellness-muted line-clamp-2 leading-relaxed">
+          <p className="mt-1 text-sm text-wellness-muted line-clamp-2 leading-relaxed font-medium">
             {session.description}
           </p>
         </div>
         
-        <div className="mt-4 flex items-center justify-between text-xs font-semibold text-wellness-muted border-t border-wellness-softcream pt-4">
+        <div className="mt-4 flex items-center justify-between text-xs font-semibold text-wellness-muted border-t border-wellness-border pt-4">
           <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 bg-white px-2 py-1 rounded-md shadow-sm">
+            <span className="flex items-center gap-1 bg-white/5 border border-wellness-border px-2 py-1 rounded-md text-white">
               <Play size={12} className="text-wellness-orange" /> {session.duration}m
             </span>
-            <span>{session.level}</span>
+            <span className="text-wellness-muted">{session.level}</span>
           </div>
         </div>
       </div>

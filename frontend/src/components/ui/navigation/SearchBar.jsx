@@ -48,13 +48,24 @@ export default function SearchBar({ query, onQueryChange }) {
   };
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
+      animate={{
+        scale: searchFocused ? 1.025 : 1,
+        boxShadow: searchFocused
+          ? "0 0 25px rgba(0, 230, 118, 0.22), inset 0 0 10px rgba(255,255,255,0.05)"
+          : "0 4px 20px rgba(0, 0, 0, 0.15)",
+      }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      style={{
+        background: "rgba(255,255,255,0.05)",
+        backdropFilter: "blur(20px)",
+      }}
       className={[
-        "relative flex w-full items-center gap-3 rounded-full border px-4 py-2.5 transition-all duration-200 z-50",
+        "relative flex w-full items-center gap-3 rounded-full border px-4 py-2.5 transition-all duration-300 z-50",
         searchFocused
-          ? "border-wellness-green/50 bg-white shadow-liftSm"
-          : "border-white/50 bg-white/65 shadow-[0_8px_20px_rgba(72,42,8,0.05)]",
+          ? "border-wellness-glow/70"
+          : "border-wellness-border",
       ].join(" ")}
     >
       <Search className="flex-shrink-0 text-wellness-gold" size={18} />
@@ -67,7 +78,7 @@ export default function SearchBar({ query, onQueryChange }) {
         }}
         onFocus={() => setSearchFocused(true)}
         placeholder="Search sessions, instructors, music..."
-        className="w-full bg-transparent text-sm text-wellness-dark outline-none placeholder:text-wellness-muted"
+        className="w-full bg-transparent text-sm text-white outline-none placeholder:text-wellness-muted/70 transition-all duration-300 focus:placeholder:translate-x-1"
       />
       <AnimatePresence>
         {query && (
@@ -80,7 +91,7 @@ export default function SearchBar({ query, onQueryChange }) {
               onQueryChange?.("");
               setSearchFocused(true);
             }}
-            className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-wellness-softcream text-wellness-muted hover:bg-wellness-cream hover:text-wellness-dark"
+            className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-wellness-muted hover:bg-white/20 hover:text-white"
           >
             <X size={12} />
           </motion.button>
@@ -94,7 +105,7 @@ export default function SearchBar({ query, onQueryChange }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.2 }}
-            className="absolute left-0 right-0 top-full mt-2 overflow-hidden rounded-[1.5rem] border border-white/50 bg-white/90 p-4 shadow-glass backdrop-blur-xl"
+            className="absolute left-0 right-0 top-full mt-2 overflow-hidden rounded-[2rem] border border-wellness-border bg-wellness-glass p-6 shadow-glass backdrop-blur-[24px]"
           >
             {recentSearches.length > 0 && (
               <div className="mb-4">
@@ -104,7 +115,7 @@ export default function SearchBar({ query, onQueryChange }) {
                   </p>
                   <button
                     onClick={clearRecentSearches}
-                    className="text-[0.65rem] font-bold text-wellness-muted hover:text-wellness-dark"
+                    className="text-[0.65rem] font-bold text-wellness-muted hover:text-white"
                   >
                     Clear
                   </button>
@@ -114,7 +125,7 @@ export default function SearchBar({ query, onQueryChange }) {
                     <button
                       key={term}
                       onClick={() => handleSearchSubmit(term)}
-                      className="rounded-full border border-wellness-softcream bg-white px-3 py-1.5 text-xs font-semibold text-wellness-dark shadow-sm transition hover:border-wellness-green hover:bg-wellness-greenLight"
+                      className="rounded-full border border-wellness-border bg-white/5 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:border-wellness-glow hover:bg-wellness-glow/10"
                     >
                       {term}
                     </button>
@@ -132,7 +143,7 @@ export default function SearchBar({ query, onQueryChange }) {
                   <button
                     key={term}
                     onClick={() => handleSearchSubmit(term)}
-                    className="rounded-full border border-wellness-softcream bg-wellness-cream px-3 py-1.5 text-xs font-semibold text-wellness-dark transition hover:bg-wellness-orange hover:text-white"
+                    className="rounded-full border border-wellness-border bg-white/5 px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-wellness-glow/10 hover:border-wellness-glow hover:text-wellness-glow"
                   >
                     {term}
                   </button>
@@ -142,6 +153,6 @@ export default function SearchBar({ query, onQueryChange }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

@@ -117,14 +117,14 @@ export default function AICoachSection() {
       <DashboardSection id="ai-coach-hub">
         <div className="grid gap-8 lg:grid-cols-5 items-start">
           {/* Chat Interface (Left 3 cols on lg) */}
-          <div className="lg:col-span-3 rounded-[2.5rem] bg-white/40 border border-white/60 p-6 shadow-glass backdrop-blur-md flex flex-col h-[520px] justify-between">
+          <div className="lg:col-span-3 rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-6 shadow-glass backdrop-blur-[18px] flex flex-col h-[520px] justify-between">
             {/* Coach Header */}
-            <div className="flex items-center gap-3 border-b border-wellness-softcream pb-4">
+            <div className="flex items-center gap-3 border-b border-wellness-border pb-4">
               <div className="h-10 w-10 rounded-full bg-gradient-to-br from-wellness-orange/80 to-wellness-green flex items-center justify-center text-white shadow-glow2">
                 <Cpu size={18} />
               </div>
               <div>
-                <h4 className="font-heading text-sm font-bold text-wellness-dark">Aria</h4>
+                <h4 className="font-heading text-sm font-bold text-white">Aria</h4>
                 <p className="text-[10px] text-wellness-green font-semibold uppercase tracking-wider">Online • Wellness Coach</p>
               </div>
             </div>
@@ -140,7 +140,7 @@ export default function AICoachSection() {
                     className={`max-w-[85%] rounded-[1.8rem] px-5 py-3.5 text-xs leading-relaxed ${
                       msg.sender === "user"
                         ? "bg-wellness-orange text-white rounded-br-sm shadow-sm"
-                        : "bg-white/70 border border-white/50 text-wellness-dark rounded-bl-sm shadow-sm whitespace-pre-line"
+                        : "bg-white/5 border border-wellness-border text-white rounded-bl-sm shadow-sm whitespace-pre-line font-medium"
                     }`}
                   >
                     {msg.text}
@@ -150,7 +150,7 @@ export default function AICoachSection() {
 
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="bg-white/70 border border-white/50 rounded-[1.8rem] rounded-bl-sm px-5 py-3.5 shadow-sm flex items-center gap-1.5">
+                  <div className="bg-white/5 border border-wellness-border rounded-[1.8rem] rounded-bl-sm px-5 py-3.5 shadow-sm flex items-center gap-1.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-wellness-muted animate-bounce" />
                     <span className="h-1.5 w-1.5 rounded-full bg-wellness-muted animate-bounce delay-150" />
                     <span className="h-1.5 w-1.5 rounded-full bg-wellness-muted animate-bounce delay-300" />
@@ -166,18 +166,18 @@ export default function AICoachSection() {
                 e.preventDefault();
                 handleSend();
               }}
-              className="flex gap-2 border-t border-wellness-softcream pt-4"
+              className="flex gap-2 border-t border-wellness-border pt-4"
             >
               <input
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Ask Aria about yoga postures, breathing, or mindfulness..."
-                className="flex-1 rounded-2xl border border-white/60 bg-white/70 px-4 py-3 text-xs text-wellness-dark placeholder-wellness-muted/50 focus:border-wellness-orange focus:bg-white focus:outline-none focus:ring-1 focus:ring-wellness-orange transition-all"
+                className="flex-1 rounded-2xl border border-wellness-border bg-white/5 px-4 py-3 text-xs text-white placeholder-wellness-muted/55 focus:border-wellness-orange focus:bg-white/10 focus:outline-none transition-all"
               />
               <button
                 type="submit"
-                className="h-11 w-11 rounded-2xl bg-wellness-dark hover:bg-black text-white flex items-center justify-center transition-colors shadow-sm"
+                className="h-11 w-11 rounded-2xl bg-wellness-glow hover:bg-wellness-glow/90 text-black flex items-center justify-center transition-colors shadow-glow"
               >
                 <Send size={15} />
               </button>
@@ -190,8 +190,8 @@ export default function AICoachSection() {
               <span className="inline-flex items-center gap-1.5 text-[0.65rem] font-bold uppercase tracking-wider text-wellness-orange mb-2">
                 <Sparkles size={12} /> Prompt Library
               </span>
-              <h3 className="font-heading text-xl font-bold text-wellness-dark">Suggested Inquiries</h3>
-              <p className="text-xs text-wellness-muted mt-1">Tap a quick-start question to chat with Aria instantly.</p>
+              <h3 className="font-heading text-xl font-bold text-white">Suggested Inquiries</h3>
+              <p className="text-xs text-wellness-muted mt-1 font-medium">Tap a quick-start question to chat with Aria instantly.</p>
             </div>
 
             <div className="grid gap-3">
@@ -199,7 +199,7 @@ export default function AICoachSection() {
                 <button
                   key={prompt}
                   onClick={() => handleSend(prompt)}
-                  className="w-full text-left p-4 rounded-2xl border border-white/60 bg-white/50 hover:bg-white transition-all text-xs font-bold text-wellness-dark flex items-center gap-2 group shadow-sm hover:shadow-liftSm"
+                  className="w-full text-left p-4 rounded-2xl border border-wellness-border bg-wellness-glass hover:bg-white/5 hover:border-wellness-glow/30 transition-all duration-300 text-xs font-bold text-white flex items-center gap-2 group shadow-glass"
                 >
                   <MessageCircle size={14} className="text-wellness-orange flex-shrink-0 group-hover:scale-105 transition-transform" />
                   <span className="truncate">{prompt}</span>
@@ -207,11 +207,11 @@ export default function AICoachSection() {
               ))}
             </div>
 
-            <div className="rounded-3xl border border-white/60 bg-white/40 p-5 flex items-start gap-3 backdrop-blur-sm shadow-sm">
+            <div className="rounded-3xl border border-wellness-border bg-wellness-glass p-5 flex items-start gap-3 backdrop-blur-[18px] shadow-glass">
               <AlertCircle size={18} className="text-wellness-orange mt-0.5 flex-shrink-0" />
               <div>
-                <h5 className="text-xs font-bold text-wellness-dark">AI Coach Guidelines</h5>
-                <p className="text-[11px] text-wellness-muted mt-1 leading-relaxed">
+                <h5 className="text-xs font-bold text-white">AI Coach Guidelines</h5>
+                <p className="text-[11px] text-wellness-muted mt-1 leading-relaxed font-medium">
                   Aria is designed for general lifestyle guidance, breath resets, and alignment tips. Speak naturally.
                 </p>
               </div>

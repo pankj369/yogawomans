@@ -13,13 +13,13 @@ export default function ContinueWatchingRow({ items }) {
   };
 
   return (
-    <div className="relative group">
+    <div className="relative group/row">
       {/* Scroll Buttons */}
       <button
         onClick={() => scroll("left")}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 hidden h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-card backdrop-blur-md transition-all hover:bg-white hover:scale-110 md:group-hover:flex"
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 hidden h-12 w-12 items-center justify-center rounded-full bg-wellness-glass border border-wellness-border text-white shadow-glass backdrop-blur-md transition-all hover:scale-110 hover:bg-white/10 hover:border-wellness-glow/20 md:group-hover/row:flex"
       >
-        <ChevronLeft size={24} className="text-wellness-dark" />
+        <ChevronLeft size={24} className="text-white" />
       </button>
 
       {/* Scrolling Container */}
@@ -37,9 +37,9 @@ export default function ContinueWatchingRow({ items }) {
 
       <button
         onClick={() => scroll("right")}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 hidden h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-card backdrop-blur-md transition-all hover:bg-white hover:scale-110 md:group-hover:flex"
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 hidden h-12 w-12 items-center justify-center rounded-full bg-wellness-glass border border-wellness-border text-white shadow-glass backdrop-blur-md transition-all hover:scale-110 hover:bg-white/10 hover:border-wellness-glow/20 md:group-hover/row:flex"
       >
-        <ChevronRight size={24} className="text-wellness-dark" />
+        <ChevronRight size={24} className="text-white" />
       </button>
     </div>
   );

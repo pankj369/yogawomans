@@ -19,28 +19,42 @@ module.exports = {
 
         // --- Premium Wellness Design System (OFFICIAL PALETTE) ---
         wellness: {
-          bg:         "#F7F3EC", // BACKGROUND IVORY
-          sand:       "#EDE4D6", // SOFT SAND
-          green:      "#1E7A46", // PRIMARY ACCENT
-          dark:       "#0F2E1D", // PRIMARY DARK
+          bg:         "#050816", // PRIMARY BACKGROUND
+          surface:    "#0B1220", // SECONDARY SURFACE
+          sand:       "#EDE4D6", // SOFT SAND (legacy)
+          green:      "#00E676", // PRIMARY ACCENT
+          dark:       "#050816", // PRIMARY DARK
           glow:       "#00E676", // PREMIUM GLOW
-          orange:     "#E9781F", // SPIRITUAL ORANGE
+          gold:       "#D4A64F", // SECONDARY ACCENT (spiritual/premium)
+          orange:     "#FF8A3D", // ALERT / ENERGY ACCENT
           black:      "#0A0A0A", // LUXURY BLACK
-          text:       "#1E1E1E", // TEXT PRIMARY
-          muted:      "#7A7A7A", // TEXT SECONDARY
-          glass:      "rgba(255,255,255,0.08)", // GLASS SURFACE
+          text:       "#F8FAFC", // PRIMARY TEXT
+          textSec:    "#94A3B8", // SECONDARY TEXT
+          muted:      "#64748B", // MUTED TEXT
+          glass:      "rgba(10,15,25,0.72)", // GLASS SURFACE
 
           // Legacy maps to prevent layout breaks
-          cream:      "#F7F3EC",
-          softcream:  "#EDE4D6",
+          cream:      "#050816",
+          softcream:  "#0B1220",
           sage:       "#1E7A46",
-          gold:       "#E9781F",
-          greenDark:  "#0F2E1D",
-          greenLight: "rgba(0, 230, 118, 0.15)", // Subtle neon glow for backgrounds
-          orangeDeep: "#c55716",
-          cream2:     "#F7F3EC",
-          warm:       "#EDE4D6",
-          border:     "rgba(255,255,255,0.1)", // Elegant glass border
+          greenDark:  "#050816",
+          greenLight: "rgba(0, 230, 118, 0.08)", // Subtle neon glow for backgrounds
+          orangeDeep: "#FF8A3D",
+          cream2:     "#0B1220",
+          warm:       "#0B1220",
+          border:     "rgba(255,255,255,0.06)", // Elegant glass border
+        },
+
+        // --- Premium Light Cream Luxury Design System ---
+        luxury: {
+          bg:         "#F7F3EC", // PRIMARY BACKGROUND
+          surface:    "#EFE6D7", // SECONDARY SURFACE
+          card:       "rgba(255,255,255,0.72)", // CARD BACKGROUND
+          text:       "#1A1A1A", // PRIMARY TEXT
+          muted:      "#6B7280", // MUTED TEXT
+          emerald:    "#00A86B", // ACCENT EMERALD
+          gold:       "#C89B3C", // SOFT GOLD
+          sand:       "#DCC9A3", // SAND HIGHLIGHT
         },
       },
 
@@ -55,13 +69,14 @@ module.exports = {
         glow: "0 10px 40px rgba(26, 107, 175, 0.16)",
         soft: "0 8px 28px rgba(44, 44, 44, 0.1)",
         // wellness design system
-        glass:    "0 30px 80px rgba(0, 0, 0, 0.04)", // Soft immersive shadow
-        card:     "0 20px 40px rgba(0, 0, 0, 0.03)", // Very diffuse card shadow
+        glass:    "0 10px 40px rgba(0, 0, 0, 0.35), 0 0 20px rgba(0, 230, 118, 0.04)", // Premium glass shadow
+        card:     "0 10px 40px rgba(0, 0, 0, 0.35), 0 0 20px rgba(0, 230, 118, 0.04)", // Diffuse card shadow
+        cardHover:"0 10px 30px rgba(0, 230, 118, 0.12)",
         glow2:    "0 16px 35px rgba(0, 230, 118, 0.15)", // Premium Emerald Glow
-        sidebar:  "4px 0 40px rgba(0, 0, 0, 0.02)",
+        sidebar:  "4px 0 40px rgba(0, 0, 0, 0.2)",
         navitem:  "0 14px 30px rgba(0, 230, 118, 0.08)",
-        liftSm:   "0 12px 30px rgba(0, 0, 0, 0.025)",
-        heroCard: "0 30px 90px rgba(0, 0, 0, 0.05)",
+        liftSm:   "0 12px 30px rgba(0, 0, 0, 0.15)",
+        heroCard: "0 30px 90px rgba(0, 0, 0, 0.4)",
       },
 
       backgroundImage: {
@@ -70,21 +85,23 @@ module.exports = {
           "linear-gradient(120deg, rgba(26,107,175,0.3), rgba(232,101,26,0.2), rgba(46,125,50,0.2))",
         // wellness system
         "wellness-bg":
-          "radial-gradient(circle at top left, rgba(233,120,31,0.04) 0%, transparent 32%), " + // Spiritual Orange
-          "radial-gradient(circle at top right, rgba(0,230,118,0.04) 0%, transparent 28%), " + // Premium Glow
-          "linear-gradient(180deg, #F7F3EC 0%, #EDE4D6 52%, #F7F3EC 100%)", // Ivory to Sand
+          "radial-gradient(circle at top left, rgba(0,230,118,0.06) 0%, transparent 40%), " + // Premium Glow
+          "radial-gradient(circle at bottom right, rgba(212,166,79,0.04) 0%, transparent 40%), " + // Spiritual Gold
+          "linear-gradient(180deg, #050816 0%, #0B1220 100%)", // Deep Dark Surface
         "sidebar-bg":
-          "linear-gradient(180deg, rgba(247, 243, 236, 0.85) 0%, rgba(237, 228, 214, 0.85) 100%)",
+          "linear-gradient(180deg, #07140F 0%, #081B14 50%, #050816 100%)",
         "hero-overlay":
-          "linear-gradient(110deg, rgba(247,243,236,0.85) 0%, rgba(237,228,214,0.75) 34%, rgba(255,255,255,0.3) 100%)",
+          "linear-gradient(180deg, rgba(5,8,22,0.85) 0%, rgba(11,18,32,0.6) 100%)",
         "btn-primary":
           "linear-gradient(135deg, #1E7A46 0%, #00E676 100%)", // Forest Green to Emerald Glow
         "btn-healing":
-          "linear-gradient(135deg, #0F2E1D 0%, #1E7A46 100%)", // Primary Dark to Accent
+          "linear-gradient(135deg, #0B1220 0%, #00E676 100%)", // Primary Dark to Accent
         "card-gradient":
-          "linear-gradient(160deg, rgba(255,255,255,0.92), rgba(247,243,236,0.82))",
+          "linear-gradient(160deg, rgba(10,15,25,0.72), rgba(11,18,32,0.6))",
         "sidebar-item-active":
-          "linear-gradient(135deg, rgba(255,255,255,1), rgba(255,255,255,0.95))",
+          "linear-gradient(90deg, rgba(0,230,118,0.18) 0%, rgba(0,230,118,0.04) 100%)",
+        "breath-gradient":
+          "radial-gradient(circle at center, rgba(0,230,118,0.18), rgba(0,0,0,0))",
       },
 
       keyframes: {

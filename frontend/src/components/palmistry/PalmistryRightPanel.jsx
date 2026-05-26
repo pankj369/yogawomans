@@ -1,7 +1,20 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import UploadDropzone from "./UploadDropzone";
 
 export default function PalmistryRightPanel() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleStartReading = () => {
+    if (user) {
+      navigate("/dashboard/palmistry");
+    } else {
+      navigate("/login", { state: { returnTo: "/dashboard/palmistry" } });
+    }
+  };
+
   return (
     <div className="w-full max-w-3xl mx-auto flex flex-col z-20 px-4 sm:px-0">
       
@@ -49,7 +62,10 @@ export default function PalmistryRightPanel() {
 
         {/* 5. CTA Button */}
         <div className="w-full max-w-md mx-auto mt-2">
-          <button className="w-full py-3 xl:py-3.5 rounded-full bg-gradient-to-r from-[#1E7A46] to-[#00E676] hover:from-[#00E676] hover:to-[#00E676] text-[#0A0A0A] font-bold text-sm xl:text-base tracking-wide shadow-[0_0_15px_rgba(0,230,118,0.2)] hover:shadow-[0_0_25px_rgba(0,230,118,0.5)] transition-all duration-300 flex items-center justify-center gap-2 group">
+          <button 
+            onClick={handleStartReading}
+            className="w-full py-3 xl:py-3.5 rounded-full bg-gradient-to-r from-[#1E7A46] to-[#00E676] hover:from-[#00E676] hover:to-[#00E676] text-[#0A0A0A] font-bold text-sm xl:text-base tracking-wide shadow-[0_0_15px_rgba(0,230,118,0.2)] hover:shadow-[0_0_25px_rgba(0,230,118,0.5)] transition-all duration-300 flex items-center justify-center gap-2 group"
+          >
             <span className="text-base text-white group-hover:animate-spin">✦</span> GET MY PALM READING
           </button>
         </div>

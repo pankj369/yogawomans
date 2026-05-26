@@ -41,9 +41,9 @@ function Navbar() {
         mx-auto
         max-w-[1450px]
         rounded-[32px]
-        border border-wellness-border
-        glass-navbar
-        shadow-glass
+        border border-luxury-surface/50
+        bg-white/72 backdrop-blur-xl
+        shadow-sm
         px-6 lg:px-10
         h-[88px]
         flex items-center justify-between
@@ -68,7 +68,7 @@ function Navbar() {
               leading-[1.4]
               tracking-[0.22em]
               uppercase
-              text-[#c17b42]
+              text-luxury-gold
               "
             >
               Why should all
@@ -99,9 +99,9 @@ function Navbar() {
               relative
               flex items-center gap-2
               px-3 py-2
-              text-[16px] font-semibold text-wellness-muted
+              text-[16px] font-semibold text-luxury-muted
               transition-colors duration-300
-              hover:text-wellness-dark
+              hover:text-luxury-text
               "
                 >
                 <span className="text-[18px]">
@@ -115,7 +115,7 @@ function Navbar() {
                   className="
                   absolute left-1/2 -bottom-2
                   h-[4px] w-6 -translate-x-1/2
-                  rounded-full bg-wellness-orange
+                  rounded-full bg-luxury-gold
                   "
                 />
               )}
@@ -130,14 +130,14 @@ function Navbar() {
         <div className="hidden lg:flex items-center gap-4">
           <Link
             to="/login"
-            className="text-sm font-bold uppercase tracking-widest text-wellness-muted hover:text-wellness-dark transition duration-200 px-4"
+            className="text-sm font-bold uppercase tracking-widest text-luxury-muted hover:text-luxury-text transition duration-200 px-4"
           >
             Login
           </Link>
 
           <Link
             to="/auth"
-            className="btn-wellness-primary"
+            className="rounded-full bg-luxury-emerald hover:bg-luxury-emerald/90 text-white px-7 py-3.5 text-sm font-bold shadow-sm transition-all duration-300 hover:-translate-y-0.5"
           >
             Upgrade
           </Link>
@@ -154,13 +154,13 @@ function Navbar() {
 
           rounded-full
 
-          bg-[#ede3d5]
+          bg-luxury-surface
 
           flex
           items-center
           justify-center
 
-          text-[#3d3125]
+          text-luxury-text
           "
         >
           {isMenuOpen ? <FaTimes /> : <FaBars />}
@@ -174,8 +174,8 @@ function Navbar() {
         <div
           className="
           lg:hidden mt-4
-          rounded-3xl border border-wellness-border
-          glass-navbar shadow-glass
+          rounded-3xl border border-luxury-surface/50
+          bg-white/95 backdrop-blur-xl shadow-lg
           p-6 max-h-[80vh] overflow-y-auto
           "
         >
@@ -196,7 +196,7 @@ function Navbar() {
 
                   text-[18px]
                   font-medium
-                  text-[#4d3928]
+                  text-luxury-text
                   "
                   >
 
@@ -217,13 +217,13 @@ function Navbar() {
           <div className="mt-8 flex flex-col gap-3">
             <Link
               to="/auth"
-              className="btn-wellness-primary w-full"
+              className="w-full text-center rounded-full bg-luxury-emerald hover:bg-luxury-emerald/95 text-white py-3.5 text-sm font-bold transition"
             >
               Upgrade
             </Link>
             <Link
               to="/login"
-              className="btn-wellness-secondary w-full"
+              className="w-full text-center rounded-full bg-luxury-surface hover:bg-luxury-surface/80 text-luxury-text py-3.5 text-sm font-bold transition border border-luxury-sand/30"
             >
               Login
             </Link>

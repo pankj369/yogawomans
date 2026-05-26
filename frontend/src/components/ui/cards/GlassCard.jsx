@@ -9,7 +9,7 @@ export default function GlassCard({
   delay = 0,
   ...props
 }) {
-  const baseClasses = "rounded-4xl border border-white/60 bg-white/55 shadow-glass backdrop-blur-2xl";
+  const baseClasses = "rounded-4xl border border-wellness-border bg-wellness-glass shadow-glass backdrop-blur-[18px]";
   
   if (animate || hover) {
     return (

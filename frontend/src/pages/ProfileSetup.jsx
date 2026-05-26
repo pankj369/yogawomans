@@ -201,6 +201,7 @@ useEffect(() => {
     setError("");
 
     const payload = {
+      ...state.data,
       goals: state.data.goals || [],
       style: state.data.yogaStyle || "",
       ambient: state.data.ambient || "nature"

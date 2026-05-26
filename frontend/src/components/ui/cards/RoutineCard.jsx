@@ -14,23 +14,23 @@ export default function RoutineCard({ task, isCompleted, onToggle }) {
       whileHover="hover"
       className={`group relative flex w-full items-center justify-between overflow-hidden rounded-3xl border p-4 transition-all duration-300 ${
         isCompleted
-          ? "border-wellness-green/20 bg-wellness-greenLight shadow-sm"
-          : "border-white/70 bg-white/70 hover:bg-white/95 shadow-liftSm hover:shadow-card"
+          ? "border-wellness-glow/30 bg-wellness-glow/10 shadow-[0_0_15px_rgba(0,230,118,0.1)]"
+          : "border-wellness-border bg-wellness-glass hover:bg-white/5 hover:border-wellness-glow/30 shadow-glass"
       }`}
     >
       <div className="flex items-center gap-4">
         <div
           className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl transition-all duration-200 ${
             isCompleted
-              ? "bg-[#2D6338] text-white shadow-sm"
-              : "bg-white text-wellness-orange shadow-sm"
+              ? "bg-wellness-glow text-black shadow-glow2"
+              : "bg-white/5 border border-wellness-border text-wellness-orange"
           }`}
         >
           {Icon ? <Icon size={20} /> : <Check size={20} />}
         </div>
         <div className="text-left">
           <p className={`font-heading text-base font-bold transition-colors ${
-            isCompleted ? "text-[#2D6338] opacity-80" : "text-wellness-dark group-hover:text-[#2D6338]"
+            isCompleted ? "text-wellness-glow" : "text-white group-hover:text-wellness-orange"
           }`}>
             {task.title}
           </p>
@@ -41,7 +41,7 @@ export default function RoutineCard({ task, isCompleted, onToggle }) {
       </div>
 
       <div className={`flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-200 ${
-        isCompleted ? "border-[#2D6338] bg-[#2D6338] text-white" : "border-[#8C847A]/30"
+        isCompleted ? "border-wellness-glow bg-wellness-glow text-black" : "border-wellness-border"
       }`}>
         {isCompleted && <Check size={12} strokeWidth={3} />}
       </div>

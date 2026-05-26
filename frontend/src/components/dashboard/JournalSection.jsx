@@ -83,7 +83,7 @@ export default function JournalSection() {
       <DashboardSection id="journal-input">
         <div className="grid gap-8 lg:grid-cols-5 items-start">
           {/* Form Editor (Left 3 cols on lg) */}
-          <div className="lg:col-span-3 relative overflow-hidden rounded-[2.5rem] bg-white/40 p-8 border border-white/60 shadow-glass backdrop-blur-md">
+          <div className="lg:col-span-3 relative overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-8 shadow-glass backdrop-blur-[18px]">
             <span className="inline-flex items-center gap-1.5 text-[0.65rem] font-bold uppercase tracking-wider text-wellness-orange mb-4">
               <Edit3 size={12} /> Reflective Diary
             </span>
@@ -98,7 +98,7 @@ export default function JournalSection() {
                 <Sparkles size={12} /> Change Prompt
               </button>
             </div>
-            <p className="font-heading text-lg font-bold text-wellness-dark mt-1">
+            <p className="font-heading text-lg font-bold text-white mt-1">
               {activePrompt}
             </p>
 
@@ -114,8 +114,8 @@ export default function JournalSection() {
                       onClick={() => setSelectedMood(key)}
                       className={`px-4 py-2 text-xs font-bold rounded-2xl border transition-all ${
                         selectedMood === key
-                          ? "bg-wellness-orange border-wellness-orange text-white shadow-md shadow-wellness-orange/15"
-                          : "bg-white/60 border-white/30 text-wellness-muted hover:bg-white"
+                          ? "bg-wellness-orange border-wellness-orange text-white shadow-md"
+                          : "bg-white/5 border-wellness-border text-wellness-muted hover:bg-white/10 hover:text-white"
                       }`}
                     >
                       <span className="mr-1.5">{item.emoji}</span>
@@ -134,13 +134,13 @@ export default function JournalSection() {
                   value={noteText}
                   onChange={(e) => setNoteText(e.target.value)}
                   placeholder="Pour your heart and thoughts here..."
-                  className="w-full rounded-2xl border border-white/60 bg-white/70 p-4 text-sm text-wellness-dark placeholder-wellness-muted/50 focus:border-wellness-orange focus:bg-white focus:outline-none focus:ring-1 focus:ring-wellness-orange transition-all leading-relaxed"
+                  className="w-full rounded-2xl border border-wellness-border bg-white/5 p-4 text-sm text-white placeholder-wellness-muted/50 focus:border-wellness-orange focus:bg-white/10 focus:outline-none transition-all leading-relaxed"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full sm:w-auto rounded-full bg-wellness-dark hover:bg-black text-white px-8 py-3.5 text-sm font-bold transition-all shadow-sm"
+                className="w-full sm:w-auto rounded-full bg-wellness-glow hover:bg-wellness-glow/90 text-black px-8 py-3.5 text-sm font-extrabold transition-all shadow-glow2"
               >
                 Save Log Entry
               </button>
@@ -148,8 +148,8 @@ export default function JournalSection() {
           </div>
 
           {/* Past logs feed (Right 2 cols on lg) */}
-          <div className="lg:col-span-2 rounded-[2.5rem] bg-white/40 border border-white/60 shadow-glass p-6 sm:p-8 backdrop-blur-md flex flex-col min-h-[400px]">
-            <h3 className="font-heading text-lg font-bold text-wellness-dark flex items-center gap-2 mb-4">
+          <div className="lg:col-span-2 rounded-[2.5rem] border border-wellness-border bg-wellness-glass shadow-glass p-6 sm:p-8 backdrop-blur-[18px] flex flex-col min-h-[400px]">
+            <h3 className="font-heading text-lg font-bold text-white flex items-center gap-2 mb-4">
               <Calendar size={18} className="text-wellness-orange" />
               Past Reflections ({entries.length})
             </h3>
@@ -162,28 +162,28 @@ export default function JournalSection() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="p-4 bg-white/60 border border-white/50 rounded-3xl relative group shadow-sm hover:shadow-liftSm transition-all"
+                    className="p-4 bg-white/5 border border-wellness-border rounded-3xl relative group shadow-glass transition-all hover:bg-white/10 hover:border-wellness-glow/30 duration-300"
                   >
                     <div className="flex items-center justify-between text-[10px] font-bold text-wellness-muted mb-2">
                       <span className="flex items-center gap-1">
                         <Calendar size={11} /> {entry.date} at {entry.time}
                       </span>
-                      <span className="bg-wellness-orange/5 text-wellness-orange px-2 py-0.5 rounded-md flex items-center gap-1">
+                      <span className="bg-white/5 border border-wellness-border text-wellness-orange px-2 py-0.5 rounded-md flex items-center gap-1">
                         {moodIcons[entry.mood]?.emoji || "😊"} {moodIcons[entry.mood]?.label || "Good"}
                       </span>
                     </div>
 
-                    <p className="text-xs text-wellness-muted font-bold line-clamp-1 border-b border-wellness-softcream pb-2 mb-2">
+                    <p className="text-xs text-wellness-muted font-bold line-clamp-1 border-b border-wellness-border pb-2 mb-2">
                       {entry.prompt}
                     </p>
 
-                    <p className="text-xs text-wellness-dark leading-relaxed whitespace-pre-line">
+                    <p className="text-xs text-white leading-relaxed whitespace-pre-line font-medium">
                       {entry.text}
                     </p>
 
                     <button
                       onClick={() => handleDeleteEntry(entry.id)}
-                      className="absolute bottom-4 right-4 text-wellness-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all p-1 hover:bg-red-50 rounded-lg"
+                      className="absolute bottom-4 right-4 text-wellness-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all p-1 hover:bg-white/10 rounded-lg"
                       title="Delete log"
                     >
                       <Trash2 size={13} />

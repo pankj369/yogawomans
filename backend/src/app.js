@@ -13,6 +13,8 @@ import playlistRoutes from "./routes/playlistRoutes.js";
 import generatedPlanRoutes from "./routes/generatedPlanRoutes.js";
 import recommendationRoutes from "./routes/recommendationRoutes.js";
 import coachRoutes from "./routes/coachRoutes.js";
+import palmistryRoutes from "./routes/palmistryRoutes.js";
+import suryaRoutes from "./routes/suryaRoutes.js";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
@@ -46,6 +48,8 @@ app.use("/api/playlists", playlistRoutes);
 app.use("/api/plans", generatedPlanRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/coach", coachRoutes);
+app.use("/api/palmistry", palmistryRoutes);
+app.use("/api/surya", suryaRoutes);
 
 // Legacy routes
 app.use("/api", productRoutes);

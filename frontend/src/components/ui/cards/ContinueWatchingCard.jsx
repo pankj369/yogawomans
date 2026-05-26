@@ -35,7 +35,7 @@ export default function ContinueWatchingCard({ item }) {
       variants={hoverLift}
       whileHover="hover"
       initial="rest"
-      className="relative cursor-pointer group flex-shrink-0 w-72 sm:w-80 rounded-3xl overflow-hidden border border-white/40 bg-white/10 backdrop-blur-md shadow-card transition-all hover:border-white/60 snap-start"
+      className="relative cursor-pointer group flex-shrink-0 w-72 sm:w-80 rounded-[2rem] overflow-hidden border border-wellness-border bg-wellness-glass backdrop-blur-[18px] shadow-glass transition-all duration-300 hover:border-wellness-glow/30 hover:bg-white/5 hover:shadow-cardHover snap-start"
       onClick={handlePlay}
     >
       {/* Thumbnail Image */}
@@ -67,7 +67,7 @@ export default function ContinueWatchingCard({ item }) {
         {/* Delete button (top-right) */}
         <button
           onClick={handleRemove}
-          className="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 text-white/60 hover:text-white hover:bg-black/70 transition opacity-0 group-hover:opacity-100 z-10"
+          className="absolute top-3 right-3 p-1.5 rounded-full bg-black/60 border border-wellness-border text-white/60 hover:text-red-400 hover:bg-black/80 transition opacity-0 group-hover:opacity-100 z-10"
           title="Remove from history"
         >
           <Trash2 size={12} />
@@ -75,8 +75,8 @@ export default function ContinueWatchingCard({ item }) {
 
         {/* Play Icon hover overlay */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/25 backdrop-blur-md border border-white/40 text-white shadow-glow2 transform transition-transform duration-300 scale-90 group-hover:scale-100">
-            <Play fill="white" size={20} className="ml-0.5" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-wellness-glow/20 backdrop-blur-md border border-wellness-glow/40 text-wellness-glow shadow-glow2 transform transition-transform duration-300 scale-90 group-hover:scale-100">
+            <Play fill="currentColor" size={20} className="ml-0.5" />
           </div>
         </div>
 

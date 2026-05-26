@@ -40,11 +40,11 @@ function PremiumUpgradeModal({ isOpen, onClose }) {
           initial={{ y: 30, opacity: 0, scale: 0.98 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
           exit={{ y: 30, opacity: 0, scale: 0.98 }}
-          className="mx-auto w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-white/20 bg-wellness-dark text-white shadow-2xl relative"
+          className="mx-auto w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass text-white shadow-glass backdrop-blur-xl relative"
         >
-          <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-wellness-gold/20 to-transparent" />
+          <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-wellness-gold/15 to-transparent pointer-events-none" />
           
-          <button onClick={onClose} className="absolute right-5 top-5 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 transition backdrop-blur-sm">
+          <button onClick={onClose} className="absolute right-5 top-5 z-10 p-2 rounded-full bg-white/5 border border-wellness-border hover:bg-white/10 transition backdrop-blur-sm">
             <X size={20} />
           </button>
 
@@ -55,20 +55,20 @@ function PremiumUpgradeModal({ isOpen, onClose }) {
             
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.25em] text-wellness-gold mb-2">Premium Content</p>
             <h3 className="font-heading text-3xl font-extrabold mb-4">Unlock Your Potential</h3>
-            <p className="text-sm text-white/70 leading-relaxed max-w-sm mb-8">
+            <p className="text-sm text-wellness-muted leading-relaxed max-w-sm mb-8 font-medium">
               This session is locked. Upgrade to our Premium tier to access our entire library of expert-led physical wellness programs, advanced tracking, and personalized coaching.
             </p>
             
             <div className="w-full space-y-3">
               <button 
                 onClick={() => navigate("/pricing")}
-                className="w-full rounded-full bg-wellness-gold text-wellness-dark py-4 text-sm font-bold transition hover:bg-yellow-500 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                className="w-full rounded-full bg-wellness-gold text-black py-4 text-sm font-extrabold transition hover:bg-yellow-500 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 View Plans & Upgrade
               </button>
               <button 
                 onClick={onClose}
-                className="w-full rounded-full bg-white/10 py-4 text-sm font-bold transition hover:bg-white/20"
+                className="w-full rounded-full bg-white/5 border border-wellness-border py-4 text-sm font-bold transition hover:bg-white/10"
               >
                 Maybe Later
               </button>

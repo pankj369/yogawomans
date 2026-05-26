@@ -1,6 +1,23 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
+import { suryaService } from "../../services/suryaService";
 
 export default function LeftContentPanel() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { showToast } = useToast();
+
+  const handleWatchFlow = async () => {
+    if (user) {
+      showToast({ title: "Starting Session", message: "Loading Surya Namaskar Flow..." });
+      await suryaService.saveSession(user.uid, { title: "Surya Namaskar Video", duration: 15 });
+      navigate("/dashboard");
+    } else {
+      navigate("/login", { state: { returnTo: "/dashboard" } });
+    }
+  };
   return (
     <div className="flex flex-col justify-center h-full w-full z-30 pointer-events-auto items-center xl:items-start text-center xl:text-left max-w-lg mx-auto xl:mx-0">
       <motion.div
@@ -33,7 +50,10 @@ export default function LeftContentPanel() {
           Experience the timeless flow that energizes your body, calms your mind and connects you with the power of the sun.
         </p>
 
-        <button className="flex items-center gap-3 px-6 py-3 rounded-full border border-[#E9781F]/80 text-[#E9781F] hover:bg-[#E9781F] hover:text-[#0A0A0A] transition-all duration-300 group mx-auto xl:mx-0 hover:shadow-[0_0_20px_rgba(233,120,31,0.3)]">
+        <button 
+          onClick={handleWatchFlow}
+          className="flex items-center gap-3 px-6 py-3 rounded-full border border-[#E9781F]/80 text-[#E9781F] hover:bg-[#E9781F] hover:text-[#0A0A0A] transition-all duration-300 group mx-auto xl:mx-0 hover:shadow-[0_0_20px_rgba(233,120,31,0.3)]"
+        >
           <span className="w-6 h-6 rounded-full border border-current flex items-center justify-center text-[10px] group-hover:bg-[#0A0A0A] group-hover:text-[#E9781F] transition-all">
             ▶
           </span>
