@@ -285,16 +285,28 @@ if (onComplete) {
 export default function Signup() {
   const navigate = useNavigate();
   const auth = useAuth();
+
+  const returnTo = sessionStorage.getItem("authReturnTo");
+  const planState = JSON.parse(sessionStorage.getItem("authPlanState") || "null");
+  const actionPending = sessionStorage.getItem("authActionPending");
+
   if (auth.isAuthenticated) {
+    if (returnTo) {
+      sessionStorage.removeItem("authReturnTo");
+      sessionStorage.removeItem("authPlanState");
+      sessionStorage.removeItem("authActionPending");
+      return <Navigate to={returnTo} state={{ planState, actionPending }} replace />;
+    }
     return <Navigate to={auth.profileSetupComplete ? "/dashboard" : "/profile-setup"} replace />;
   }
+
   return (
     <AuthLayout>
       <RegisterForm
         onLogin={() => navigate("/login")}
-       onComplete={() => {
-  navigate("/login");
-}}
+        onComplete={() => {
+          navigate("/login");
+        }}
       />
     </AuthLayout>
   );

@@ -12,10 +12,12 @@ export default function LeftContentPanel() {
   const handleWatchFlow = async () => {
     if (user) {
       showToast({ title: "Starting Session", message: "Loading Surya Namaskar Flow..." });
-      await suryaService.saveSession(user.uid, { title: "Surya Namaskar Video", duration: 15 });
-      navigate("/dashboard");
+      await suryaService.saveSession(user.uid || user.id, { title: "Surya Namaskar Video", duration: 15 });
+      navigate("/dashboard/surya");
     } else {
-      navigate("/login", { state: { returnTo: "/dashboard" } });
+      sessionStorage.setItem("pending_action_type", "surya");
+      sessionStorage.setItem("pending_action_data", "watch-flow");
+      navigate("/login", { state: { returnTo: "/dashboard/surya" } });
     }
   };
   return (

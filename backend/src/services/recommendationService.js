@@ -12,7 +12,7 @@ const mediaCatalog = [
 ];
 
 class RecommendationService {
-  async getDashboardRecommendations(uid) {
+  async getDashboardRecommendations(uid, mood) {
     const userDoc = await db.collection("users").doc(uid).get();
     if (!userDoc.exists) throw new AppError("User not found", 404);
     
@@ -30,7 +30,7 @@ class RecommendationService {
       .get();
     
     const recentMediaIds = historySnapshot.docs.map(doc => doc.data().mediaId);
-    const insightData = await aiService.generateInsights(userData, stats, historySnapshot.docs);
+    const insightData = await aiService.generateInsights(userData, stats, historySnapshot.docs, mood);
 
     let scoredCatalog = mediaCatalog.map(media => {
       if (dismissed.includes(media.id)) return { ...media, recommendationScore: -999 };
@@ -41,9 +41,29 @@ class RecommendationService {
       );
       if (hasMatchingGoal) score += 3;
 
+      // Base profile stress scoring
       if (stressLevel >= 7 && media.tags.includes("stress relief")) score += 4;
       if (stressLevel >= 7 && media.tags.includes("anxiety")) score += 4;
       if (stressLevel <= 4 && media.tags.includes("energy")) score += 2;
+
+      // Real-time Mood Adaptive Weighting
+      if (mood) {
+        const moodLower = mood.toLowerCase();
+        if (moodLower === "stressed") {
+          if (media.tags.includes("stress relief") || media.tags.includes("anxiety")) score += 5;
+          if (media.level === "Gentle" || media.category === "breathwork") score += 3;
+        } else if (moodLower === "tired") {
+          if (media.level === "Gentle" || media.category === "breathwork") score += 5;
+          if (media.tags.includes("Restorative")) score += 4;
+        } else if (moodLower === "focused") {
+          if (media.category === "meditation" || media.category === "breathwork") score += 4;
+          if (media.tags.includes("Reset")) score += 3;
+        } else if (moodLower === "happy") {
+          if (media.tags.includes("Energy") || media.tags.includes("Flow")) score += 4;
+        } else if (moodLower === "calm") {
+          if (media.tags.includes("Stillness") || media.tags.includes("Calm")) score += 4;
+        }
+      }
       
       if (preferences.fitnessLevel === "Beginner" && media.level === "Beginner") score += 2;
       if (recentMediaIds.includes(media.id)) score -= 2;

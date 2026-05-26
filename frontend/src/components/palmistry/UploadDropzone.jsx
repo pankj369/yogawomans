@@ -1,18 +1,64 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useState, useRef } from "react";
+import { useToast } from "../../context/ToastContext";
 
-export default function UploadDropzone() {
+export default function UploadDropzone({ onFileSelect }) {
   const [isHovered, setIsHovered] = useState(false);
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  const [isDragActive, setIsDragActive] = useState(false);
+  const fileInputRef = useRef(null);
+  const { showToast } = useToast();
 
-  const handleStartReading = () => {
-    if (user) {
-      navigate("/dashboard/palmistry");
-    } else {
-      navigate("/login", { state: { returnTo: "/dashboard/palmistry" } });
+  const validateAndSelectFile = (file) => {
+    if (!file) return;
+
+    // Check file type
+    const validTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!validTypes.includes(file.type)) {
+      showToast({ 
+        type: "error", 
+        title: "Invalid File Type", 
+        message: "Please upload a JPG, PNG, or WEBP image." 
+      });
+      return;
+    }
+
+    // Check file size (10MB limit)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      showToast({ 
+        type: "error", 
+        title: "File Too Large", 
+        message: "Maximum upload size is 10MB." 
+      });
+      return;
+    }
+
+    onFileSelect(file);
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setIsDragActive(true);
+    } else if (e.type === "dragleave") {
+      setIsDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      validateAndSelectFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      validateAndSelectFile(e.target.files[0]);
     }
   };
 
@@ -22,22 +68,32 @@ export default function UploadDropzone() {
         className="relative group cursor-pointer"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        onClick={handleStartReading}
+        onDragEnter={handleDrag}
+        onDragOver={handleDrag}
+        onDragLeave={handleDrag}
+        onDrop={handleDrop}
+        onClick={() => fileInputRef.current?.click()}
       >
         {/* Animated Glow Behind Dropzone */}
         <motion.div 
-          className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#00E676] to-[#1E7A46] opacity-0 blur-xl group-hover:opacity-40 transition-opacity duration-500"
-          animate={{ scale: isHovered ? 1.02 : 1 }}
+          className={`absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#00E676] to-[#1E7A46] blur-xl transition-opacity duration-500 ${
+            isDragActive || isHovered ? "opacity-40" : "opacity-0"
+          }`}
+          animate={{ scale: isHovered || isDragActive ? 1.02 : 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         />
 
         {/* Dropzone Container */}
-        <div className="relative w-full py-3.5 xl:py-4.5 rounded-2xl border border-dashed border-[#00E676]/60 bg-transparent flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:border-[#00E676] group-hover:bg-[#00E676]/5">
+        <div className={`relative w-full py-6 rounded-2xl border border-dashed flex flex-col items-center justify-center text-center transition-all duration-300 ${
+          isDragActive 
+            ? "border-[#00E676] bg-[#00E676]/10" 
+            : "border-[#00E676]/60 bg-transparent group-hover:border-[#00E676] group-hover:bg-[#00E676]/5"
+        }`}>
           
           <div className="relative z-10 flex flex-col items-center gap-2">
             {/* Upload Icon */}
             <motion.div 
-              animate={{ y: isHovered ? -2 : 0 }}
+              animate={{ y: isHovered || isDragActive ? -2 : 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className="text-[#00E676] drop-shadow-[0_0_8px_rgba(0,230,118,0.4)]"
             >
@@ -53,13 +109,19 @@ export default function UploadDropzone() {
                 Drag & Drop your palm image here <br/> or click to upload
               </p>
               <p className="text-[#888] text-[10px] mt-1 group-hover:text-gray-400 transition-colors uppercase tracking-wider">
-                JPG, PNG up to 10MB
+                JPG, PNG, WEBP up to 10MB
               </p>
             </div>
           </div>
-
         </div>
       </div>
+      <input 
+        type="file" 
+        ref={fileInputRef} 
+        onChange={handleFileChange} 
+        accept="image/png, image/jpeg, image/webp" 
+        className="hidden" 
+      />
     </div>
   );
 }

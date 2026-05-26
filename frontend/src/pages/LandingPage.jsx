@@ -8,7 +8,6 @@ import AboutUs from "../components/AboutUs";
 import WhyChooseUs from "../components/WhyChooseUs";
 import Instructors from "../components/Instructors";  
 import ClassesSection from "../components/ClassesSection";
-import Pricing from "../components/Pricing";        
 import FindSolution from "../components/FindSolution";
 import Testimonials from "../components/Testimonials";
 import Footer from "../components/Footer";
@@ -43,10 +42,6 @@ function LandingPage() {
 
           {/* 6. WHY US — competitors se alag kyun hain */}
           <WhyChooseUs />
-
-
-        {/* 7. PRICING — ab user convince ho chuka hai */}
-        <Pricing />
 
 
         {/* 8. TESTIMONIALS — real reviews before final CTA */}

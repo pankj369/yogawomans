@@ -53,8 +53,8 @@ class AIService {
   /**
    * Generates dynamic, emotionally intelligent dashboard insights.
    */
-  async generateInsights(profile, stats, history) {
-    const prompt = getInsightPrompt(profile, stats, history);
+  async generateInsights(profile, stats, history, mood) {
+    const prompt = getInsightPrompt(profile, stats, history, mood);
 
     try {
       const response = await openai.chat.completions.create({
@@ -81,10 +81,10 @@ class AIService {
   /**
    * Conversational endpoint for the AI Coach
    */
-  async chatWithCoach(messageHistory, profile) {
+  async chatWithCoach(messageHistory, profile, mood) {
     const systemPrompt = {
       role: "system",
-      content: getCoachSystemPrompt(profile)
+      content: getCoachSystemPrompt(profile, mood)
     };
 
     try {

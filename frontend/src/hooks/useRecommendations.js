@@ -2,9 +2,11 @@ import { useState, useEffect, useCallback } from "react";
 import apiClient from "../services/apiClient";
 import { useAuth } from "../context/AuthContext";
 import { sessionCatalog } from "../data/wellnessData";
+import { useMood } from "../context/MoodContext";
 
 export function useRecommendations() {
   const { user } = useAuth();
+  const { mood } = useMood();
   const [recommendations, setRecommendations] = useState([]);
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,7 +22,7 @@ export function useRecommendations() {
 
     try {
       setLoading(true);
-      const res = await apiClient.get("/recommendations/dashboard");
+      const res = await apiClient.get(`/recommendations/dashboard?mood=${mood}`);
       if (res?.data?.success) {
         // Map backend recommendations to rich catalog data
         const backendRecs = res.data.data.recommendedSessions || [];
@@ -38,7 +40,7 @@ export function useRecommendations() {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, mood]);
 
   useEffect(() => {
     fetchRecommendations();

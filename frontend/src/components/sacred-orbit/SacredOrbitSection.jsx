@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
+import { suryaService } from "../../services/suryaService";
 import CenterLotus from "./CenterLotus";
 import RotatingOrbit from "./RotatingOrbit";
 import AmbientParticles from "./AmbientParticles";
@@ -61,6 +64,34 @@ if (!document.head.querySelector("[data-sacred-orbit]")) {
 export default function SacredOrbitSection({ isDashboard = false }) {
   const [activeNode, setActiveNode] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
+  const { user } = useAuth();
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    const resumePendingSurya = async () => {
+      const type = sessionStorage.getItem("pending_action_type");
+      const action = sessionStorage.getItem("pending_action_data");
+      
+      if (user && type === "surya" && action) {
+        sessionStorage.removeItem("pending_action_type");
+        sessionStorage.removeItem("pending_action_data");
+        
+        try {
+          if (action === "watch-flow") {
+            showToast({ title: "Starting Session", message: "Resuming Surya Namaskar Flow..." });
+            await suryaService.saveSession(user.uid || user.id, { title: "Surya Namaskar Video", duration: 15 });
+          } else if (action === "start-flow") {
+            showToast({ title: "Practice Started", message: "Resuming your 12-step flow." });
+            await suryaService.saveSession(user.uid || user.id, { title: "Surya Namaskar 12-Step", duration: 20 });
+          }
+        } catch (err) {
+          console.error("Failed to resume pending surya session:", err);
+        }
+      }
+    };
+
+    resumePendingSurya();
+  }, [user, showToast]);
 
   return (
     <section className={`relative w-full overflow-hidden flex flex-col justify-center ${

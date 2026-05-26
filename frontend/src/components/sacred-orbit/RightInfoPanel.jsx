@@ -12,10 +12,12 @@ export default function RightInfoPanel() {
   const handleStartFlow = async () => {
     if (user) {
       showToast({ title: "Practice Started", message: "Your 12-step flow is beginning." });
-      await suryaService.saveSession(user.uid, { title: "Surya Namaskar 12-Step", duration: 20 });
-      navigate("/dashboard");
+      await suryaService.saveSession(user.uid || user.id, { title: "Surya Namaskar 12-Step", duration: 20 });
+      navigate("/dashboard/surya");
     } else {
-      navigate("/login", { state: { returnTo: "/dashboard" } });
+      sessionStorage.setItem("pending_action_type", "surya");
+      sessionStorage.setItem("pending_action_data", "start-flow");
+      navigate("/login", { state: { returnTo: "/dashboard/surya" } });
     }
   };
   const benefits = [

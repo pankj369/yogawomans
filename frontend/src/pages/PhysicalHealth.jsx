@@ -24,62 +24,6 @@ import { physicalStats, physicalCategories, physicalVideos } from "../data/physi
 import { featuredPrograms, breathingExercises } from "../data/wellnessData";
 import physicalVideo from "../assets/videos/physicalhealthherovideo.mp4";
 
-function PremiumUpgradeModal({ isOpen, onClose }) {
-  const navigate = useNavigate();
-  if (!isOpen) return null;
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] bg-black/60 px-4 py-8 backdrop-blur-xl flex items-center justify-center"
-      >
-        <motion.div
-          initial={{ y: 30, opacity: 0, scale: 0.98 }}
-          animate={{ y: 0, opacity: 1, scale: 1 }}
-          exit={{ y: 30, opacity: 0, scale: 0.98 }}
-          className="mx-auto w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass text-white shadow-glass backdrop-blur-xl relative"
-        >
-          <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-wellness-gold/15 to-transparent pointer-events-none" />
-          
-          <button onClick={onClose} className="absolute right-5 top-5 z-10 p-2 rounded-full bg-white/5 border border-wellness-border hover:bg-white/10 transition backdrop-blur-sm">
-            <X size={20} />
-          </button>
-
-          <div className="relative z-10 p-10 text-center flex flex-col items-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-wellness-gold to-yellow-600 mb-6 shadow-glow2">
-              <Lock size={32} className="text-white" />
-            </div>
-            
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.25em] text-wellness-gold mb-2">Premium Content</p>
-            <h3 className="font-heading text-3xl font-extrabold mb-4">Unlock Your Potential</h3>
-            <p className="text-sm text-wellness-muted leading-relaxed max-w-sm mb-8 font-medium">
-              This session is locked. Upgrade to our Premium tier to access our entire library of expert-led physical wellness programs, advanced tracking, and personalized coaching.
-            </p>
-            
-            <div className="w-full space-y-3">
-              <button 
-                onClick={() => navigate("/pricing")}
-                className="w-full rounded-full bg-wellness-gold text-black py-4 text-sm font-extrabold transition hover:bg-yellow-500 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-              >
-                View Plans & Upgrade
-              </button>
-              <button 
-                onClick={onClose}
-                className="w-full rounded-full bg-white/5 border border-wellness-border py-4 text-sm font-bold transition hover:bg-white/10"
-              >
-                Maybe Later
-              </button>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-
 export default function PhysicalHealth() {
   const auth = useAuth();
   const toast = useToast();
@@ -92,7 +36,6 @@ export default function PhysicalHealth() {
   const userName = profile?.full_name || "Yogi";
 
   const [activeFilter, setActiveFilter] = useState("All");
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const filteredVideos = activeFilter === "All" 
     ? physicalVideos 
@@ -100,7 +43,12 @@ export default function PhysicalHealth() {
 
   const handleVideoClick = (video) => {
     if (video.premium && !hasProPlan) {
-      setShowUpgradeModal(true);
+      toast.showToast({
+        type: "warning",
+        title: "Pro Content Locked",
+        message: "Please upgrade to the Transform Pro plan to unlock this workout.",
+      });
+      navigate("/pricing");
     } else {
       playVideo(video);
       toast.showToast({ title: "Starting Workout", message: `Loading ${video.title}...` });
@@ -221,8 +169,16 @@ export default function PhysicalHealth() {
                 key={program.id} 
                 program={program} 
                 onExplore={() => {
-                  if (!hasProPlan) setShowUpgradeModal(true);
-                  else toast.showToast({ title: "Opening Program", message: program.title });
+                  if (!hasProPlan) {
+                    toast.showToast({
+                      type: "warning",
+                      title: "Pro Program Locked",
+                      message: "Please upgrade to the Transform Pro plan to unlock this program.",
+                    });
+                    navigate("/pricing");
+                  } else {
+                    toast.showToast({ title: "Opening Program", message: program.title });
+                  }
                 }} 
               />
             ))}
@@ -249,11 +205,6 @@ export default function PhysicalHealth() {
         </DashboardSection>
 
       </div>
-
-      <PremiumUpgradeModal 
-        isOpen={showUpgradeModal} 
-        onClose={() => setShowUpgradeModal(false)} 
-      />
     </DashboardLayout>
   );
 }

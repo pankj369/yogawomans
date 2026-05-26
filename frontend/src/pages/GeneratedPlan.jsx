@@ -116,9 +116,35 @@ function TimelinePhase({ step, index, isExpanded, onToggle, isLast }) {
                 </div>
               </div>
 
-              <h4 className="mb-4 font-heading text-xl font-bold text-luxury-text">{step.name || step.title}</h4>
+              <h4 className="mb-2 font-heading text-xl font-bold text-luxury-text">{step.name || step.title}</h4>
               <p className="mb-6 text-sm leading-relaxed text-luxury-muted font-medium">{step.description}</p>
-              {step.items && (
+              
+              {/* Individual Exercises/Sessions */}
+              {step.sessions && step.sessions.length > 0 ? (
+                <div className="space-y-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-luxury-muted">AI Recommended Exercises</p>
+                  <div className="grid gap-3">
+                    {step.sessions.map((session, i) => (
+                      <div key={i} className="p-4 rounded-2xl bg-white border border-luxury-surface shadow-sm hover:border-luxury-emerald/30 transition-all duration-300">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded-full bg-luxury-emerald/10 text-luxury-emerald text-[9px] font-extrabold uppercase tracking-wider">
+                              {session.type || "Yoga"}
+                            </span>
+                            <h5 className="font-heading text-sm font-bold text-luxury-text">{session.title}</h5>
+                          </div>
+                          <span className="text-xs text-luxury-gold font-bold">{session.durationMin || session.duration} mins</span>
+                        </div>
+                        {session.reason && (
+                          <p className="text-xs text-luxury-muted leading-relaxed font-medium">
+                            <span className="text-luxury-text/70 font-semibold">AI Insight:</span> {session.reason}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : step.items && step.items.length > 0 ? (
                 <div className="flex flex-wrap gap-3">
                   {step.items.map((item, i) => (
                     <span key={i} className="inline-flex items-center rounded-full bg-white border border-luxury-surface px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-luxury-emerald shadow-sm">
@@ -126,7 +152,7 @@ function TimelinePhase({ step, index, isExpanded, onToggle, isLast }) {
                     </span>
                   ))}
                 </div>
-              )}
+              ) : null}
             </div>
           </motion.div>
         )}
@@ -258,6 +284,14 @@ export default function GeneratedPlan() {
   // Cinematic loader handles message cycling now
 
   useEffect(() => {
+    // If state contains planData (e.g. from history), bypass AI generation completely
+    if (state.planData) {
+      setPlanData(state.planData);
+      setCurrentPlan(state.planData);
+      setIsGenerating(false);
+      return;
+    }
+
     // If navigated without state and not authenticated, go home. 
     // If authenticated, we allow it so they can see History.
     if (!location.state && !auth.isAuthenticated) {
@@ -288,7 +322,8 @@ export default function GeneratedPlan() {
             description: day.theme,
             duration: day.sessions?.[0]?.durationMin ? `${day.sessions[0].durationMin} min` : "15 min",
             type: day.sessions?.[0]?.type || "Practice",
-            items: day.sessions?.map(s => s.title) || []
+            items: day.sessions?.map(s => s.title) || [],
+            sessions: day.sessions || []
           })) || [],
           progress: 0,
           completed: false,
@@ -304,7 +339,7 @@ export default function GeneratedPlan() {
     }, 5000); 
 
     return () => clearTimeout(timer);
-  }, [goalId, durationId, levelId, navigate, category.label, totalMinutes, auth.isAuthenticated, location.state]);
+  }, [goalId, durationId, levelId, navigate, category.label, totalMinutes, auth.isAuthenticated, location.state, state.planData]);
 
   // Execute pending actions automatically if logged in
   useEffect(() => {
@@ -383,12 +418,18 @@ export default function GeneratedPlan() {
     // Re-generate the view with the history plan's state
     navigate("/generated-plan", {
       state: {
-        goalId: historyPlan.goal,
-        durationId: historyPlan.duration,
-        levelId: historyPlan.level
+        planState: {
+          goalId: historyPlan.goal,
+          durationId: historyPlan.duration,
+          levelId: historyPlan.level,
+          planData: historyPlan
+        }
       },
       replace: true
     });
+    setPlanData(historyPlan);
+    setCurrentPlan(historyPlan);
+    setIsGenerating(false);
     setActiveTab("practice");
   };
 

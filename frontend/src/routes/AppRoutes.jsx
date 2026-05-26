@@ -21,22 +21,14 @@ const PhysicalHealth = lazy(() => import("../pages/PhysicalHealth"));
 const MentalHealth = lazy(() => import("../pages/MentalHealth"));
 const GeneratedPlan = lazy(() => import("../pages/GeneratedPlan"));
 const SessionPlayer = lazy(() => import("../pages/SessionPlayer"));
+const DiscoverYoga = lazy(() => import("../pages/DiscoverYoga"));
+const LiveSchedules = lazy(() => import("../pages/LiveSchedules"));
+const Store = lazy(() => import("../pages/Store"));
+
+import CinematicLoader from "../components/ui/animations/CinematicLoader";
 
 function AppRouteLoader() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-wellness-bg">
-      <div className="flex flex-col items-center gap-6">
-        <Skeleton variant="circular" className="h-20 w-20 bg-wellness-orange/10" />
-        <motion.p
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-sm font-bold uppercase tracking-widest text-wellness-muted"
-        >
-          Loading YogaWomans...
-        </motion.p>
-      </div>
-    </div>
-  );
+  return <CinematicLoader onComplete={() => {}} />;
 }
 
 export default function AppRoutes() {
@@ -50,7 +42,10 @@ export default function AppRoutes() {
         <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
         <Route path="/signup" element={<PageWrapper><Signup /></PageWrapper>} />
         <Route path="/pricing" element={<PageWrapper><PricingPage /></PageWrapper>} />
-        <Route path="/shop" element={<PageWrapper><Shop /></PageWrapper>} />
+        <Route path="/discover-yoga" element={<PageWrapper><DiscoverYoga /></PageWrapper>} />
+        <Route path="/live-schedules" element={<PageWrapper><LiveSchedules /></PageWrapper>} />
+        <Route path="/store" element={<PageWrapper><Store /></PageWrapper>} />
+        <Route path="/shop" element={<Navigate to="/store" replace />} />
         <Route path="/shop/:slug" element={<PageWrapper><ProductDetail /></PageWrapper>} />
         <Route path="/generated-plan" element={<PageWrapper><GeneratedPlan /></PageWrapper>} />
 

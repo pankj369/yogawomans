@@ -39,6 +39,7 @@ import SacredOrbitSection from "../components/sacred-orbit/SacredOrbitSection";
 // Premium Wellness OS Components
 import DashboardHero from "../components/dashboard/dashboardHero/DashboardHero";
 import WellnessInsights from "../components/dashboard/WellnessInsights";
+import SpiritualMilestones from "../components/dashboard/SpiritualMilestones";
 import ContinueJourney from "../components/dashboard/ContinueJourney";
 import RecentPlans from "../components/dashboard/RecentPlans";
 import AIRecommendations from "../components/dashboard/AIRecommendations";
@@ -434,6 +435,10 @@ export default function Dashboard() {
               
               <div className="order-2 lg:order-none">
                 <WellnessInsights />
+              </div>
+
+              <div className="order-2 lg:order-none">
+                <SpiritualMilestones streak={currentStreak} wellnessScore={state.wellnessScore || calmScore} />
               </div>
 
               <div className="order-3 lg:order-none space-y-10 lg:space-y-14">

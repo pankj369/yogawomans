@@ -19,3 +19,13 @@ export const updateProfile = async (profileData) => {
     throw error;
   }
 };
+
+export const getAIWellnessProfile = async () => {
+  try {
+    const response = await apiClient.get("/profile/ai-wellness");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch AI Wellness Profile", error);
+    return { success: false, data: null };
+  }
+};

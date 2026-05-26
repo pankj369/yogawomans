@@ -5,6 +5,8 @@ import DashboardSection from "../ui/sections/DashboardSection";
 import SectionHeading from "../ui/sections/SectionHeading";
 import { useToast } from "../../context/ToastContext";
 import apiClient from "../../services/apiClient";
+import VoiceGuide from "./VoiceGuide";
+import { useMood } from "../../context/MoodContext";
 
 const suggestionPrompts = [
   "Suggest a 5-minute desk stretch",
@@ -29,6 +31,7 @@ const presets = {
 
 export default function AICoachSection() {
   const toast = useToast();
+  const { mood } = useMood();
   const messagesEndRef = useRef(null);
   const [messages, setMessages] = useState([
     {
@@ -71,7 +74,7 @@ export default function AICoachSection() {
       }));
 
       // Make API call
-      const response = await apiClient.post("/coach/chat", { messages: apiMessages });
+      const response = await apiClient.post("/coach/chat", { messages: apiMessages, mood });
       
       const newMsg = {
         id: `coach-${Date.now()}`,
@@ -136,15 +139,22 @@ export default function AICoachSection() {
                   key={msg.id}
                   className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  <div
-                    className={`max-w-[85%] rounded-[1.8rem] px-5 py-3.5 text-xs leading-relaxed ${
-                      msg.sender === "user"
-                        ? "bg-wellness-orange text-white rounded-br-sm shadow-sm"
-                        : "bg-white/5 border border-wellness-border text-white rounded-bl-sm shadow-sm whitespace-pre-line font-medium"
-                    }`}
-                  >
-                    {msg.text}
-                  </div>
+                  {msg.sender === "coach" ? (
+                    <div className="flex flex-col items-start max-w-[85%]">
+                      <div className="rounded-[1.8rem] px-5 py-3.5 text-xs leading-relaxed bg-white/5 border border-wellness-border text-white rounded-bl-sm shadow-sm whitespace-pre-line font-medium">
+                        {msg.text}
+                      </div>
+                      <div className="mt-1 flex items-center gap-1.5 pl-2 text-[10px] text-wellness-muted font-bold uppercase tracking-wider">
+                        <span>Aria</span>
+                        <span>•</span>
+                        <VoiceGuide text={msg.text} size={11} className="!p-1 border-none bg-transparent hover:bg-white/5" />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="max-w-[85%] rounded-[1.8rem] px-5 py-3.5 text-xs leading-relaxed bg-wellness-orange text-white rounded-br-sm shadow-sm">
+                      {msg.text}
+                    </div>
+                  )}
                 </div>
               ))}
 

@@ -24,62 +24,6 @@ import { useMedia } from "../context/MediaContext";
 import { mentalCategories, meditationSessions, healingAudio, breathingCycles, sleepStories, healingRoutines } from "../data/mentalHealthData";
 import mentalVideo from "../assets/videos/physicalhealthherovideo.mp4";
 
-function PremiumUpgradeModal({ isOpen, onClose }) {
-  const navigate = useNavigate();
-  if (!isOpen) return null;
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] bg-black/60 px-4 py-8 backdrop-blur-xl flex items-center justify-center"
-      >
-        <motion.div
-          initial={{ y: 30, opacity: 0, scale: 0.98 }}
-          animate={{ y: 0, opacity: 1, scale: 1 }}
-          exit={{ y: 30, opacity: 0, scale: 0.98 }}
-          className="mx-auto w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-wellness-border bg-wellness-glass text-white shadow-glass backdrop-blur-xl relative"
-        >
-          <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-purple-500/15 to-transparent pointer-events-none" />
-          
-          <button onClick={onClose} className="absolute right-5 top-5 z-10 p-2 rounded-full bg-white/5 border border-wellness-border hover:bg-white/10 transition backdrop-blur-sm">
-            <X size={20} />
-          </button>
-
-          <div className="relative z-10 p-10 text-center flex flex-col items-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 mb-6 shadow-glow2">
-              <Lock size={32} className="text-white" />
-            </div>
-            
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.25em] text-purple-300 mb-2">Premium Healing</p>
-            <h3 className="font-heading text-3xl font-extrabold mb-4">Deepen Your Journey</h3>
-            <p className="text-sm text-wellness-muted leading-relaxed max-w-sm mb-8 font-medium">
-              This session is locked. Upgrade to our Premium tier to access advanced meditations, sleep stories, and personalized emotional wellness routines.
-            </p>
-            
-            <div className="w-full space-y-3">
-              <button 
-                onClick={() => navigate("/pricing")}
-                className="w-full rounded-full bg-purple-600 hover:bg-purple-500 text-white py-4 text-sm font-extrabold transition shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-              >
-                View Plans & Upgrade
-              </button>
-              <button 
-                onClick={onClose}
-                className="w-full rounded-full bg-white/5 border border-wellness-border py-4 text-sm font-bold transition hover:bg-white/10"
-              >
-                Maybe Later
-              </button>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-
 export default function MentalHealth() {
   const auth = useAuth();
   const toast = useToast();
@@ -92,7 +36,6 @@ export default function MentalHealth() {
   const userName = profile?.full_name || "Yogi";
 
   const [activeFilter, setActiveFilter] = useState("All");
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [completedRoutines, setCompletedRoutines] = useState([]);
 
   const filteredMeditations = activeFilter === "All" 
@@ -101,7 +44,12 @@ export default function MentalHealth() {
 
   const handleSessionClick = (session) => {
     if (session.premium && !hasProPlan) {
-      setShowUpgradeModal(true);
+      toast.showToast({
+        type: "warning",
+        title: "Pro Session Locked",
+        message: "Please upgrade to the Transform Pro plan to unlock this session.",
+      });
+      navigate("/pricing");
     } else {
       if (session.mediaType === "video") {
         playVideo(session);
@@ -256,11 +204,6 @@ export default function MentalHealth() {
         </DashboardSection>
 
       </div>
-
-      <PremiumUpgradeModal 
-        isOpen={showUpgradeModal} 
-        onClose={() => setShowUpgradeModal(false)} 
-      />
     </DashboardLayout>
   );
 }

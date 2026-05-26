@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, Award, Flame, Play } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useDashboard } from "../../context/DashboardContext";
+import { useMood } from "../../context/MoodContext";
 import SearchBar from "../ui/navigation/SearchBar";
 import NotificationButton from "../ui/navigation/NotificationButton";
 import ProfileDropdown from "../ui/navigation/ProfileDropdown";
@@ -13,6 +14,7 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title, is
   const navigate = useNavigate();
   const auth = useAuth();
   const { notifications, markNotificationRead, state, isReturningUser } = useDashboard();
+  const { activeTheme, setShowCheckInModal } = useMood();
   
   const [activePanel, setActivePanel] = useState(null);
   const panelRef = useRef(null);
@@ -97,6 +99,14 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title, is
                 <Flame size={10} /> {streakDays} Day Streak
               </span>
             )}
+            <button
+              onClick={() => setShowCheckInModal(true)}
+              className="flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-white/95 transition-all shadow-liftSm"
+              style={{ borderColor: "var(--adaptive-glow-color)" }}
+            >
+              <span className="text-[12px]">{activeTheme.emoji}</span>
+              <span>{activeTheme.name} Vibe</span>
+            </button>
           </div>
 
           {/* CENTER: Floating Search Bar */}
@@ -167,6 +177,15 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title, is
 
           {/* RIGHT: notifications + profile avatar */}
           <div className="flex items-center gap-2 shrink-0 relative">
+            <button
+              onClick={() => setShowCheckInModal(true)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-base transition-all"
+              style={{ borderColor: "var(--adaptive-glow-color)" }}
+              title="Change vibe"
+            >
+              {activeTheme.emoji}
+            </button>
+            
             <NotificationButton
               notifications={panelNotifications}
               unreadCount={unreadCount}

@@ -4,6 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --adaptive-glow-color: rgba(0, 230, 118, 0.4);
+  --adaptive-glow-color-rgb: 0, 230, 118;
+  --adaptive-primary: #00E676;
+  --adaptive-glow-gradient-start: rgba(0, 230, 118, 0.12);
+}
+
 /* ─── Base ────────────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;

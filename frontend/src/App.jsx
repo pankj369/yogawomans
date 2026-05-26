@@ -6,6 +6,7 @@ import { WishlistProvider } from "./context/WishlistContext";
 import { DashboardProvider } from "./context/DashboardContext";
 import { ToastProvider } from "./context/ToastContext";
 import { MediaProvider } from "./context/MediaContext";
+import { MoodProvider } from "./context/MoodContext";
 import AppRoutes, { AppRouteLoader } from "./routes/AppRoutes";
 import { Suspense } from "react";
 import ErrorBoundary from "./components/ui/ErrorBoundary";
@@ -71,13 +72,15 @@ function App() {
           <CartProvider>
             <WishlistProvider>
               <DashboardProvider>
-                <ToastProvider>
-                  <MediaProvider>
-                    <Suspense fallback={<AppRouteLoader />}>
-                      <MainAppContent />
-                    </Suspense>
-                  </MediaProvider>
-                </ToastProvider>
+                <MoodProvider>
+                  <ToastProvider>
+                    <MediaProvider>
+                      <Suspense fallback={<AppRouteLoader />}>
+                        <MainAppContent />
+                      </Suspense>
+                    </MediaProvider>
+                  </ToastProvider>
+                </MoodProvider>
               </DashboardProvider>
             </WishlistProvider>
           </CartProvider>

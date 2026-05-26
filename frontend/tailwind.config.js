@@ -56,6 +56,13 @@ module.exports = {
           gold:       "#C89B3C", // SOFT GOLD
           sand:       "#DCC9A3", // SAND HIGHLIGHT
         },
+
+        // --- Adaptive Theme Color Mappings ---
+        adaptive: {
+          glow:       "var(--adaptive-glow-color)",
+          primary:    "var(--adaptive-primary)",
+          gradientStart: "var(--adaptive-glow-gradient-start)",
+        },
       },
 
       fontFamily: {

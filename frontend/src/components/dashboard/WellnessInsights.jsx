@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { fadeUp, easings } from "../../utils/animations";
 import { useRecommendations } from "../../hooks/useRecommendations";
+import VoiceGuide from "./VoiceGuide";
 
 export default function WellnessInsights() {
   const { insights: aiInsights, loading } = useRecommendations();
@@ -27,9 +28,12 @@ export default function WellnessInsights() {
     >
       <div className="mb-8">
         <h2 className="font-heading text-2xl font-extrabold text-white">Wellness State</h2>
-        <p className="mt-2 text-sm text-wellness-muted font-medium tracking-wide italic border-l-2 border-wellness-orange pl-3">
-          "{aiInsights?.message || "Your weekly holistic overview"}"
-        </p>
+        <div className="mt-2 flex items-center justify-between gap-4 border-l-2 border-wellness-orange pl-3">
+          <p className="text-sm text-wellness-muted font-medium tracking-wide italic flex-1">
+            "{aiInsights?.message || "Your weekly holistic overview"}"
+          </p>
+          <VoiceGuide text={aiInsights?.message || "Your weekly holistic overview"} size={16} />
+        </div>
       </div>
 
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">

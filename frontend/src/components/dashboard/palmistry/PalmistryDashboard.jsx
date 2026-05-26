@@ -1,14 +1,28 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   UploadCloud, PlayCircle, Bell, ChevronRight, CheckCircle, BrainCircuit, Shield, Star, Heart, RefreshCw, Sparkles, Upload
 } from "lucide-react";
 import { usePalmistry } from "../../../hooks/usePalmistry";
+import { useAuth } from "../../../context/AuthContext";
 import { 
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, 
   ResponsiveContainer 
 } from "recharts";
 import palmImage from "../../../assets/images/palmimage.png";
+
+// Helper function to convert Base64 Data URL to a File object
+function dataURLtoFile(dataurl, filename) {
+  const arr = dataurl.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
+}
 
 // Orbit animation component for the visualization card
 function OrbitRing({ size, duration, reverse = false, dashed = false, color = "#00E676", opacity = "opacity-50" }) {
@@ -43,8 +57,23 @@ export default function PalmistryDashboard() {
     processPalmImage 
   } = usePalmistry();
 
+  const { user } = useAuth();
   const fileInputRef = useRef(null);
   const [isHoveringDrop, setIsHoveringDrop] = useState(false);
+
+  useEffect(() => {
+    const pendingPalmImage = sessionStorage.getItem("pending_palm_image");
+    if (pendingPalmImage && user) {
+      sessionStorage.removeItem("pending_palm_image");
+      sessionStorage.removeItem("pending_action_type");
+      try {
+        const file = dataURLtoFile(pendingPalmImage, "palm_image.png");
+        processPalmImage(file);
+      } catch (err) {
+        console.error("Failed to convert cached palm image:", err);
+      }
+    }
+  }, [user, processPalmImage]);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];

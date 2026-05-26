@@ -7,8 +7,9 @@ import recommendationService from "../services/recommendationService.js";
  */
 export const getDashboardRecommendations = asyncHandler(async (req, res) => {
   const { uid } = req.user;
+  const { mood } = req.query;
 
-  const data = await recommendationService.getDashboardRecommendations(uid);
+  const data = await recommendationService.getDashboardRecommendations(uid, mood);
 
   res.status(200).json({
     success: true,

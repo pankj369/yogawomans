@@ -23,7 +23,7 @@ export const getCoachHistory = asyncHandler(async (req, res) => {
  */
 export const chatWithCoach = asyncHandler(async (req, res) => {
   const { uid } = req.user;
-  const { messages } = req.body;
+  const { messages, mood } = req.body;
 
   if (!messages || !Array.isArray(messages)) {
     res.status(400);
@@ -37,7 +37,7 @@ export const chatWithCoach = asyncHandler(async (req, res) => {
   // Limit message history to last 10 messages to save tokens
   const trimmedMessages = messages.slice(-10);
 
-  const aiReply = await aiService.chatWithCoach(trimmedMessages, profile);
+  const aiReply = await aiService.chatWithCoach(trimmedMessages, profile, mood);
 
   // Grab the user's latest message to persist
   const newUserMessage = messages[messages.length - 1];

@@ -10,22 +10,22 @@ import navlogo from "../assets/images/navlogo.png";
 const links = [
   {
     label: "Home",
-    href: "#home",
+    href: "/",
     icon: <FaHome />,
   },
   {
     label: "Discover Yoga",
-    href: "#discover",
+    href: "/discover-yoga",
     icon: <GiLotus />,
   },
   {
     label: "Live Schedules",
-    href: "#events",
+    href: "/live-schedules",
     icon: <MdEventAvailable />,
   },
   {
-    label: "Shop",
-    href: "/shop",
+    label: "Store",
+    href: "/store",
     icon: <FiShoppingBag />,
   },
 ];
@@ -136,7 +136,7 @@ function Navbar() {
           </Link>
 
           <Link
-            to="/auth"
+            to="/pricing"
             className="rounded-full bg-luxury-emerald hover:bg-luxury-emerald/90 text-white px-7 py-3.5 text-sm font-bold shadow-sm transition-all duration-300 hover:-translate-y-0.5"
           >
             Upgrade
@@ -216,7 +216,7 @@ function Navbar() {
 
           <div className="mt-8 flex flex-col gap-3">
             <Link
-              to="/auth"
+              to="/pricing"
               className="w-full text-center rounded-full bg-luxury-emerald hover:bg-luxury-emerald/95 text-white py-3.5 text-sm font-bold transition"
             >
               Upgrade
