@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, Sparkles, CheckCircle2, Lock } from "lucide-react";
+import { ChevronDown, Sparkles, CheckCircle2, Lock, Wind, Flame, Mountain } from "lucide-react";
 import PremiumButton from "../ui/PremiumButton";
 
 // ----------------------------------------------------
@@ -31,7 +31,7 @@ const quizOptions = {
 };
 
 // ----------------------------------------------------
-// PREMIUM SELECTOR (Styled like FindSolution)
+// PREMIUM SELECTOR
 // ----------------------------------------------------
 const PremiumSelector = ({ options, selectedId, onChange, placeholder }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,7 +53,7 @@ const PremiumSelector = ({ options, selectedId, onChange, placeholder }) => {
     <div className="relative inline-block mx-2 sm:mx-3 align-middle" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group relative flex w-full items-center justify-between gap-2 sm:gap-5 rounded-[2rem] border border-[#E27229]/30 bg-white px-4 py-2 sm:px-6 sm:py-3.5 font-serif text-2xl sm:text-4xl md:text-5xl lg:text-[56px] font-medium tracking-tight text-[#11281d] shadow-[0_20px_40px_rgba(226,114,41,0.06)] backdrop-blur-xl transition-all duration-500 -translate-y-1"
+        className="group relative flex w-full items-center justify-between gap-2 sm:gap-4 rounded-[2rem] border border-[#E27229]/30 bg-white px-4 py-2 sm:px-6 sm:py-3 font-serif text-2xl sm:text-4xl md:text-5xl font-medium tracking-tight text-[#11281d] shadow-[0_20px_40px_rgba(226,114,41,0.06)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1"
       >
         <span className="whitespace-nowrap">
           {selectedOption ? selectedOption.label : placeholder}
@@ -61,9 +61,9 @@ const PremiumSelector = ({ options, selectedId, onChange, placeholder }) => {
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          className="flex h-8 w-8 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#f4eadf] text-[#2B3B2E] transition-colors duration-300 group-hover:bg-[#E27229] group-hover:text-white"
+          className="flex h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#f4eadf] text-[#2B3B2E] transition-colors duration-300 group-hover:bg-[#E27229] group-hover:text-white"
         >
-          <ChevronDown className="h-5 w-5 sm:h-7 sm:w-7" strokeWidth={1.5} />
+          <ChevronDown className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.5} />
         </motion.div>
       </button>
 
@@ -83,13 +83,13 @@ const PremiumSelector = ({ options, selectedId, onChange, placeholder }) => {
                   onChange(option.id);
                   setIsOpen(false);
                 }}
-                className={`group flex w-full items-center gap-3 sm:gap-4 rounded-xl sm:rounded-2xl px-4 py-3 sm:px-5 sm:py-4 text-left transition-all duration-300 ${selectedId === option.id
+                className={`group flex w-full items-center gap-3 sm:gap-4 rounded-xl sm:rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5 text-left transition-all duration-300 ${selectedId === option.id
                     ? "bg-[#f4eadf] text-[#11281d] shadow-[inset_0_2px_10px_rgba(226,114,41,0.05)]"
                     : "text-[#3a4a3d] hover:bg-[#EFE7DC]/50 hover:text-[#11281d] hover:translate-x-1"
                   }`}
               >
                 {option.icon && (
-                  <span className={`flex h-8 w-8 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-full text-lg sm:text-2xl shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${selectedId === option.id ? 'bg-white shadow-md' : 'bg-[#f4eadf]'}`}>
+                  <span className={`flex h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-full text-lg sm:text-xl shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${selectedId === option.id ? 'bg-white shadow-md' : 'bg-[#f4eadf]'}`}>
                     {option.icon}
                   </span>
                 )}
@@ -108,7 +108,7 @@ const PremiumSelector = ({ options, selectedId, onChange, placeholder }) => {
 
 export default function DoshaDiscoverySection() {
   const navigate = useNavigate();
-  const [viewState, setViewState] = useState("quiz"); // start directly in quiz for interactivity
+  const [viewState, setViewState] = useState("quiz");
 
   const [answers, setAnswers] = useState({
     energy: "vata",
@@ -152,11 +152,9 @@ export default function DoshaDiscoverySection() {
     };
   };
 
-  const liveScores = getLiveScores();
-
   return (
-    <section className="relative bg-[#F7F3EE] px-4 py-20 md:px-10 lg:py-24 min-h-[80vh] flex items-center justify-center overflow-hidden">
-      {/* Ambient Lighting / Atmospheric Mesh Gradients */}
+    <section className="relative bg-[#F7F3EE] px-4 py-12 lg:py-0 h-screen max-h-[850px] min-h-[600px] flex items-center justify-center overflow-hidden">
+      {/* Ambient Lighting */}
       <motion.div
         animate={{ opacity: [0.4, 0.6, 0.4], scale: [1, 1.05, 1], backgroundColor: 'rgba(226,114,41,0.15)' }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
@@ -168,157 +166,137 @@ export default function DoshaDiscoverySection() {
         className="pointer-events-none absolute right-[5%] bottom-[5%] h-[800px] w-[800px] rounded-full blur-[120px]"
       />
 
-      <div className="relative z-10 w-full max-w-[1400px] flex flex-col xl:flex-row items-center xl:items-start gap-12 xl:gap-20">
+      <div className="relative z-10 w-full max-w-[900px] flex flex-col items-center text-center">
         
-        {/* Left Side: Conversational UI */}
-        <div className="flex-1 w-full text-center xl:text-left">
-          <div className="mb-8 lg:mb-12 flex flex-col items-center xl:items-start">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#2E7D32]/20 bg-[#2E7D32]/10 px-[18px] py-[7px] text-[11px] font-bold uppercase tracking-[0.14em] text-[#2E7D32] mb-4">
-              ✨ AI DOSHA ANALYZER
-            </div>
-            <h2 className="font-['Poppins',sans-serif] text-[30px] sm:text-[42px] font-extrabold leading-[1.18] text-[#1A2E1A] mb-4">
-              Discover Your <span className="text-[#E8651A]">Dosha</span>
-            </h2>
-            <p className="font-['Poppins',sans-serif] text-[16px] leading-[1.75] text-[#777777] max-w-[520px] mx-auto xl:mx-0">
-              Answer a few mindful questions and our AI wellness system will reveal your dominant dosha energy.
-            </p>
+        {/* Header Block */}
+        <div className="mb-6 lg:mb-10 flex flex-col items-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#2E7D32]/20 bg-[#2E7D32]/10 px-[16px] py-[6px] text-[10px] font-bold uppercase tracking-[0.15em] text-[#2E7D32] mb-3">
+            ✨ AI DOSHA ANALYZER
           </div>
-
-          {viewState === "quiz" && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col flex-wrap items-center xl:items-start gap-y-4 sm:gap-y-6 text-center xl:text-left font-serif text-[26px] sm:text-4xl md:text-5xl lg:text-[64px] font-medium tracking-tight text-[#3a4a3d] leading-[1.4] lg:leading-[1.6]"
-            >
-              <div className="inline-block">
-                <span className="whitespace-nowrap px-2">My energy feels</span>
-                <PremiumSelector options={quizOptions.energy} selectedId={answers.energy} onChange={(v) => setAnswers({...answers, energy: v})} placeholder="energy" />
-              </div>
-
-              <div className="inline-block mt-4">
-                <span className="whitespace-nowrap px-2">and my digestion is</span>
-                <PremiumSelector options={quizOptions.digestion} selectedId={answers.digestion} onChange={(v) => setAnswers({...answers, digestion: v})} placeholder="digestion" />
-                <span className="whitespace-nowrap px-2">.</span>
-              </div>
-
-              <div className="inline-block mt-4">
-                <span className="whitespace-nowrap px-2">My sleep feels</span>
-                <PremiumSelector options={quizOptions.sleep} selectedId={answers.sleep} onChange={(v) => setAnswers({...answers, sleep: v})} placeholder="sleep" />
-              </div>
-
-              <div className="inline-block mt-4">
-                <span className="whitespace-nowrap px-2">and under stress I become</span>
-                <PremiumSelector options={quizOptions.stress} selectedId={answers.stress} onChange={(v) => setAnswers({...answers, stress: v})} placeholder="reaction" />
-                <span className="whitespace-nowrap px-2">.</span>
-              </div>
-              
-              <div className="mt-16 w-full flex justify-center xl:justify-start">
-                <PremiumButton onClick={() => setViewState("result")} icon={Sparkles} className="w-full sm:w-auto px-10 sm:px-16">
-                  Reveal My Dosha Blueprint
-                </PremiumButton>
-              </div>
-            </motion.div>
-          )}
-
-          {viewState === "result" && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-8 text-center xl:text-left"
-            >
-              <h3 className="text-4xl sm:text-5xl font-['Poppins',sans-serif] font-extrabold text-[#1A2E1A] mb-6">
-                You are primarily <span style={{ color: getFinalResult().primary.color }}>{getFinalResult().primary.name}</span>
-              </h3>
-              <p className="text-xl text-[#777777] mb-12 font-serif">
-                With secondary <span className="font-bold">{getFinalResult().secondary.name}</span> influence.
-              </p>
-
-              {/* Locked Premium Insights */}
-              <div className="relative rounded-[2rem] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-[#EFE7DC] overflow-hidden p-8 sm:p-12 max-w-3xl">
-                <div className="filter blur-[8px] opacity-40 pointer-events-none select-none">
-                  <h3 className="text-2xl font-serif text-[#1A2E1A] mb-8">Your Ayurvedic Blueprint</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                    <div className="space-y-4">
-                      <div className="h-6 bg-[#EFE7DC] rounded w-3/4"></div>
-                      <div className="h-4 bg-[#f4eadf] rounded w-full"></div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[4px] p-6 text-center">
-                  <div className="mb-6 rounded-full bg-[#E27229]/10 p-4 text-[#E27229]">
-                    <Lock size={32} />
-                  </div>
-                  <h3 className="text-3xl font-['Poppins',sans-serif] font-extrabold text-[#1A2E1A] mb-8">
-                    Unlock your full blueprint
-                  </h3>
-                  <PremiumButton onClick={() => navigate("/login")} className="px-10">
-                    LOGIN TO UNLOCK
-                  </PremiumButton>
-                </div>
-              </div>
-            </motion.div>
-          )}
+          <h2 className="font-heading text-[32px] sm:text-[42px] font-extrabold leading-[1.1] text-[#1A2E1A] mb-3">
+            Discover Your <span className="text-[#E8651A]">Dosha</span>
+          </h2>
+          <p className="text-[15px] text-[#777777] max-w-[450px]">
+            Answer a few mindful questions and our AI wellness system will reveal your dominant dosha energy.
+          </p>
         </div>
 
-        {/* Right Side: Live AI Preview (Desktop Only) */}
-        <div className="hidden xl:block w-[450px] sticky top-32">
+        {/* Quiz Flow */}
+        {viewState === "quiz" && (
           <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="rounded-[2.5rem] bg-white/80 backdrop-blur-xl p-10 shadow-[0_30px_60px_rgba(17,40,29,0.08)] border border-[#EFE7DC] relative overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col flex-wrap items-center justify-center gap-y-4 sm:gap-y-5 text-center font-serif text-[24px] sm:text-3xl md:text-4xl lg:text-[50px] font-medium tracking-tight text-[#3a4a3d] leading-[1.3] lg:leading-[1.5]"
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-[#f4eadf]/50 to-transparent pointer-events-none" />
+            <div className="inline-block">
+              <span className="whitespace-nowrap px-2">My energy feels</span>
+              <PremiumSelector options={quizOptions.energy} selectedId={answers.energy} onChange={(v) => setAnswers({...answers, energy: v})} placeholder="energy" />
+            </div>
+
+            <div className="inline-block">
+              <span className="whitespace-nowrap px-2">and my digestion is</span>
+              <PremiumSelector options={quizOptions.digestion} selectedId={answers.digestion} onChange={(v) => setAnswers({...answers, digestion: v})} placeholder="digestion" />
+              <span className="whitespace-nowrap px-2">.</span>
+            </div>
+
+            <div className="inline-block">
+              <span className="whitespace-nowrap px-2">My sleep feels</span>
+              <PremiumSelector options={quizOptions.sleep} selectedId={answers.sleep} onChange={(v) => setAnswers({...answers, sleep: v})} placeholder="sleep" />
+            </div>
+
+            <div className="inline-block">
+              <span className="whitespace-nowrap px-2">and under stress I become</span>
+              <PremiumSelector options={quizOptions.stress} selectedId={answers.stress} onChange={(v) => setAnswers({...answers, stress: v})} placeholder="reaction" />
+              <span className="whitespace-nowrap px-2">.</span>
+            </div>
             
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-10">
-                <h4 className="text-xs font-bold text-[#2E7D32] tracking-[0.2em] uppercase">Live Calculation</h4>
-                <div className="h-2.5 w-2.5 rounded-full bg-[#E27229] shadow-[0_0_10px_rgba(226,114,41,0.6)] animate-pulse" />
-              </div>
+            <div className="mt-10 w-full flex justify-center">
+              <PremiumButton onClick={() => setViewState("result")} icon={Sparkles} className="px-10 sm:px-14 py-3 sm:py-4">
+                Reveal My Dosha Blueprint
+              </PremiumButton>
+            </div>
+          </motion.div>
+        )}
 
-              <div className="space-y-8">
-                {/* VATA */}
-                <div>
-                  <div className="flex justify-between text-base mb-3 font-['Poppins',sans-serif] font-bold">
-                    <span className="text-[#1A2E1A]">VATA</span>
-                    <span className="text-[#7DB4C4]">{liveScores.vata}%</span>
-                  </div>
-                  <div className="h-3 w-full bg-[#EFE7DC] rounded-full overflow-hidden">
-                    <motion.div animate={{ width: `${liveScores.vata}%` }} transition={{ duration: 0.6, ease: "easeOut" }} className="h-full bg-[#7DB4C4] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]" />
-                  </div>
-                </div>
-
-                {/* PITTA */}
-                <div>
-                  <div className="flex justify-between text-base mb-3 font-['Poppins',sans-serif] font-bold">
-                    <span className="text-[#1A2E1A]">PITTA</span>
-                    <span className="text-[#E59849]">{liveScores.pitta}%</span>
-                  </div>
-                  <div className="h-3 w-full bg-[#EFE7DC] rounded-full overflow-hidden">
-                    <motion.div animate={{ width: `${liveScores.pitta}%` }} transition={{ duration: 0.6, ease: "easeOut" }} className="h-full bg-[#E59849] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]" />
-                  </div>
-                </div>
-
-                {/* KAPHA */}
-                <div>
-                  <div className="flex justify-between text-base mb-3 font-['Poppins',sans-serif] font-bold">
-                    <span className="text-[#1A2E1A]">KAPHA</span>
-                    <span className="text-[#6EA885]">{liveScores.kapha}%</span>
-                  </div>
-                  <div className="h-3 w-full bg-[#EFE7DC] rounded-full overflow-hidden">
-                    <motion.div animate={{ width: `${liveScores.kapha}%` }} transition={{ duration: 0.6, ease: "easeOut" }} className="h-full bg-[#6EA885] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-12 pt-8 border-t border-[#EFE7DC]/60 text-center">
-                <p className="text-sm font-['Poppins',sans-serif] text-[#777777]">
-                  AI is analyzing your mind-body pattern in real-time.
+        {/* Results Flow */}
+        {viewState === "result" && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-2 w-full flex flex-col items-center"
+          >
+            {/* Primary Result Spotlight */}
+            <div className="mb-6 w-full max-w-2xl p-6 sm:p-8 rounded-[2rem] border border-[#EFE7DC] bg-white/70 shadow-[0_15px_40px_rgba(17,40,29,0.04)] backdrop-blur-md transition-all">
+              <div className="flex flex-col items-center text-center">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5c6861] mb-2">Your Primary Energy</span>
+                <h3 className="text-4xl sm:text-[50px] font-heading font-extrabold text-[#1A2E1A] mb-3 leading-none">
+                  <span style={{ color: getFinalResult().primary.color }}>{getFinalResult().primary.name}</span>
+                </h3>
+                <p className="text-sm sm:text-base text-[#3a4a3d] font-medium max-w-[400px]">
+                  {getFinalResult().primary.desc}
                 </p>
+                <div className="mt-4 pt-4 border-t border-[#EFE7DC]/60 w-full flex justify-center">
+                  <p className="text-[11px] sm:text-xs text-[#777777] italic tracking-wide">
+                    With secondary <span className="font-bold not-italic">{getFinalResult().secondary.name}</span> influence.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* The 3 Body Types Summary */}
+            <div className="w-full max-w-2xl mb-8">
+              <h4 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#2E7D32] mb-3 text-center">
+                The 3 Ayurvedic Body Types
+              </h4>
+              <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                <div className="group flex flex-col items-center justify-center text-center p-3 sm:p-4 rounded-[1.5rem] border border-[#7DB4C4]/20 bg-[#7DB4C4]/5 hover:bg-[#7DB4C4]/10 transition-colors">
+                  <Wind size={18} className="text-[#7DB4C4] mb-1.5 transition-transform group-hover:scale-110" />
+                  <span className="text-xs sm:text-sm font-bold text-[#1A2E1A]">VATA</span>
+                  <span className="text-[9px] sm:text-[10px] text-[#777777] uppercase tracking-wider">The Creator</span>
+                </div>
+                <div className="group flex flex-col items-center justify-center text-center p-3 sm:p-4 rounded-[1.5rem] border border-[#E59849]/20 bg-[#E59849]/5 hover:bg-[#E59849]/10 transition-colors">
+                  <Flame size={18} className="text-[#E59849] mb-1.5 transition-transform group-hover:scale-110" />
+                  <span className="text-xs sm:text-sm font-bold text-[#1A2E1A]">PITTA</span>
+                  <span className="text-[9px] sm:text-[10px] text-[#777777] uppercase tracking-wider">The Achiever</span>
+                </div>
+                <div className="group flex flex-col items-center justify-center text-center p-3 sm:p-4 rounded-[1.5rem] border border-[#6EA885]/20 bg-[#6EA885]/5 hover:bg-[#6EA885]/10 transition-colors">
+                  <Mountain size={18} className="text-[#6EA885] mb-1.5 transition-transform group-hover:scale-110" />
+                  <span className="text-xs sm:text-sm font-bold text-[#1A2E1A]">KAPHA</span>
+                  <span className="text-[9px] sm:text-[10px] text-[#777777] uppercase tracking-wider">The Peacemaker</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Locked Premium Insights (Curiosity Cliff) */}
+            <div className="relative rounded-[2rem] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-[#EFE7DC] overflow-hidden p-8 sm:p-10 w-full max-w-2xl mx-auto group">
+              <div className="filter blur-[8px] opacity-30 pointer-events-none select-none transition-opacity duration-500 group-hover:opacity-10">
+                <h3 className="text-2xl font-serif text-[#1A2E1A] mb-8">Your Ayurvedic Blueprint</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <div className="h-6 bg-[#EFE7DC] rounded w-3/4"></div>
+                    <div className="h-4 bg-[#f4eadf] rounded w-full"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[6px] p-6 text-center">
+                <div className="mb-3 rounded-full bg-[#E27229]/10 p-3 text-[#E27229]">
+                  <Lock size={24} />
+                </div>
+                <p className="text-xs font-bold uppercase tracking-[0.1em] text-[#E27229] mb-2">Deep Analysis Ready</p>
+                <h3 className="text-2xl sm:text-3xl font-heading font-extrabold text-[#1A2E1A] mb-3">
+                  Unlock your full blueprint
+                </h3>
+                <p className="text-[13px] text-[#777777] mb-6 max-w-[320px]">
+                  Discover how your Dosha affects your sleep architecture, digestive fire, and daily energy.
+                </p>
+                <PremiumButton onClick={() => navigate("/login")} className="px-10 py-3 text-sm">
+                  LOGIN TO UNLOCK
+                </PremiumButton>
               </div>
             </div>
           </motion.div>
-        </div>
+        )}
 
       </div>
     </section>
