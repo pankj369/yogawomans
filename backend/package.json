@@ -9,18 +9,16 @@
     "start": "node src/server.js"
   },
   "dependencies": {
-    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-async-handler": "^1.2.0",
+    "express-rate-limit": "^8.5.2",
     "express-validator": "^7.3.2",
     "firebase-admin": "^13.10.0",
     "helmet": "^8.1.0",
-    "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "multer": "^2.1.1",
-    "mysql2": "^3.11.4",
     "openai": "^6.39.0"
   },
   "devDependencies": {

@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import SacredOrbitSection from "../components/sacred-orbit/SacredOrbitSection";
 import PalmistrySection from "../components/palmistry/PalmistrySection";
+// import DoshaLandingSection from "../components/dosha/DoshaLandingSection";
+import DoshaDiscoverySection from "../components/dosha-discovery/DoshaDiscoverySection";
 
 import AboutUs from "../components/AboutUs";  
 import WhyChooseUs from "../components/WhyChooseUs";
@@ -23,12 +25,16 @@ function LandingPage() {
         {/* Sacred Flow Orbital Animation */}
         <SacredOrbitSection />
 
-        {/* AI Palmistry Experience */}
-        <PalmistrySection />
+        
 
         {/* 2. PROBLEM-SOLUTION — pain points address karo */}
         <FindSolution />
 
+        {/* BRAND NEW: Conversational AI Dosha Discovery */}
+        <DoshaDiscoverySection />
+
+        {/* AI Palmistry Experience */}
+        {/* <PalmistrySection /> */}
 
         {/* 3. CLASSES — detail mein offering */}
         <ClassesSection />

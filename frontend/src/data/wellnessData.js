@@ -4,6 +4,8 @@ import {
   Bookmark, Edit3, Settings, Cpu, Radio, Lock, Sparkles, HeartPulse, Globe
 } from "lucide-react";
 
+import { ENABLE_PALMISTRY } from "../config/features";
+
 import ananyaImg from "../assets/images/ananya.png";
 import meeraImg from "../assets/images/meera.png";
 import kavithaImg from "../assets/images/kavitha.png";
@@ -43,13 +45,14 @@ export const dashboardMenuGroups = [
     items: [
       { label: "Physical Health", path: "/physicalHealth",         icon: Zap       },
       { label: "Mental Health",   path: "/mentalHealth",           icon: Briefcase },
-      { label: "Palmistry",       path: "/dashboard/palmistry",    icon: Sparkles  },
+      // { label: "Dosha Discovery", path: "/dashboard/dosha",        icon: Sparkles  },
+      ENABLE_PALMISTRY && { label: "Palmistry",       path: "/dashboard/palmistry",    icon: Sparkles  },
       { label: "Health Metrics",  path: "/dashboard/metrics",      icon: HeartPulse },
       { label: "Breathwork",      path: "/dashboard/breathwork",   icon: Wind      },
       { label: "Meditation",      path: "/dashboard/meditation",   icon: Moon      },
       { label: "Surya Sessions",  path: "/dashboard/surya",        icon: Sun       },
       { label: "Wellness Insights", path: "/dashboard/insights",   icon: BookOpen  },
-    ],
+    ].filter(Boolean),
   },
   {
     group: "Sanctuary",

@@ -35,6 +35,8 @@ import EmptyState from "../components/ui/states/EmptyState";
 import { Search } from "lucide-react";
 import PalmistryDashboard from "../components/dashboard/palmistry/PalmistryDashboard";
 import SacredOrbitSection from "../components/sacred-orbit/SacredOrbitSection";
+// import DoshaDashboard from "../components/dashboard/dosha/DoshaDashboard";
+import { ENABLE_PALMISTRY } from "../config/features";
 
 // Premium Wellness OS Components
 import DashboardHero from "../components/dashboard/dashboardHero/DashboardHero";
@@ -357,7 +359,8 @@ export default function Dashboard() {
         {section === "plans" && <DashboardPlansSection />}
         {section === "metrics" && <HealthMetricsSection />}
         {section === "yoga-world" && <YogaWorldSection />}
-        {section === "palmistry" && <PalmistryDashboard />}
+        {/* {section === "dosha" && <DoshaDashboard />} */}
+        {section === "palmistry" && ENABLE_PALMISTRY && <PalmistryDashboard />}
         {section === "surya" && <SacredOrbitSection isDashboard />}
         {section === "insights" && <WellnessInsights />}
         {section === "history" && (

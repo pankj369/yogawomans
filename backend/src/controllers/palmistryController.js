@@ -1,11 +1,14 @@
 import asyncHandler from "express-async-handler";
 import palmistryService from "../services/palmistryService.js";
 import { AppError } from "../middleware/errorMiddleware.js";
+import { ENABLE_PALMISTRY } from "../config/features.js";
 
 /**
  * POST /api/palmistry/analyze
  */
 export const analyzePalm = asyncHandler(async (req, res, next) => {
+  if (!ENABLE_PALMISTRY) return next(new AppError("Palmistry feature is currently disabled", 403));
+  
   const { uid } = req.user;
   const { imageUrl } = req.body;
 
@@ -26,6 +29,8 @@ export const analyzePalm = asyncHandler(async (req, res, next) => {
  * POST /api/palmistry/save
  */
 export const saveAnalysis = asyncHandler(async (req, res, next) => {
+  if (!ENABLE_PALMISTRY) return next(new AppError("Palmistry feature is currently disabled", 403));
+  
   const { uid } = req.user;
   const { report } = req.body;
 
@@ -46,6 +51,8 @@ export const saveAnalysis = asyncHandler(async (req, res, next) => {
  * GET /api/palmistry/history
  */
 export const getAnalysisHistory = asyncHandler(async (req, res, next) => {
+  if (!ENABLE_PALMISTRY) return next(new AppError("Palmistry feature is currently disabled", 403));
+  
   const { uid } = req.user;
 
   const history = await palmistryService.getAnalysisHistory(uid);

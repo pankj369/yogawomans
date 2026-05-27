@@ -68,7 +68,7 @@ function Navbar() {
               leading-[1.4]
               tracking-[0.22em]
               uppercase
-              text-luxury-gold
+              text-luxury-white
               "
             >
               Why should all
@@ -96,12 +96,13 @@ function Navbar() {
               <Link
               to={link.href}
               className="
-              relative
+              relative z-50 pointer-events-auto
               flex items-center gap-2
               px-3 py-2
-              text-[16px] font-semibold text-luxury-muted
+              text-[16px] font-bold text-[#11281d]
               transition-colors duration-300
-              hover:text-luxury-text
+              hover:text-white
+              drop-shadow-sm
               "
                 >
                 <span className="text-[18px]">
@@ -130,7 +131,7 @@ function Navbar() {
         <div className="hidden lg:flex items-center gap-4">
           <Link
             to="/login"
-            className="text-sm font-bold uppercase tracking-widest text-luxury-muted hover:text-luxury-text transition duration-200 px-4"
+            className="relative z-50 pointer-events-auto text-sm font-bold uppercase tracking-widest text-[#11281d] hover:text-white transition duration-200 px-4"
           >
             Login
           </Link>

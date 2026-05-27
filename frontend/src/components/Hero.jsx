@@ -2,8 +2,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles, Smile, Heart, Menu } from "lucide-react";
 
-import heroImage from "../assets/images/hero1.png";
-import hero2 from "../assets/images/hero2.png";
+import heroImage from "../assets/images/newhero1.png";
+import hero2 from "../assets/images/newhero2.png";
 import AmbientGlow from "./ui/animations/AmbientGlow";
 import MagneticButton from "./ui/animations/MagneticButton";
 
@@ -65,13 +65,13 @@ function Hero() {
                 text-5xl md:text-6xl lg:text-[5.5rem] xl:text-[6rem]
               "
             >
-              <motion.span custom={0} variants={textVariants} className="block text-wellness-orange [-webkit-text-stroke:1px_white]">
+              <motion.span custom={0} variants={textVariants} className="block text-[#E96924] [-webkit-text-stroke:1px_white]">
                 Find Balance.
               </motion.span>
               <motion.span custom={1} variants={textVariants} className="block text-[#FAF8F5] [-webkit-text-stroke:1px_white]">
                 Inner Peace.
               </motion.span>
-              <motion.span custom={2} variants={textVariants} className="block text-wellness-green [-webkit-text-stroke:1px_white]">
+              <motion.span custom={2} variants={textVariants} className="block text-[#267F37] [-webkit-text-stroke:1px_white]">
                 Better You.
               </motion.span>
             </motion.h1>
@@ -182,13 +182,13 @@ function Hero() {
                 drop-shadow-[0_6px_20px_rgba(0,0,0,0.15)]
               "
             >
-              <span className="block text-wellness-orange [-webkit-text-stroke:0.5px_white]">
+              <span className="block text-[#E96924] [-webkit-text-stroke:0.5px_white]">
                 Find Balance.
               </span>
-              <span className="block text-[#FAF8F5] [-webkit-text-stroke:0.5px_white]">
+              <span className="block text-[#FAF8F5]  [-webkit-text-stroke:0.5px_white]">
                 Inner Peace.
               </span>
-              <span className="block text-wellness-green [-webkit-text-stroke:0.5px_white]">
+              <span className="block text-[#267F37] [-webkit-text-stroke:0.5px_white]">
                 Better You.
               </span>
             </motion.h1>

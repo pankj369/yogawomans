@@ -18,51 +18,24 @@ export const getCoachHistory = asyncHandler(async (req, res) => {
 });
 
 /**
- * Chat with AI Wellness Coach
+ * Chat with AI Wellness Coach (Streaming SSE)
  * POST /api/coach/chat
  */
 export const chatWithCoach = asyncHandler(async (req, res) => {
   const { uid } = req.user;
-  const { messages, mood } = req.body;
+  const { message } = req.body;
 
-  if (!messages || !Array.isArray(messages)) {
+  if (!message) {
     res.status(400);
-    throw new Error("A valid messages array is required.");
+    throw new Error("A valid message string is required.");
   }
 
   // Fetch user profile for context
   const userDoc = await db.collection("users").doc(uid).get();
   const profile = userDoc.exists ? userDoc.data() : {};
 
-  // Limit message history to last 10 messages to save tokens
-  const trimmedMessages = messages.slice(-10);
-
-  const aiReply = await aiService.chatWithCoach(trimmedMessages, profile, mood);
-
-  // Grab the user's latest message to persist
-  const newUserMessage = messages[messages.length - 1];
-  
-  // Create a structured AI message to persist
-  const newAiMessage = {
-    id: `coach-${Date.now()}`,
-    sender: "coach",
-    text: aiReply.content,
-    timestamp: new Date().toISOString()
-  };
-
-  // Persist both messages
-  await coachService.appendMessages(uid, [
-    {
-      id: `user-${Date.now()}`,
-      sender: "user",
-      text: newUserMessage.content,
-      timestamp: new Date().toISOString()
-    },
-    newAiMessage
-  ]);
-
-  res.status(200).json({
-    success: true,
-    data: aiReply,
-  });
+  // Delegate entirely to chatbotAI stream function
+  // It handles SSE response formatting directly
+  const chatbotAI = (await import("../services/ai/chatbotAI.js")).default;
+  await chatbotAI.chatWithCoachStream(message, profile, uid, res);
 });

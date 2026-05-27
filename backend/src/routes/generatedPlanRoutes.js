@@ -8,11 +8,13 @@ import {
   generatePlan,
 } from "../controllers/generatedPlanController.js";
 
+import { aiRateLimiter } from "../middleware/aiSecurity.js";
+
 const router = express.Router();
 
 router.use(requireAuth); // Protect all plan routes
 
-router.post("/generate", generatePlan);
+router.post("/generate", aiRateLimiter, generatePlan);
 router.post("/", savePlan);
 router.get("/", getUserPlans);
 router.get("/:id", getPlanById);

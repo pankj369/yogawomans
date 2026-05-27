@@ -3,6 +3,8 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 
+import { ENABLE_PALMISTRY } from "./config/features.js";
+
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
@@ -106,7 +108,9 @@ app.use("/api/playlists", playlistRoutes);
 app.use("/api/plans", generatedPlanRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/coach", coachRoutes);
-app.use("/api/palmistry", palmistryRoutes);
+if (ENABLE_PALMISTRY) {
+  app.use("/api/palmistry", palmistryRoutes);
+}
 app.use("/api/surya", suryaRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/notifications", notificationRoutes);

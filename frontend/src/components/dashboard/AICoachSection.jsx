@@ -5,8 +5,10 @@ import DashboardSection from "../ui/sections/DashboardSection";
 import SectionHeading from "../ui/sections/SectionHeading";
 import { useToast } from "../../context/ToastContext";
 import apiClient from "../../services/apiClient";
+import { auth } from "../../config/firebase";
 import VoiceGuide from "./VoiceGuide";
 import { useMood } from "../../context/MoodContext";
+import MoodSelector from "../common/MoodSelector";
 
 const suggestionPrompts = [
   "Suggest a 5-minute desk stretch",
@@ -31,7 +33,7 @@ const presets = {
 
 export default function AICoachSection() {
   const toast = useToast();
-  const { mood } = useMood();
+  const { mood, setMood } = useMood();
   const messagesEndRef = useRef(null);
   const [messages, setMessages] = useState([
     {
@@ -66,30 +68,59 @@ export default function AICoachSection() {
   const streamResponse = async (userMsgText, currentMessages) => {
     setIsTyping(true);
     
-    try {
-      // Map frontend messages to OpenAI format: [{role, content}]
-      const apiMessages = currentMessages.map(m => ({
-        role: m.sender === "user" ? "user" : "assistant",
-        content: m.text
-      }));
+    // Add a placeholder message for the AI
+    const newMsgId = `coach-${Date.now()}`;
+    setMessages((prev) => [...prev, {
+      id: newMsgId,
+      sender: "coach",
+      text: "",
+    }]);
 
-      // Make API call
-      const response = await apiClient.post("/coach/chat", { messages: apiMessages, mood });
+    try {
+      const token = auth.currentUser ? await auth.currentUser.getIdToken() : "";
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
       
-      const newMsg = {
-        id: `coach-${Date.now()}`,
-        sender: "coach",
-        text: response.data.data.content,
-      };
-      
-      setMessages((prev) => [...prev, newMsg]);
+      const response = await fetch(`${baseUrl}/coach/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ message: userMsgText, mood }),
+      });
+
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      let done = false;
+
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+        if (value) {
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+              try {
+                const data = JSON.parse(line.slice(6));
+                setMessages(prev => prev.map(msg => 
+                  msg.id === newMsgId ? { ...msg, text: msg.text + data.text } : msg
+                ));
+              } catch (e) {
+                // Ignore parse errors on partial chunks
+              }
+            }
+          }
+        }
+      }
     } catch (error) {
       console.error("Coach API Error:", error);
-      setMessages((prev) => [...prev, {
-        id: `coach-${Date.now()}`,
-        sender: "coach",
-        text: "I'm having a little trouble connecting right now. Let's take a deep breath and try again in a moment.",
-      }]);
+      setMessages((prev) => prev.map(msg => 
+        msg.id === newMsgId ? { ...msg, text: "I'm having a little trouble connecting right now. Let's take a deep breath and try again in a moment." } : msg
+      ));
     } finally {
       setIsTyping(false);
     }
@@ -122,14 +153,17 @@ export default function AICoachSection() {
           {/* Chat Interface (Left 3 cols on lg) */}
           <div className="lg:col-span-3 rounded-[2.5rem] border border-wellness-border bg-wellness-glass p-6 shadow-glass backdrop-blur-[18px] flex flex-col h-[520px] justify-between">
             {/* Coach Header */}
-            <div className="flex items-center gap-3 border-b border-wellness-border pb-4">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-wellness-orange/80 to-wellness-green flex items-center justify-center text-white shadow-glow2">
-                <Cpu size={18} />
+            <div className="flex items-center justify-between border-b border-wellness-border pb-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-wellness-orange/80 to-wellness-green flex items-center justify-center text-white shadow-glow2">
+                  <Cpu size={18} />
+                </div>
+                <div>
+                  <h4 className="font-heading text-sm font-bold text-white">Aria</h4>
+                  <p className="text-[10px] text-wellness-green font-semibold uppercase tracking-wider">Online • Wellness Coach</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-heading text-sm font-bold text-white">Aria</h4>
-                <p className="text-[10px] text-wellness-green font-semibold uppercase tracking-wider">Online • Wellness Coach</p>
-              </div>
+              <MoodSelector currentMood={mood} onMoodSelect={setMood} />
             </div>
 
             {/* Chat Messages */}
