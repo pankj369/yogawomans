@@ -156,6 +156,19 @@ useEffect(() => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Validate size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File is too large. Maximum size is 5MB.");
+      return;
+    }
+
+    // Validate type (JPEG, PNG, WEBP)
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Invalid file type. Only JPEG, PNG, and WEBP images are supported.");
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => {
       setState((prev) => ({
@@ -215,7 +228,7 @@ useEffect(() => {
 
     markProfileSetupCompleted(state.data);
 
-    auth.completeProfileSetup(state.data);
+    auth.completeProfileSetup(response.user);
 
     navigate("/dashboard", {
       replace: true,

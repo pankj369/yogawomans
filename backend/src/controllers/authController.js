@@ -31,10 +31,19 @@ export const register = asyncHandler(async (req, res, next) => {
  * or to update a lastLogin timestamp.
  */
 export const login = asyncHandler(async (req, res, next) => {
-  const { uid } = req.user; // Provided by requireAuth middleware
+  const { uid, email, name } = req.user; // Provided by requireAuth middleware
 
-  // Verify user exists in Firestore
-  const userProfile = await userService.getUserProfile(uid);
+  let userProfile;
+  try {
+    userProfile = await userService.getUserProfile(uid);
+  } catch (error) {
+    if (error.statusCode === 404 || error.message === "User not found") {
+      console.log(`Auto-registering missing Firestore profile for UID: ${uid}`);
+      userProfile = await authService.registerUser(uid, email, name);
+    } else {
+      throw error;
+    }
+  }
 
   res.status(200).json({
     success: true,
@@ -48,9 +57,19 @@ export const login = asyncHandler(async (req, res, next) => {
  * GET /api/auth/me
  */
 export const getCurrentUser = asyncHandler(async (req, res, next) => {
-  const { uid } = req.user;
+  const { uid, email, name } = req.user;
 
-  const userProfile = await userService.getUserProfile(uid);
+  let userProfile;
+  try {
+    userProfile = await userService.getUserProfile(uid);
+  } catch (error) {
+    if (error.statusCode === 404 || error.message === "User not found") {
+      console.log(`Auto-registering missing Firestore profile for UID: ${uid}`);
+      userProfile = await authService.registerUser(uid, email, name);
+    } else {
+      throw error;
+    }
+  }
 
   res.status(200).json({
     success: true,

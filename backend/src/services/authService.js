@@ -7,7 +7,7 @@ class AuthService {
     const userDoc = await userRef.get();
 
     if (userDoc.exists) {
-      throw new AppError("User already exists", 400);
+      return userDoc.data();
     }
 
     const newUser = {

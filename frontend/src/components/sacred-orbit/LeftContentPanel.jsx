@@ -6,13 +6,21 @@ import { suryaService } from "../../services/suryaService";
 
 export default function LeftContentPanel() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { showToast } = useToast();
 
   const handleWatchFlow = async () => {
     if (user) {
       showToast({ title: "Starting Session", message: "Loading Surya Namaskar Flow..." });
-      await suryaService.saveSession(user.uid || user.id, { title: "Surya Namaskar Video", duration: 15 });
+      const res = await suryaService.saveSession(user.id, { title: "Surya Namaskar Video", duration: 15 });
+      if (res && res.newStreak !== undefined) {
+        updateUser({
+          wellnessStats: {
+            ...(user.wellnessStats || {}),
+            currentStreak: res.newStreak
+          }
+        });
+      }
       navigate("/dashboard/surya");
     } else {
       sessionStorage.setItem("pending_action_type", "surya");

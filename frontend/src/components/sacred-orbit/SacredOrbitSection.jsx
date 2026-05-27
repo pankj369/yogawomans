@@ -64,7 +64,7 @@ if (!document.head.querySelector("[data-sacred-orbit]")) {
 export default function SacredOrbitSection({ isDashboard = false }) {
   const [activeNode, setActiveNode] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -77,12 +77,22 @@ export default function SacredOrbitSection({ isDashboard = false }) {
         sessionStorage.removeItem("pending_action_data");
         
         try {
+          let res;
           if (action === "watch-flow") {
             showToast({ title: "Starting Session", message: "Resuming Surya Namaskar Flow..." });
-            await suryaService.saveSession(user.uid || user.id, { title: "Surya Namaskar Video", duration: 15 });
+            res = await suryaService.saveSession(user.id, { title: "Surya Namaskar Video", duration: 15 });
           } else if (action === "start-flow") {
             showToast({ title: "Practice Started", message: "Resuming your 12-step flow." });
-            await suryaService.saveSession(user.uid || user.id, { title: "Surya Namaskar 12-Step", duration: 20 });
+            res = await suryaService.saveSession(user.id, { title: "Surya Namaskar 12-Step", duration: 20 });
+          }
+          
+          if (res && res.newStreak !== undefined) {
+            updateUser({
+              wellnessStats: {
+                ...(user.wellnessStats || {}),
+                currentStreak: res.newStreak
+              }
+            });
           }
         } catch (err) {
           console.error("Failed to resume pending surya session:", err);
@@ -91,7 +101,7 @@ export default function SacredOrbitSection({ isDashboard = false }) {
     };
 
     resumePendingSurya();
-  }, [user, showToast]);
+  }, [user, showToast, updateUser]);
 
   return (
     <section className={`relative w-full overflow-hidden flex flex-col justify-center ${

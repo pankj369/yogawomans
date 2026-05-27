@@ -254,7 +254,7 @@ export default function PalmistryDashboard() {
                 image={reading.imageUrl}
                 date={new Date(reading.date).toLocaleString()}
                 isLatest={idx === 0}
-                insight="You are entering a period of growth and emotional clarity. Stay focused on your goals."
+                insight={reading.insights?.[0] || "Your energy profile shows balance and resilience."}
               />
             )) : (
               <>

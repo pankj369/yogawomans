@@ -16,7 +16,6 @@ import ThemeTransitionOverlay from "./components/ui/animations/ThemeTransitionOv
 const getThemeForPath = (path) => {
   const lightPaths = ["/", "/pricing", "/generated-plan"];
   if (lightPaths.includes(path)) return "light";
-  if (path.startsWith("/shop")) return "light";
   return "dark";
 };
 

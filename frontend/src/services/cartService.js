@@ -1,69 +1,73 @@
-import { collection, doc, getDocs, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { db, auth, isConfigured } from "../config/firebase";
+import apiClient from "./apiClient";
+import { getAllProducts } from "./productService";
 
-const mockDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+/**
+ * Fetch all cart items from backend and populate product metadata.
+ */
 export const getCartItems = async () => {
-  if (!isConfigured) {
-    await mockDelay(500);
-    return { items: [] };
+  try {
+    const response = await apiClient.get("/cart");
+    const cart = response?.cart || [];
+    
+    // Fetch products list to populate details
+    const productsRes = await getAllProducts();
+    const productsList = productsRes?.products || [];
+    
+    const items = cart.map(item => {
+      const product = productsList.find(p => p.id === item.product_id || p.slug === item.product_id);
+      return {
+        ...item,
+        title: product?.title || product?.name || "Wellness Tool",
+        products: product ? {
+          ...product,
+          price: product.price,
+          image_url: product.image
+        } : null
+      };
+    });
+    
+    return { items, cart: items };
+  } catch (error) {
+    console.error("Error fetching cart items:", error);
+    throw error;
   }
-
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not authenticated");
-
-  const cartRef = collection(db, "users", user.uid, "cart");
-  const snapshot = await getDocs(cartRef);
-  
-  const items = snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
-
-  return { items };
 };
 
+/**
+ * Add a product to the cart on backend.
+ */
 export const addToCartApi = async (product_id, quantity = 1) => {
-  if (!isConfigured) {
-    await mockDelay(500);
-    return { success: true };
+  try {
+    const response = await apiClient.post("/cart/add", { product_id, quantity });
+    return response;
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+    throw error;
   }
-
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not authenticated");
-
-  const docRef = doc(db, "users", user.uid, "cart", product_id);
-  await setDoc(docRef, { product_id, quantity, addedAt: new Date().toISOString() });
-
-  return { success: true };
 };
 
+/**
+ * Update the quantity of a cart item on backend.
+ */
 export const updateCartItemApi = async (cartId, quantity) => {
-  if (!isConfigured) {
-    await mockDelay(500);
-    return { success: true };
+  try {
+    const response = await apiClient.put(`/cart/update/${cartId}`, { quantity });
+    return response;
+  } catch (error) {
+    console.error("Error updating cart item:", error);
+    throw error;
   }
-
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not authenticated");
-
-  const docRef = doc(db, "users", user.uid, "cart", cartId);
-  await updateDoc(docRef, { quantity });
-
-  return { success: true };
 };
 
+/**
+ * Remove an item from the cart on backend.
+ */
 export const removeCartItemApi = async (cartId) => {
-  if (!isConfigured) {
-    await mockDelay(500);
-    return { success: true };
+  try {
+    const response = await apiClient.delete(`/cart/remove/${cartId}`);
+    return response;
+  } catch (error) {
+    console.error("Error removing cart item:", error);
+    throw error;
   }
-
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not authenticated");
-
-  const docRef = doc(db, "users", user.uid, "cart", cartId);
-  await deleteDoc(docRef);
-
-  return { success: true };
-};
+};

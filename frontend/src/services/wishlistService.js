@@ -1,54 +1,60 @@
-import { collection, doc, getDocs, setDoc, deleteDoc } from "firebase/firestore";
-import { db, auth, isConfigured } from "../config/firebase";
+import apiClient from "./apiClient";
+import { getAllProducts } from "./productService";
 
-const mockDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+/**
+ * Fetch all wishlist items from backend and populate product metadata.
+ */
 export const getWishlistItems = async () => {
-  if (!isConfigured) {
-    await mockDelay(500);
-    return { items: [] };
+  try {
+    const response = await apiClient.get("/wishlist");
+    const wishlist = response?.wishlist || [];
+    
+    // Fetch products list to populate details
+    const productsRes = await getAllProducts();
+    const productsList = productsRes?.products || [];
+    
+    const items = wishlist.map(item => {
+      const product = productsList.find(p => p.id === item.product_id || p.slug === item.product_id);
+      return {
+        ...item,
+        title: product?.title || product?.name || "Wellness Tool",
+        products: product ? {
+          ...product,
+          price: product.price,
+          image_url: product.image
+        } : null
+      };
+    });
+    
+    return { items, wishlist: items };
+  } catch (error) {
+    console.error("Error fetching wishlist items:", error);
+    throw error;
   }
-
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not authenticated");
-
-  const wishlistRef = collection(db, "users", user.uid, "wishlist");
-  const snapshot = await getDocs(wishlistRef);
-  
-  const items = snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
-
-  return { items };
 };
 
+/**
+ * Add a product to the wishlist on backend.
+ */
 export const addToWishlistApi = async (product_id) => {
-  if (!isConfigured) {
-    await mockDelay(500);
-    return { success: true };
+  try {
+    const response = await apiClient.post("/wishlist/add", { product_id });
+    return response;
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+    throw error;
   }
-
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not authenticated");
-
-  const docRef = doc(db, "users", user.uid, "wishlist", product_id);
-  await setDoc(docRef, { product_id, addedAt: new Date().toISOString() });
-
-  return { success: true };
 };
 
+/**
+ * Remove an item from the wishlist on backend.
+ */
 export const removeWishlistItemApi = async (wishlistId) => {
-  if (!isConfigured) {
-    await mockDelay(500);
-    return { success: true };
+  try {
+    const response = await apiClient.delete(`/wishlist/remove/${wishlistId}`);
+    return response;
+  } catch (error) {
+    console.error("Error removing wishlist item:", error);
+    throw error;
   }
-
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not authenticated");
-
-  const docRef = doc(db, "users", user.uid, "wishlist", wishlistId);
-  await deleteDoc(docRef);
-
-  return { success: true };
-};
+};

@@ -6,13 +6,21 @@ import { suryaService } from "../../services/suryaService";
 
 export default function RightInfoPanel() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { showToast } = useToast();
 
   const handleStartFlow = async () => {
     if (user) {
       showToast({ title: "Practice Started", message: "Your 12-step flow is beginning." });
-      await suryaService.saveSession(user.uid || user.id, { title: "Surya Namaskar 12-Step", duration: 20 });
+      const res = await suryaService.saveSession(user.id, { title: "Surya Namaskar 12-Step", duration: 20 });
+      if (res && res.newStreak !== undefined) {
+        updateUser({
+          wellnessStats: {
+            ...(user.wellnessStats || {}),
+            currentStreak: res.newStreak
+          }
+        });
+      }
       navigate("/dashboard/surya");
     } else {
       sessionStorage.setItem("pending_action_type", "surya");

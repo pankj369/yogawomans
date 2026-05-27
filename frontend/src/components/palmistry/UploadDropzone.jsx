@@ -22,13 +22,13 @@ export default function UploadDropzone({ onFileSelect }) {
       return;
     }
 
-    // Check file size (10MB limit)
-    const maxSize = 10 * 1024 * 1024;
+    // Check file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       showToast({ 
         type: "error", 
         title: "File Too Large", 
-        message: "Maximum upload size is 10MB." 
+        message: "Maximum upload size is 5MB." 
       });
       return;
     }
@@ -109,7 +109,7 @@ export default function UploadDropzone({ onFileSelect }) {
                 Drag & Drop your palm image here <br/> or click to upload
               </p>
               <p className="text-[#888] text-[10px] mt-1 group-hover:text-gray-400 transition-colors uppercase tracking-wider">
-                JPG, PNG, WEBP up to 10MB
+                JPG, PNG, WEBP up to 5MB
               </p>
             </div>
           </div>

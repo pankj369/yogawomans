@@ -61,33 +61,49 @@ export function AuthProvider({ children }) {
           // Fetch real profile from backend safely
           const profileData = await getCurrentUser();
           if (isMounted) {
+            const localProfile = loadProfileSetupState();
             if (profileData) {
               setBackendProfile(profileData);
               setAuthState((current) => ({
                 ...current,
                 isPremium: profileData.premiumStatus || current.isPremium,
-                profileSetupComplete: profileData.onboardingCompleted || current.profileSetupComplete,
+                profileSetupComplete: profileData.onboardingCompleted || localProfile.completed || current.profileSetupComplete || false,
+                profileSetupSkipped: localProfile.skipped || current.profileSetupSkipped || false,
               }));
             } else {
-              // Fallback to Firebase auth data if backend fetch fails
               setBackendProfile(null);
+              setAuthState((current) => ({
+                ...current,
+                profileSetupComplete: localProfile.completed || current.profileSetupComplete || false,
+                profileSetupSkipped: localProfile.skipped || current.profileSetupSkipped || false,
+              }));
             }
           }
         } catch (error) {
           console.error("AuthContext: Failed to sync backend profile", error);
+          if (isMounted) {
+            const localProfile = loadProfileSetupState();
+            setAuthState((current) => ({
+              ...current,
+              profileSetupComplete: localProfile.completed || current.profileSetupComplete || false,
+              profileSetupSkipped: localProfile.skipped || current.profileSetupSkipped || false,
+            }));
+          }
         }
       } else {
         setFirebaseUser(null);
         setBackendProfile(null);
+        if (isMounted) {
+          const localProfile = loadProfileSetupState();
+          setAuthState((current) => ({
+            ...current,
+            profileSetupComplete: localProfile.completed || false,
+            profileSetupSkipped: localProfile.skipped || false,
+          }));
+        }
       }
 
       if (isMounted) {
-        const localProfile = loadProfileSetupState();
-        setAuthState((current) => ({
-          ...current,
-          profileSetupComplete: localProfile.completed || current.profileSetupComplete || false,
-          profileSetupSkipped: localProfile.skipped || current.profileSetupSkipped || false,
-        }));
         setInitialized(true);
       }
     });
@@ -180,6 +196,9 @@ export function AuthProvider({ children }) {
       profileSetupSkipped: false,
       profile: profileData,
     }));
+    if (profileData) {
+      setBackendProfile(profileData);
+    }
   };
 
   const skipProfileSetup = () => {

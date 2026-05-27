@@ -1,58 +1,41 @@
-import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
-import { db, isConfigured } from "../config/firebase";
+import apiClient from "./apiClient";
 
-const mockDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+/**
+ * Fetch all products from Express REST API.
+ */
 export const getAllProducts = async () => {
-  if (!isConfigured) {
-    await mockDelay(500);
-    return { data: [] };
-  }
-
   try {
-    const productsRef = collection(db, "products");
-    const snapshot = await getDocs(productsRef);
-    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return { data };
+    const response = await apiClient.get("/products");
+    const products = response?.products || [];
+    return { data: products, products };
   } catch (error) {
     console.error("Get Products Error:", error);
     throw error;
   }
 };
 
+/**
+ * Fetch a single product by its slug from Express REST API.
+ */
 export const getSingleProduct = async (slug) => {
-  if (!isConfigured) {
-    await mockDelay(500);
-    return { data: null };
-  }
-
   try {
-    const productsRef = collection(db, "products");
-    const q = query(productsRef, where("slug", "==", slug));
-    const snapshot = await getDocs(q);
-    
-    if (!snapshot.empty) {
-      const doc = snapshot.docs[0];
-      return { data: { id: doc.id, ...doc.data() } };
-    }
-    return { data: null };
+    const response = await apiClient.get(`/products/${slug}`);
+    const product = response?.product || null;
+    return { data: product, product };
   } catch (error) {
     console.error("Get Single Product Error:", error);
     throw error;
   }
 };
 
+/**
+ * Fetch all categories from Express REST API.
+ */
 export const getAllCategories = async () => {
-  if (!isConfigured) {
-    await mockDelay(500);
-    return { data: [] };
-  }
-
   try {
-    const categoriesRef = collection(db, "categories");
-    const snapshot = await getDocs(categoriesRef);
-    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return { data };
+    const response = await apiClient.get("/categories");
+    const categories = response?.categories || [];
+    return { data: categories, categories };
   } catch (error) {
     console.error("Get Categories Error:", error);
     throw error;
