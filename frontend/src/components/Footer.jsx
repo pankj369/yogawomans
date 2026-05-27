@@ -59,7 +59,7 @@ function Footer() {
 
 <a
   href="#home"
-  aria-label="YOGAWOMANS home"
+  aria-label="YOGAWOMAN home"
   className="
     inline-flex
     items-center
@@ -79,7 +79,7 @@ function Footer() {
 
   <img
     src={fotlogo}
-    alt="YOGAWOMANS Logo"
+    alt="YOGAWOMAN Logo"
     className="
       h-12
       w-auto
@@ -218,10 +218,10 @@ function Footer() {
                   <HiOutlineEnvelope className="shrink-0 text-lg text-[#E8651A]" />
 
                   <a
-                    href="mailto:hello@yogawomans.com"
+                    href="mailto:hello@yogawoman.com"
                     className="transition-colors duration-300 hover:text-[#43A047]"
                   >
-                    hello@yogawomans.com
+                    hello@yogawoman.com
                   </a>
 
                 </li>
@@ -286,7 +286,7 @@ function Footer() {
                   />
 
                   <span>
-                    I agree to receive wellness updates from YOGAWOMANS
+                    I agree to receive wellness updates from YOGAWOMAN
                   </span>
 
                 </label>
@@ -305,7 +305,7 @@ function Footer() {
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-center text-xs text-[#999999] md:flex-row md:text-left">
 
             <p>
-              &copy; 2025 YOGAWOMANS. All Rights Reserved.
+              &copy; 2025 YOGAWOMAN. All Rights Reserved.
             </p>
 
             <p>

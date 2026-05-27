@@ -30,11 +30,11 @@ export default function HeroBanner({
   const { state, lastSession: contextLastSession } = useDashboard() || {};
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("yogawomans_has_visited");
+    const hasVisited = localStorage.getItem("yogawoman_has_visited");
     if (hasVisited) {
       setIsReturning(true);
     } else {
-      localStorage.setItem("yogawomans_has_visited", "true");
+      localStorage.setItem("yogawoman_has_visited", "true");
     }
   }, []);
 

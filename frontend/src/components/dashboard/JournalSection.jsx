@@ -29,7 +29,7 @@ export default function JournalSection() {
 
   // Load Entries
   useEffect(() => {
-    const saved = localStorage.getItem("yogawomans_journal");
+    const saved = localStorage.getItem("yogawoman_journal");
     if (saved) {
       setEntries(JSON.parse(saved));
     }
@@ -58,7 +58,7 @@ export default function JournalSection() {
 
     const updated = [newEntry, ...entries];
     setEntries(updated);
-    localStorage.setItem("yogawomans_journal", JSON.stringify(updated));
+    localStorage.setItem("yogawoman_journal", JSON.stringify(updated));
     setNoteText("");
     toast.showToast({ type: "success", title: "Entry Saved", message: "Journal entry stored in your wellness log." });
   };
@@ -66,7 +66,7 @@ export default function JournalSection() {
   const handleDeleteEntry = (id) => {
     const updated = entries.filter((entry) => entry.id !== id);
     setEntries(updated);
-    localStorage.setItem("yogawomans_journal", JSON.stringify(updated));
+    localStorage.setItem("yogawoman_journal", JSON.stringify(updated));
     toast.showToast({ title: "Entry Deleted", message: "Journal entry removed." });
   };
 

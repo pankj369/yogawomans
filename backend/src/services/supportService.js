@@ -7,7 +7,7 @@ import telemetry from "../utils/telemetry.js";
 const FAQ_KNOWLEDGE_BASE = [
   {
     keywords: ["price", "pricing", "subscription", "upgrade", "membership", "pro", "premium", "cost"],
-    answer: "You can upgrade to YogaWomans Pro in your billing dashboard or via /pricing. Pro unlocks GPT-4 Vision palm readings, customized daily multi-week wellness routines, and premium live classes.",
+    answer: "You can upgrade to YogaWoman Pro in your billing dashboard or via /pricing. Pro unlocks GPT-4 Vision palm readings, customized daily multi-week wellness routines, and premium live classes.",
   },
   {
     keywords: ["goals", "profile", "change preferences", "reset", "onboarding"],
@@ -53,7 +53,7 @@ class SupportService {
     }
 
     // 2. Generate customized AI suggestion
-    let aiReply = "Thank you for reaching out to YogaWomans Support. We have received your ticket and a member of our team will respond shortly.";
+    let aiReply = "Thank you for reaching out to YogaWoman Support. We have received your ticket and a member of our team will respond shortly.";
     
     if (autoAnswer) {
       // Create a customized soothing wrapper from Aria
@@ -67,7 +67,7 @@ class SupportService {
           "calm",
           uid
         );
-        aiReply = `Hi, this is Aria from YogaWomans Support. Acknowledging your request: "${coachResponse.content}"`;
+        aiReply = `Hi, this is Aria from YogaWoman Support. Acknowledging your request: "${coachResponse.content}"`;
       } catch (err) {
         logger.error("Failed to generate custom AI support ticket response:", err);
       }

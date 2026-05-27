@@ -27,7 +27,7 @@ export default function AiWellnessCore() {
             AI Wellness Core
           </h2>
           <p className="text-[#888] max-w-lg mx-auto">
-            The beating heart of YogaWomans. Our sacred AI engine synthesizes your metrics, mood, and goals to generate perfect wellness pathways.
+            The beating heart of YogaWoman. Our sacred AI engine synthesizes your metrics, mood, and goals to generate perfect wellness pathways.
           </p>
         </div>
 

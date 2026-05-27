@@ -134,7 +134,7 @@ export default function FeaturedSlider({
       transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
       className="wellness-section"
     >
-      <SectionHeader eyebrow="Featured" title="Popular on YogaWomans">
+      <SectionHeader eyebrow="Featured" title="Popular on YogaWoman">
         <div className="flex gap-2">
           {[
             { action: () => swiper?.slidePrev(), icon: FiChevronLeft, label: "Previous" },

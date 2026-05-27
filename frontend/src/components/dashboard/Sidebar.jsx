@@ -39,12 +39,9 @@ function SidebarPanel({ onClose, isMobile = false }) {
         <div className="flex items-center gap-3">
           <img
             src={fotlogo}
-            alt="YogaWomans Logo"
+            alt="YogaWoman Logo"
             className="h-10 w-auto object-contain brightness-0 invert opacity-90"
           />
-          <span className="text-sm font-bold uppercase tracking-[0.25em] text-white">
-            YogaWomans
-          </span>
         </div>
 
         {isMobile && (

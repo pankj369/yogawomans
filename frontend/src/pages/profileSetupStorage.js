@@ -1,5 +1,5 @@
-export const AUTH_FLAG = "yogawomans_logged_in";
-export const PROFILE_SETUP_KEY = "yogawomans_profile_setup_v1";
+export const AUTH_FLAG = "yogawoman_logged_in";
+export const PROFILE_SETUP_KEY = "yogawoman_profile_setup_v1";
 
 export const defaultProfileSetupState = {
   step: 0,

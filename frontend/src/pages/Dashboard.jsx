@@ -387,7 +387,7 @@ export default function Dashboard() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-wellness-gold/20 border border-wellness-gold/30 text-wellness-gold shadow-[0_0_15px_rgba(212,166,79,0.2)]">
                 <Headphones size={20} />
               </div>
-              <h2 className="font-heading text-2xl font-bold text-white">YogaWomans Support</h2>
+              <h2 className="font-heading text-2xl font-bold text-white">YogaWoman Support</h2>
             </div>
             <div className="rounded-[2rem] border border-wellness-border bg-wellness-glass p-8 shadow-glass backdrop-blur-[18px] space-y-6">
               <div>

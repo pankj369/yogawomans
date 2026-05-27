@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'YogaWomans AI Wellness',
-        short_name: 'YogaWomans',
+        name: 'YogaWoman AI Wellness',
+        short_name: 'YogaWoman',
         description: 'Premium AI Wellness Platform for Women',
         theme_color: '#F7F3EE',
         background_color: '#F7F3EE',

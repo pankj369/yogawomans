@@ -6,7 +6,7 @@ import {
   removeCartItemApi,
 } from "../services/cartService";
 import { useAuth } from "./AuthContext";
-const CART_STORAGE_KEY = "yogawomans_cart";
+const CART_STORAGE_KEY = "yogawoman_cart";
 
 const CartContext = createContext(null);
 

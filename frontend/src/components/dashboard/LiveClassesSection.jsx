@@ -129,7 +129,7 @@ export default function LiveClassesSection() {
     const start = `${dateStr}T${startHour}${startMin}00`;
     const end = `${dateStr}T${endHour}${startMin}00`;
 
-    const text = encodeURIComponent(`YogaWomans: ${cls.title}`);
+    const text = encodeURIComponent(`YogaWoman: ${cls.title}`);
     const details = encodeURIComponent(
       `Live Yoga class with instructor ${cls.instructor}.\n\nBroadcast URL: ${cls.meetingLink || "https://meet.google.com/placeholder"}`
     );

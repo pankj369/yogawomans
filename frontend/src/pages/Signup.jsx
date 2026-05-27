@@ -94,7 +94,7 @@ if (onComplete) {
         <span className="auth-success-icon">🎉</span>
         <h3 className="auth-success-title">Account Created!</h3>
         <p className="auth-success-text">
-          Welcome to YOGAWOMANS! We've sent a verification link to <b>{form.email}</b>.
+          Welcome to YOGAWOMAN! We've sent a verification link to <b>{form.email}</b>.
           Please check your inbox to activate your account.
         </p>
         <button className="auth-submit" type="button" onClick={onLogin}>
@@ -105,7 +105,7 @@ if (onComplete) {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <h2 className="auth-title">Join yogawomans 🌿</h2>
+      <h2 className="auth-title">Join yogawoman 🌿</h2>
       <p className="auth-subtitle">Create your free account and begin the journey</p>
 
       <div className="auth-field">
@@ -247,7 +247,7 @@ if (onComplete) {
         />
         <label htmlFor="terms" className="auth-check-lbl">
           I agree to the <a href="#">Terms of Service</a> and{" "}
-          <a href="#">Privacy Policy</a> of YOGAWOMANS
+          <a href="#">Privacy Policy</a> of YOGAWOMAN
         </label>
       </div>
       {errors.agreed && (

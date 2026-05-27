@@ -75,14 +75,14 @@ export default function CinematicLoader({ onComplete }) {
             >
               <img 
                 src={fotlogo} 
-                alt="YogaWomans Logo" 
+                alt="YogaWoman Logo" 
                 className="w-full h-full object-contain brightness-0 invert" 
               />
             </motion.div>
             
             <div className="text-center">
               <h1 className="text-xl sm:text-2xl font-heading font-black text-white tracking-[0.25em] uppercase">
-                YogaWomans
+                YogaWoman
               </h1>
               <motion.div 
                 initial={{ width: 0, opacity: 0 }}

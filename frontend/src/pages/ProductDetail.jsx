@@ -92,7 +92,7 @@ export default function ProductDetail() {
               : [
                   "Handcrafted using chemical-free eco-sustainable dyes.",
                   "Reduces stress, encouraging mindfulness and grounding.",
-                  "Includes 1-Year YogaWomans wellness sanctuary guarantee."
+                  "Includes 1-Year YogaWoman wellness sanctuary guarantee."
                 ]
           };
 

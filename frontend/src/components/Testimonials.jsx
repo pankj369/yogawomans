@@ -80,7 +80,7 @@ const testimonials = [
     location: "Bangalore, India",
     role: "Sacred Orbit Integration",
     image: kavithaImg,
-    text: "YogaWomans is not just a yoga app—it's an emotional companion. The interactive Surya Namaskar tracker feels like practicing with a master teacher right in my living room.",
+    text: "YogaWoman is not just a yoga app—it's an emotional companion. The interactive Surya Namaskar tracker feels like practicing with a master teacher right in my living room.",
     rating: 5
   }
 ];
@@ -222,7 +222,7 @@ function Testimonials() {
               Real wellness stories from real people.
             </h2>
             <p className="mt-4 text-xs sm:text-sm lg:text-base text-[#B8C1CC] max-w-2xl mx-auto font-medium leading-relaxed">
-              Discover the deep physical, emotional, and spiritual alignment felt by the YogaWomans community.
+              Discover the deep physical, emotional, and spiritual alignment felt by the YogaWoman community.
             </p>
           </ScrollReveal>
         </div>

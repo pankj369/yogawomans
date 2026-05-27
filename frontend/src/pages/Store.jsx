@@ -372,7 +372,7 @@ export default function Store() {
               <ShoppingBag size={20} className="text-[#0B1220]" />
             </div>
             <div>
-              <p className="text-[10px] tracking-[0.25em] text-[#D6A756] font-bold uppercase leading-none">YogaWomans</p>
+              <p className="text-[10px] tracking-[0.25em] text-[#D6A756] font-bold uppercase leading-none">YogaWoman</p>
               <h2 className="text-base font-bold text-[#F7F3EC] font-heading mt-0.5">Alchemical Marketplace</h2>
             </div>
           </div>

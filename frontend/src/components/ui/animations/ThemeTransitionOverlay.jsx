@@ -108,7 +108,7 @@ export default function ThemeTransitionOverlay({ direction = "to-dark", onComple
                 isToDark ? "text-white" : "text-luxury-text"
               }`}
             >
-              YogaWomans
+              YogaWoman
             </motion.h2>
 
             <motion.p

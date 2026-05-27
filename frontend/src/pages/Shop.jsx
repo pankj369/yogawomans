@@ -42,7 +42,7 @@ function ShopNavbar({ onToggleCart, cartCount }) {
           />
           <div>
             <p className="text-xs uppercase tracking-[0.34em] text-white/55">Luxury Wellness</p>
-            <h1 className="text-lg font-semibold text-white">YOGAWOMANS Shop</h1>
+            <h1 className="text-lg font-semibold text-white">YOGAWOMAN Shop</h1>
           </div>
         </Link>
 

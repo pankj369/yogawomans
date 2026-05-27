@@ -87,11 +87,11 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title, is
               <div className="absolute inset-0 bg-[#00E676]/10 blur-md rounded-full scale-110 opacity-70 group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none" />
               <img
                 src={fotlogo}
-                alt="YogaWomans Logo"
+                alt="YogaWoman Logo"
                 className="relative h-9 w-auto object-contain brightness-0 invert opacity-90 transition-transform duration-500 group-hover:scale-105"
               />
               <span className="text-xs font-bold uppercase tracking-[0.25em] text-white">
-                YogaWomans
+                YogaWoman
               </span>
             </div>
             {streakDays > 0 && (
@@ -162,7 +162,7 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title, is
             
             <img
               src={fotlogo}
-              alt="YogaWomans Logo"
+              alt="YogaWoman Logo"
               className="h-8 w-auto object-contain brightness-0 invert opacity-90"
               onClick={() => navigate("/dashboard")}
             />

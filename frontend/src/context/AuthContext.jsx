@@ -5,7 +5,7 @@ import { readStorage, removeStorage, writeStorage } from "../utils/storage";
 import { loadProfileSetupState } from "../pages/profileSetupStorage";
 import { getCurrentUser, logoutUser } from "../services/authService";
 
-const AUTH_STORAGE_KEY = "yogawomans_auth_session";
+const AUTH_STORAGE_KEY = "yogawoman_auth_session";
 const AuthContext = createContext(null);
 
 function getStorageTarget(rememberMe) {
@@ -178,7 +178,7 @@ export function AuthProvider({ children }) {
     if (typeof window !== "undefined") {
       removeStorage(window.localStorage, AUTH_STORAGE_KEY);
       removeStorage(window.sessionStorage, AUTH_STORAGE_KEY);
-      window.localStorage.removeItem("yogawomans_profile_setup_v1");
+      window.localStorage.removeItem("yogawoman_profile_setup_v1");
     }
     
     // 4. Fire async backend logout safely

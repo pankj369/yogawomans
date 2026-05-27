@@ -13,7 +13,7 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("YogaWomans App Crash:", error, errorInfo);
+    console.error("YogaWoman App Crash:", error, errorInfo);
   }
 
   render() {

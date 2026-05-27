@@ -10,8 +10,8 @@ export default function Settings() {
 
   const deleteAccount = () => {
     auth.logout();
-    window.localStorage.removeItem("yogawomans_dashboard_state");
-    window.localStorage.removeItem("yogawomans_profile_setup_v1");
+    window.localStorage.removeItem("yogawoman_dashboard_state");
+    window.localStorage.removeItem("yogawoman_profile_setup_v1");
     window.location.href = "/login";
   };
 

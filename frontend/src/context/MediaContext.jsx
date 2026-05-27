@@ -6,8 +6,8 @@ import { useSavedMedia } from "../hooks/useSavedMedia";
 
 const MediaContext = createContext(null);
 
-const WATCH_HISTORY_KEY = "yogawomans_watch_history";
-const BOOKMARKS_KEY = "yogawomans_bookmarks";
+const WATCH_HISTORY_KEY = "yogawoman_watch_history";
+const BOOKMARKS_KEY = "yogawoman_bookmarks";
 
 export function MediaProvider({ children }) {
   // Audio state

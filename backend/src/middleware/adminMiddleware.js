@@ -10,7 +10,7 @@ export const requireAdmin = asyncHandler(async (req, res, next) => {
   const userDoc = await db.collection("users").doc(req.user.uid).get();
 
   // Fallback domain checks for startup seeding/testing
-  const isCorporateAdmin = req.user.email && req.user.email.endsWith("@yogawomans.com");
+  const isCorporateAdmin = req.user.email && req.user.email.endsWith("@yogawoman.com");
 
   if (userDoc.exists) {
     const userData = userDoc.data();

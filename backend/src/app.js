@@ -93,7 +93,7 @@ app.use("/api", rateLimiter);
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "YogaWomans Backend Running",
+    message: "YogaWoman Backend Running",
   });
 });
 

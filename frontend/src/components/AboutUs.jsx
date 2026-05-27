@@ -517,7 +517,7 @@ export default function AboutUs() {
             </h2>
 
             <p className="yoga-desc">
-              At YOGAWOMANS, we believe that true wellness begins from within.
+              At YOGAWOMAN, we believe that true wellness begins from within.
               Founded on the timeless principles of yoga, we bring together
               expert instructors, personalized programs, and a supportive
               community to help you transform your mind, body, and soul.

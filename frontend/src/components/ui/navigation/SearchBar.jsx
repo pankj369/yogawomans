@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, History, Sparkles } from "lucide-react";
 
 const SUGGESTIONS = ["Morning Flow", "Deep Sleep", "Anxiety Relief", "Core Strength", "Beginner Yoga"];
-const RECENT_SEARCHES_KEY = "yogawomans_recent_searches";
+const RECENT_SEARCHES_KEY = "yogawoman_recent_searches";
 
 export default function SearchBar({ query, onQueryChange }) {
   const [searchFocused, setSearchFocused] = useState(false);

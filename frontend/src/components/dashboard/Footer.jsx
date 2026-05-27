@@ -20,12 +20,12 @@ export default function Footer() {
           <div className="flex items-center gap-2 mb-2">
             <img
               src={fotlogo}
-              alt="YogaWomans Logo"
+              alt="YogaWoman Logo"
               className="h-8 w-auto object-contain brightness-0 invert opacity-90"
             />
           </div>
           <p className="text-sm text-wellness-muted">
-            © {new Date().getFullYear()} YogaWomans. Warm, mindful wellness for daily life.
+            © {new Date().getFullYear()} YogaWoman. Warm, mindful wellness for daily life.
           </p>
         </div>
 

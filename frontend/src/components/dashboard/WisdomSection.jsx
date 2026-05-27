@@ -46,7 +46,7 @@ export default function WisdomSection() {
 
   // Load Saved Quotes
   useEffect(() => {
-    const saved = localStorage.getItem("yogawomans_saved_quotes");
+    const saved = localStorage.getItem("yogawoman_saved_quotes");
     if (saved) {
       setSavedQuotes(JSON.parse(saved));
     }
@@ -71,7 +71,7 @@ export default function WisdomSection() {
       toast.showToast({ type: "success", title: "Saved Quote", message: "Quote added to your wisdom journal!" });
     }
     setSavedQuotes(newSaved);
-    localStorage.setItem("yogawomans_saved_quotes", JSON.stringify(newSaved));
+    localStorage.setItem("yogawoman_saved_quotes", JSON.stringify(newSaved));
   };
 
   const currentQuote = wisdomQuotes[activeQuoteIndex];

@@ -342,7 +342,7 @@ export default function WhyChooseUs() {
             <ScrollReveal>
               <div className="yw-top">
                 <div className="ins-badge">
-                  🌸 why choose yogawomans
+                  🌸 why choose yogawoman
                 </div>
                 <h2 className="yw-heading">
                   Transform Your Mind, Body & <span className="acc">Inner Energy</span>

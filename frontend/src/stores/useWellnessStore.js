@@ -89,7 +89,7 @@ export const useWellnessStore = create(
       resetStore: () => set(initialState)
     }),
     {
-      name: 'yogawomans-wellness-storage', // key in local storage
+      name: 'yogawoman-wellness-storage', // key in local storage
       storage: createJSONStorage(() => localStorage),
       // Optional: partalize can be used to omit certain state from persistence
       partialize: (state) => ({ 

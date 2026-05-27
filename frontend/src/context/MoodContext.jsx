@@ -64,7 +64,7 @@ export function MoodProvider({ children }) {
   // Load mood and check-in status on mount
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("yogawomans_mood_state");
+      const stored = localStorage.getItem("yogawoman_mood_state");
       if (stored) {
         const { currentMood, lastCheckInDate } = JSON.parse(stored);
         if (currentMood && moodThemes[currentMood]) {
@@ -108,7 +108,7 @@ export function MoodProvider({ children }) {
     
     const today = new Date().toDateString();
     localStorage.setItem(
-      "yogawomans_mood_state",
+      "yogawoman_mood_state",
       JSON.stringify({
         currentMood: newMood,
         lastCheckInDate: today
