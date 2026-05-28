@@ -18,7 +18,7 @@ import sacredImg from "../assets/images/sacredimage.png";
 import heroImg from "../assets/images/hero.png";
 
 // Local Audios
-import audioRestNow from "../assets/audios/mixkit-rest-now-584.mp3";
+import audioRestNow from "../assets/audios/restnow.mp3";
 import audioRelaxBeat from "../assets/audios/mixkit-relax-beat-292.mp3";
 import audioWhatItTakes from "../assets/audios/mixkit-what-it-takes-616.mp3";
 import audioCalmMind from "../assets/audios/music_for_video-please-calm-my-mind-125566.mp3";
