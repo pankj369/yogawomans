@@ -333,10 +333,7 @@ if (typeof window !== "undefined" && !document.head.querySelector("[data-pricing
       .pr-title { font-size: 36px; }
     }
 
-    @media (max-width: 768px) {
-      .pr-inner { display: none !important; }
-      .pr-mobile-fallback { display: flex !important; }
-    }
+
   `;
   document.head.appendChild(s);
 }
@@ -537,21 +534,7 @@ export default function Pricing() {
         </ScrollReveal>
       </div>
 
-      {/* Mobile fallback view */}
-      <div className="pr-mobile-fallback">
-        <div className="pr-mobile-icon">🖥️</div>
-        <h3 className="pr-mobile-title">Elevate on Desktop</h3>
-        <p className="pr-mobile-text">
-          Our premium membership plans and AI onboarding pathways are optimized for larger displays. Please open this portal on a tablet or desktop computer to select your path.
-        </p>
-        <button
-          type="button"
-          onClick={() => navigate(auth.isAuthenticated ? "/dashboard" : "/")}
-          className="pr-mobile-btn"
-        >
-          {auth.isAuthenticated ? "Back to Dashboard" : "Back to Home"}
-        </button>
-      </div>
+
     </section>
   );
 }

@@ -255,11 +255,11 @@ if (onComplete) {
           ⚠ {errors.agreed}
         </span>
       )}
-{errors.api && (
-  <span className="auth-error-msg">
-    ⚠ {errors.api}
-  </span>
-)}
+      {errors.api && (
+        <div className="auth-error-banner">
+          <span>⚠️ {errors.api}</span>
+        </div>
+      )}
       <button className="auth-submit" type="submit" disabled={loading}>
         {loading ? "🌱 Creating Account…" : "Create Account →"}
       </button>

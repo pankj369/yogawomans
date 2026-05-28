@@ -81,6 +81,11 @@ export function AuthProvider({ children }) {
           }
         } catch (error) {
           console.error("AuthContext: Failed to sync backend profile", error);
+          if (error?.response?.status === 401) {
+             // Force logout if backend completely rejects the token
+             window.dispatchEvent(new CustomEvent("auth:logout"));
+             return;
+          }
           if (isMounted) {
             const localProfile = loadProfileSetupState();
             setAuthState((current) => ({

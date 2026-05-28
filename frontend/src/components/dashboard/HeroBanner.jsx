@@ -89,8 +89,8 @@ export default function HeroBanner({
         posterSrc={heroBackground}
         overlay="none" // We handle overlay explicitly via HeroOverlay below
       />
-      <AmbientGlow />
-      <HeroOverlay variant={overlayVariant} opacity={95} />
+      {/* <AmbientGlow /> */}
+      <HeroOverlay variant="gradient" opacity={20} />
 
       {/* ── Content Grid ── */}
       <div className="relative z-20 grid h-full w-full gap-10 px-6 py-10 sm:px-12 sm:py-16 lg:grid-cols-[1fr_340px] lg:items-center xl:grid-cols-[1fr_380px]">

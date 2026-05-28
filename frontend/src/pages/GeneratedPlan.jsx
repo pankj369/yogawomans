@@ -255,6 +255,7 @@ export default function GeneratedPlan() {
   const [expandedPhaseId, setExpandedPhaseId] = useState("phase-1");
   const [activeTab, setActiveTab] = useState("practice"); // 'practice' | 'history'
   const [isSaving, setIsSaving] = useState(false);
+  const [generationError, setGenerationError] = useState(null);
 
   // Determine state safely
   // If no state, we default to stress/20min so History tab can still load without crashing if navigated directly.
@@ -331,8 +332,10 @@ export default function GeneratedPlan() {
 
         setPlanData(uiPlanData);
         setCurrentPlan(uiPlanData);
+        setGenerationError(null);
       } catch (error) {
         console.error("Error generating:", error);
+        setGenerationError("We're having trouble connecting to the wellness AI. Please try generating your plan again.");
       } finally {
         setIsGenerating(false);
       }
@@ -437,6 +440,37 @@ export default function GeneratedPlan() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-luxury-bg">
         <CinematicLoader />
+      </div>
+    );
+  }
+
+  if (generationError) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-luxury-bg px-6 text-center text-luxury-text">
+        <div className="mb-6 rounded-full bg-red-500/10 p-6 text-red-500">
+          <RefreshCw size={48} strokeWidth={1.5} />
+        </div>
+        <h2 className="mb-4 font-heading text-3xl font-bold">Generation Paused</h2>
+        <p className="mb-8 max-w-md text-luxury-muted font-medium">{generationError}</p>
+        <div className="flex gap-4">
+          <button 
+            onClick={() => {
+              setGenerationError(null);
+              setIsGenerating(true);
+              // Trigger reload essentially
+              navigate(".", { replace: true, state: location.state });
+            }}
+            className="rounded-full bg-luxury-emerald px-8 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white hover:bg-luxury-emerald/90 transition-all shadow-md"
+          >
+            Try Again
+          </button>
+          <button 
+            onClick={() => navigate("/")}
+            className="rounded-full border border-luxury-surface bg-transparent px-8 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-luxury-text hover:bg-white/5 transition-all"
+          >
+            Go Back
+          </button>
+        </div>
       </div>
     );
   }

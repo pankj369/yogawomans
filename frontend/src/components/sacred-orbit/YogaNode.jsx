@@ -27,10 +27,13 @@ export default function YogaNode({ data, angle, isHovered, onHover, onMouseLeave
           
           {/* Node Image Container ONLY */}
           <div
-            className={`relative z-20 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-[1.5px] overflow-hidden flex items-center justify-center backdrop-blur-md transition-all duration-300 ${isActive ? 'bg-[#0A0A0A] border-[#E9781F] scale-110 shadow-[0_0_25px_rgba(233,120,31,0.6)]' : 'bg-[#0F2E1D]/80 border-[#1E7A46] group-hover:scale-105 group-hover:border-[#00E676]/50'}`}
+            className={`relative z-20 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full border-[1.5px] overflow-hidden flex items-center justify-center backdrop-blur-md transition-all duration-300 ${isActive ? 'bg-[#0A0A0A] border-[#E9781F] scale-110 shadow-[0_0_25px_rgba(233,120,31,0.6)]' : 'bg-[#0F2E1D]/80 border-[#1E7A46] group-hover:scale-105 group-hover:border-[#00E676]/50'}`}
           >
-            {/* Real image will go here. Using icon as placeholder */}
-            <span className="text-xl md:text-3xl opacity-70 group-hover:opacity-100 transition-opacity" aria-hidden="true">{data.icon}</span>
+            <img 
+              src={new URL(`../../assets/images/surya/surya-step-${parseInt(data.phase, 10)}.png`, import.meta.url).href}
+              alt={data.name}
+              className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110" 
+            />
           </div>
           
         </div>
