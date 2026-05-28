@@ -15,15 +15,15 @@ build/
 npm-debug.log*
 
 # Audio Files
-*.mp3
-*.wav
+# *.mp3
+# *.wav
 
 # Video Files
-*.mp4
-*.mov
-*.avi
-*.mkv
-*.webm
+# *.mp4
+# *.mov
+# *.avi
+# *.mkv
+# *.webm
 
 # Firebase Admin Secret
 backend/config/firebase-service-account.json
