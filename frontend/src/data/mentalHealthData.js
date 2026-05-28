@@ -10,7 +10,7 @@ import audioDana from "../assets/audios/danamusic-meditation-amp-relax-238980.mp
 import audioLeberch from "../assets/audios/leberch-meditation-meditation-music-523576.mp3";
 import audioRain from "../assets/audios/mixkit-light-rain-loop-2393.wav";
 import audioBirds from "../assets/audios/mixkit-little-birds-singing-in-the-trees-17.wav";
-import audioRestNow from "../assets/audios/mixkit-rest-now-584.mp3";
+import audioRestNow from "../assets/audios/restnow.mp3";
 import audioValleySunset from "../assets/audios/mixkit-valley-sunset-127.mp3";
 import audioVoxscape from "../assets/audios/mixkit-voxscape-571.mp3";
 import audioWhatItTakes from "../assets/audios/mixkit-what-it-takes-616.mp3";

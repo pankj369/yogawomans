@@ -14,7 +14,7 @@ import powerImg from "../../assets/images/power.png";
 
 // Audio tracks
 import audioCalmMind from "../../assets/audios/music_for_video-please-calm-my-mind-125566.mp3";
-import audioRestNow from "../../assets/audios/mixkit-rest-now-584.mp3";
+import audioRestNow from "../../assets/audios/restnow.mp3";
 import audioValleySunset from "../../assets/audios/mixkit-valley-sunset-127.mp3";
 
 const kidsSessions = [
