@@ -6,17 +6,17 @@ import yinImg from "../assets/images/yin.png";
 import ananyaImg from "../assets/images/ananya.png";
 
 // Local Audios
-import audioDana from "../assets/audios/danamusic-meditation-amp-relax-238980.mp3";
-import audioLeberch from "../assets/audios/leberch-meditation-meditation-music-523576.mp3";
-import audioRain from "../assets/audios/mixkit-light-rain-loop-2393.wav";
-import audioBirds from "../assets/audios/mixkit-little-birds-singing-in-the-trees-17.wav";
+const audioDana = "";
+const audioLeberch = "";
+const audioRain = "";
+const audioBirds = "";
 import audioRestNow from "../assets/audios/restnow.mp3";
 import audioValleySunset from "../assets/audios/mixkit-valley-sunset-127.mp3";
 import audioVoxscape from "../assets/audios/mixkit-voxscape-571.mp3";
 import audioWhatItTakes from "../assets/audios/mixkit-what-it-takes-616.mp3";
 import audioCalmMind from "../assets/audios/music_for_video-please-calm-my-mind-125566.mp3";
-import audioOcean from "../assets/audios/oceanframemusic-relax-515144.mp3";
-import audioSleepMusic from "../assets/audios/viacheslavstarostin-meditation-relax-sleep-music-346733.mp3";
+const audioOcean = "";
+const audioSleepMusic = "";
 
 export const moodOptions = [
   { id: "happy", label: "Happy", icon: Smile, color: "#2E7D32" },

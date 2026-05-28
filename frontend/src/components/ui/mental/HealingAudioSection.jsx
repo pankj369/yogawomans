@@ -8,9 +8,9 @@ import { healingAudio } from "../../../data/mentalHealthData";
 import { audioTracks } from "../../../data/wellnessData";
 
 // Nature Mixer Assets
-import audioRain from "../../../assets/audios/mixkit-light-rain-loop-2393.wav";
-import audioBirds from "../../../assets/audios/mixkit-little-birds-singing-in-the-trees-17.wav";
-import audioOcean from "../../../assets/audios/oceanframemusic-relax-515144.mp3";
+const audioRain = "";
+const audioBirds = "";
+const audioOcean = "";
 import audioWind from "../../../assets/audios/mixkit-valley-sunset-127.mp3";
 
 const mixerTracks = [

@@ -6,10 +6,10 @@ import heroImg from "../assets/images/hero.png";
 import meditationImg from "../assets/images/meditation.png";
 
 // Local Videos
-import videoYogaNature from "../assets/videos/63229-506616446.mp4";
-import videoYogaSunset from "../assets/videos/111097-689925374.mp4";
-import videoYogaForest from "../assets/videos/166793-835662244.mp4";
-import videoTinyHouse from "../assets/videos/From KlickPin CF Tiny House Design Ideas That Will Inspire You 71200 - Pin-881298220844727364.mp4";
+const videoYogaNature = "";
+const videoYogaSunset = "";
+const videoYogaForest = "";
+const videoTinyHouse = "";
 
 export const physicalStats = [
   { label: "Active Calories", value: "1,240", unit: "kcal", icon: Flame, color: "#E77B35", progress: 75 },

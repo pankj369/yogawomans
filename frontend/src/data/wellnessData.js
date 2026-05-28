@@ -26,11 +26,7 @@ import audioValleySunset from "../assets/audios/mixkit-valley-sunset-127.mp3";
 import audioVoxscape from "../assets/audios/mixkit-voxscape-571.mp3";
 
 // Local Videos
-import videoYogaNature from "../assets/videos/63229-506616446.mp4";
-import videoYogaSunset from "../assets/videos/111097-689925374.mp4";
-import videoYogaForest from "../assets/videos/166793-835662244.mp4";
-import videoTinyHouse from "../assets/videos/From KlickPin CF Tiny House Design Ideas That Will Inspire You 71200 - Pin-881298220844727364.mp4";
-import videoHeroBg from "../assets/videos/hero-bg.mp4";
+// All video imports removed because they do not exist.
 
 // Grouped sidebar navigation — each group has a label and an items array
 export const dashboardMenuGroups = [
@@ -86,7 +82,7 @@ export const featuredSessions = [
     preview: "A flowing morning session to awaken joints and breath.",
     tags: ["Flow", "Energy", "Morning"],
     mediaType: "video",
-    videoSrc: videoYogaNature,
+    videoSrc: "",
   },
   {
     id: "deep-yin",
@@ -100,7 +96,7 @@ export const featuredSessions = [
     preview: "Hold each posture and let the body soften slowly.",
     tags: ["Yin", "Restorative", "Evening"],
     mediaType: "video",
-    videoSrc: videoYogaSunset,
+    videoSrc: "",
   },
   {
     id: "power-core",
@@ -114,7 +110,7 @@ export const featuredSessions = [
     preview: "A focused core sequence to energize and tone.",
     tags: ["Strength", "Core", "Power"],
     mediaType: "video",
-    videoSrc: videoYogaForest,
+    videoSrc: "",
   },
   {
     id: "sacred-stillness",
@@ -250,7 +246,7 @@ export const sessionCatalog = [
     preview: "Build heat, balance, and intention for the day ahead.",
     tags: ["Sun", "Flow", "Strength"],
     mediaType: "video",
-    videoSrc: videoTinyHouse,
+    videoSrc: "",
   },
 ];
 

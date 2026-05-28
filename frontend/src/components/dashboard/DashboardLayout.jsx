@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import TopNavbar from "./TopNavbar";
 import GlobalAudioPlayer from "../ui/player/GlobalAudioPlayer";
 import VideoPlayerOverlay from "../ui/player/VideoPlayerOverlay";
-import defaultVideo from "../../assets/videos/166793-835662244.mp4";
+const defaultVideo = "";
 import { useMood } from "../../context/MoodContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X, Heart } from "lucide-react";

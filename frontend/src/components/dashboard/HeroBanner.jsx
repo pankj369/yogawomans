@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import heroBackground from "../../assets/images/herobg.png";
-import defaultHeroVideo from "../../assets/videos/111097-689925374.mp4";
+const defaultHeroVideo = "";
 import { Play, Wind, Activity } from "lucide-react";
 import { useDashboard } from "../../context/DashboardContext";
 
