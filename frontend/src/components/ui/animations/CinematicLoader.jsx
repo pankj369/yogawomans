@@ -94,14 +94,9 @@ export default function CinematicLoader({ onComplete, indefinite = false }) {
                 transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
                 className="h-[1.5px] bg-gradient-to-r from-transparent via-[#00E676] to-transparent mt-3 mx-auto"
               />
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: stage >= 1 ? 0.6 : 0 }}
-                transition={{ duration: 1 }}
-                className="mt-4 text-[9px] font-bold uppercase tracking-[0.4em] text-white/70"
-              >
-                Awaken Your Spirit
-              </motion.p>
+<h1 className="text-xl sm:text-2xl font-heading font-black text-white tracking-[0.25em] uppercase">
+               Why all superheros should be man?
+              </h1>
             </div>
           </motion.div>
         </motion.div>
