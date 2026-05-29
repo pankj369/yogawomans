@@ -2,7 +2,6 @@ import { lazy } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { pageTransition } from "../utils/animations";
-import Skeleton from "../components/ui/loaders/Skeleton";
 import ProtectedRoute from "./ProtectedRoute";
 
 const LandingPage = lazy(() => import("../pages/LandingPage"));

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import fotlogo from "../../../assets/images/fotlogo.png";
 
-export default function CinematicLoader({ onComplete }) {
+export default function CinematicLoader({ onComplete, indefinite = false }) {
   const [stage, setStage] = useState(0);
 
   useEffect(() => {
@@ -13,17 +13,21 @@ export default function CinematicLoader({ onComplete }) {
     
     const timer1 = setTimeout(() => setStage(1), 1200);
     const timer2 = setTimeout(() => setStage(2), 2600);
-    const timer3 = setTimeout(() => {
-      setStage(3);
-      if (onComplete) onComplete();
-    }, 3800);
+    
+    let timer3;
+    if (!indefinite) {
+      timer3 = setTimeout(() => {
+        setStage(3);
+        if (onComplete) onComplete();
+      }, 3800);
+    }
 
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
-      clearTimeout(timer3);
+      if (timer3) clearTimeout(timer3);
     };
-  }, [onComplete]);
+  }, [onComplete, indefinite]);
 
   return (
     <AnimatePresence>

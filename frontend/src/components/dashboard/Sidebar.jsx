@@ -7,7 +7,6 @@ import { useAuth } from "../../context/AuthContext";
 import { useDashboard } from "../../context/DashboardContext";
 import SidebarGroup from "../ui/navigation/SidebarGroup";
 import fotlogo from "../../assets/images/fotlogo.png";
-import FeedbackModal from "../feedback/FeedbackModal";
 
 // ─── Animation Variants ────────────────────────────────────────────────────
 const sidebarVariants = {
@@ -30,7 +29,6 @@ function SidebarPanel({ onClose, isMobile = false }) {
   const streakDays = state?.streakDays ?? 6;
   const userInitials = auth.user?.name?.charAt(0).toUpperCase() || auth.user?.displayName?.charAt(0).toUpperCase() || "Y";
   const userPhoto = auth.user?.photoURL || auth.user?.image || null;
-  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   return (
     <aside className={`flex h-full flex-col px-6 py-6 transition-all duration-300
@@ -152,13 +150,6 @@ function SidebarPanel({ onClose, isMobile = false }) {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setIsFeedbackOpen(true)}
-              title="Share Feedback"
-              className="flex items-center gap-1.5 rounded-full border border-wellness-orange/20 bg-wellness-orange/10 px-3 py-1.5 text-xs font-bold text-wellness-orange transition hover:bg-wellness-orange/20"
-            >
-              <Sparkles size={12} /> Feedback
-            </button>
-            <button
               onClick={handleLogout}
               title="Log out"
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/60 transition hover:bg-red-500/20 hover:text-red-400"
@@ -168,8 +159,6 @@ function SidebarPanel({ onClose, isMobile = false }) {
           </div>
         </div>
       </div>
-      
-      <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
     </aside>
   );
 }

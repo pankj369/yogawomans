@@ -11,7 +11,6 @@ import AppRoutes, { AppRouteLoader } from "./routes/AppRoutes";
 import { Suspense } from "react";
 import ErrorBoundary from "./components/ui/ErrorBoundary";
 import CinematicLoader from "./components/ui/animations/CinematicLoader";
-import ThemeTransitionOverlay from "./components/ui/animations/ThemeTransitionOverlay";
 import FeedbackWidget from "./components/feedback/FeedbackWidget";
 
 const getThemeForPath = (path) => {
@@ -54,8 +53,7 @@ function MainAppContent() {
         <CinematicLoader onComplete={() => setShowLoader(false)} />
       )}
       {transitionState && (
-        <ThemeTransitionOverlay 
-          direction={transitionState.direction} 
+        <CinematicLoader 
           onComplete={() => setTransitionState(null)} 
         />
       )}

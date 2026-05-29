@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
-import Skeleton from "../components/ui/loaders/Skeleton";
+import CinematicLoader from "../components/ui/animations/CinematicLoader";
 
 export default function ProtectedRoute({ requireProfileSetup = false }) {
   const { isAuthenticated, profileSetupComplete, profileSetupSkipped, isAuthReady } = useAuth();
@@ -10,17 +10,8 @@ export default function ProtectedRoute({ requireProfileSetup = false }) {
   // 1. Wait until Auth Context confirms it has finished fetching Firebase & Backend data
   if (!isAuthReady) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#FDFBF7]">
-        <div className="flex flex-col items-center gap-6">
-          <Skeleton variant="circular" className="h-20 w-20 bg-wellness-orange/10" />
-          <motion.p
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="text-sm font-bold uppercase tracking-widest text-wellness-muted"
-          >
-            Securing Session...
-          </motion.p>
-        </div>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050816]">
+        <CinematicLoader indefinite={true} />
       </div>
     );
   }

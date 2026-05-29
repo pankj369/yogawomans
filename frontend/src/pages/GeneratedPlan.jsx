@@ -6,7 +6,7 @@ import { wellnessCategories } from "../data/wellnessRecommendationData";
 import { useAuth } from "../context/AuthContext";
 import { useGeneratedPlans } from "../hooks/useGeneratedPlans";
 import { generatePlanApi, saveGeneratedPlan } from "../services/planService";
-import CinematicLoader from "../components/ui/loaders/CinematicLoader";
+import CinematicLoader from "../components/ui/animations/CinematicLoader";
 
 // AI Message Sequences
 const AI_MESSAGES = [
@@ -439,7 +439,7 @@ export default function GeneratedPlan() {
   if (isGenerating) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-luxury-bg">
-        <CinematicLoader />
+        <CinematicLoader indefinite={true} />
       </div>
     );
   }
