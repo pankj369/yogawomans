@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import TopNavbar from "./TopNavbar";
 import GlobalAudioPlayer from "../ui/player/GlobalAudioPlayer";
@@ -18,7 +18,21 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   
-  const { mood, setMood, showCheckInModal, setShowCheckInModal, themes } = useMood();
+  const { mood, setMood, showCheckInModal, dismissCheckInModal, themes } = useMood();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && showCheckInModal) {
+        dismissCheckInModal();
+      }
+    };
+    if (showCheckInModal) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showCheckInModal, dismissCheckInModal]);
 
   const handleScroll = (e) => {
     setIsScrolled(e.target.scrollTop > 20);
@@ -85,7 +99,7 @@ export default function DashboardLayout({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setShowCheckInModal(false)}
+              onClick={dismissCheckInModal}
               className="absolute inset-0 bg-black/60 backdrop-blur-md"
             />
 
@@ -105,7 +119,7 @@ export default function DashboardLayout({
 
               {/* Close button */}
               <button
-                onClick={() => setShowCheckInModal(false)}
+                onClick={dismissCheckInModal}
                 className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all"
               >
                 <X size={18} />
@@ -149,7 +163,7 @@ export default function DashboardLayout({
 
                 <div className="pt-4 flex justify-center">
                   <button
-                    onClick={() => setShowCheckInModal(false)}
+                    onClick={dismissCheckInModal}
                     className="text-xs font-bold uppercase tracking-widest text-wellness-muted hover:text-white transition-all"
                   >
                     Skip & Keep Current Vibe

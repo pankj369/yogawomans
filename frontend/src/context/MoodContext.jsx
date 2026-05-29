@@ -1,5 +1,5 @@
 // src/context/MoodContext.jsx
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 const MoodContext = createContext(null);
 
@@ -61,11 +61,20 @@ export function MoodProvider({ children }) {
   const [checkedInToday, setCheckedInToday] = useState(false);
   const [showCheckInModal, setShowCheckInModal] = useState(false);
 
+  const dismissCheckInModal = useCallback(() => {
+    setShowCheckInModal(false);
+    sessionStorage.setItem("yogawoman_mood_skipped", "true");
+  }, []);
+
   // Load mood and check-in status on mount
   useEffect(() => {
     try {
       const stored = localStorage.getItem("yogawoman_mood_state");
-      if (stored) {
+      const hasSkippedThisSession = sessionStorage.getItem("yogawoman_mood_skipped");
+
+      if (hasSkippedThisSession) {
+        setShowCheckInModal(false);
+      } else if (stored) {
         const { currentMood, lastCheckInDate } = JSON.parse(stored);
         if (currentMood && moodThemes[currentMood]) {
           setMoodState(currentMood);
@@ -84,7 +93,9 @@ export function MoodProvider({ children }) {
       }
     } catch (e) {
       console.error("Failed to load mood state:", e);
-      setShowCheckInModal(true);
+      if (!sessionStorage.getItem("yogawoman_mood_skipped")) {
+        setShowCheckInModal(true);
+      }
     }
   }, []);
 
@@ -126,6 +137,7 @@ export function MoodProvider({ children }) {
         checkedInToday,
         showCheckInModal,
         setShowCheckInModal,
+        dismissCheckInModal,
         activeTheme,
         themes: moodThemes
       }}

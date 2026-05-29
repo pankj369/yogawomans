@@ -22,7 +22,9 @@ import { useMedia } from "../context/MediaContext";
 
 import { physicalStats, physicalCategories, physicalVideos } from "../data/physicalHealthData";
 import { featuredPrograms, breathingExercises } from "../data/wellnessData";
-const physicalVideo = "";
+import physicalVideoFile from "../assets/videos/physicalhealth.mp4";
+
+const physicalVideo = physicalVideoFile;
 
 export default function PhysicalHealth() {
   const auth = useAuth();

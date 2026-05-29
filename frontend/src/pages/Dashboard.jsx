@@ -4,9 +4,9 @@ import { Play, X, Headphones, Clock } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 import HeroBanner from "../components/dashboard/HeroBanner";
-const homeVideo = "";
-const meditationVideo = "";
-const physicalVideo = "";
+import homeVideoFile from "../assets/videos/forest.mp4";
+import meditationVideoFile from "../assets/videos/nature.mp4";
+import physicalVideoFile from "../assets/videos/physicalhealth.mp4";
 import DailyRoutine from "../components/dashboard/DailyRoutine";
 import RecommendedSection from "../components/dashboard/RecommendedSection";
 import ProgressTracker from "../components/dashboard/ProgressTracker";
@@ -53,6 +53,10 @@ import { useDashboard } from "../context/DashboardContext";
 import { useToast } from "../context/ToastContext";
 import { useMedia } from "../context/MediaContext";
 import { sessionCatalog } from "../data/wellnessData";
+
+const homeVideo = homeVideoFile;
+const meditationVideo = meditationVideoFile;
+const physicalVideo = physicalVideoFile;
 
 const sectionMeta = {
   home: { title: "Today feels lighter already", hero: "Morning sanctuary", focus: "All your wellness rituals in one place." },

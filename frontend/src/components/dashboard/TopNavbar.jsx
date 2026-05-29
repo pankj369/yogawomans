@@ -1,6 +1,6 @@
 import { useMemo, useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Menu, Award, Flame, Play } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Menu, Award, Flame, Play, ArrowLeft } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useDashboard } from "../../context/DashboardContext";
 import { useMood } from "../../context/MoodContext";
@@ -12,6 +12,7 @@ import fotlogo from "../../assets/images/fotlogo.png";
 
 export default function TopNavbar({ onMenuClick, query, onQueryChange, title, isScrolled }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const auth = useAuth();
   const { notifications, markNotificationRead, state, isReturningUser } = useDashboard();
   const { activeTheme, setShowCheckInModal } = useMood();
@@ -22,8 +23,9 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title, is
   const unreadCount = notifications.filter((n) => n.unread).length;
   const panelNotifications = useMemo(() => notifications.slice(0, 5), [notifications]);
 
-  const userInitials = auth.user?.name?.slice(0, 2).toUpperCase() || "YW";
-  const userName = auth.user?.name || "Member";
+  const userInitials = auth.user?.name?.charAt(0).toUpperCase() || auth.user?.displayName?.charAt(0).toUpperCase() || "Y";
+  const userPhoto = auth.user?.photoURL || auth.user?.image || null;
+  const userName = auth.user?.name || auth.user?.displayName || "Member";
   const userEmail = auth.user?.email || "";
   const isPro = state?.activePlan === "Pro";
   const streakDays = state?.streakDays || 0;
@@ -139,6 +141,7 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title, is
               userInitials={userInitials}
               userName={userName}
               userEmail={userEmail}
+              userPhoto={userPhoto}
               isOpen={activePanel === "profile"}
               onToggle={() => togglePanel("profile")}
               onLogout={handleLogout}
@@ -194,26 +197,16 @@ export default function TopNavbar({ onMenuClick, query, onQueryChange, title, is
               onRead={markNotificationRead}
             />
             
-            <button
-              onClick={() => togglePanel("profile")}
-              className="relative h-9 w-9 rounded-full border border-wellness-border bg-white/5 flex items-center justify-center text-xs font-bold text-white shadow-glass transition hover:bg-white/10"
-            >
-              {userInitials}
-              <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-wellness-glow border-2 border-wellness-bg"></span>
-            </button>
-
-            {/* Profile dropdown relative container positioning for mobile */}
-            <div className="absolute right-0 top-[calc(100%+8px)] z-50">
-              <ProfileDropdown
-                userInitials={userInitials}
-                userName={userName}
-                userEmail={userEmail}
-                isOpen={activePanel === "profile"}
-                onToggle={() => togglePanel("profile")}
-                onLogout={handleLogout}
-                onClose={() => setActivePanel(null)}
-              />
-            </div>
+            <ProfileDropdown
+              userInitials={userInitials}
+              userName={userName}
+              userEmail={userEmail}
+              userPhoto={userPhoto}
+              isOpen={activePanel === "profile"}
+              onToggle={() => togglePanel("profile")}
+              onLogout={handleLogout}
+              onClose={() => setActivePanel(null)}
+            />
           </div>
         </div>
 

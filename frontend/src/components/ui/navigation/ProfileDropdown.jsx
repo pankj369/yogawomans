@@ -16,6 +16,7 @@ export default function ProfileDropdown({
   onToggle,
   onLogout,
   onClose,
+  userPhoto,
 }) {
   return (
     <div className="relative">
@@ -24,8 +25,12 @@ export default function ProfileDropdown({
         onClick={onToggle}
         className="flex items-center gap-2.5 rounded-full border border-wellness-border bg-white/5 pl-2 pr-3 py-1.5 shadow-glass backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:border-wellness-glow/20 hover:shadow-[0_0_15px_rgba(0,230,118,0.15)]"
       >
-        <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-wellness-orange/80 to-wellness-green text-xs font-bold text-white">
-          {userInitials}
+        <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-wellness-orange/80 to-wellness-green text-xs font-bold text-white overflow-hidden">
+          {userPhoto ? (
+            <img src={userPhoto} alt={userName} className="h-full w-full object-cover" />
+          ) : (
+            userInitials
+          )}
           <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-[#00E676] border border-wellness-bg shadow-[0_0_6px_#00E676]" />
         </span>
         <span className="hidden text-left sm:block">
@@ -54,8 +59,12 @@ export default function ProfileDropdown({
           >
             {/* User header */}
             <div className="mb-4 flex items-center gap-3 rounded-2xl bg-white/5 px-3 py-3 border border-white/5">
-              <span className="relative flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wellness-orange to-wellness-glow text-sm font-bold text-white shadow-glow2">
-                {userInitials}
+              <span className="relative flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-wellness-orange to-wellness-glow text-sm font-bold text-white shadow-glow2 overflow-hidden">
+                {userPhoto ? (
+                  <img src={userPhoto} alt={userName} className="h-full w-full object-cover" />
+                ) : (
+                  userInitials
+                )}
                 <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-[#00E676] border-2 border-wellness-bg shadow-[0_0_6px_#00E676]" />
               </span>
               <div className="min-w-0">

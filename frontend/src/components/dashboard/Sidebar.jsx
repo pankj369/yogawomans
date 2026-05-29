@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, LogOut, TrendingUp, Play } from "lucide-react";
+import { X, LogOut, TrendingUp, Sparkles } from "lucide-react";
 import { dashboardMenuGroups } from "../../data/wellnessData";
 import { useAuth } from "../../context/AuthContext";
 import { useDashboard } from "../../context/DashboardContext";
 import SidebarGroup from "../ui/navigation/SidebarGroup";
 import fotlogo from "../../assets/images/fotlogo.png";
+import FeedbackModal from "../feedback/FeedbackModal";
 
 // ─── Animation Variants ────────────────────────────────────────────────────
 const sidebarVariants = {
@@ -26,6 +28,9 @@ function SidebarPanel({ onClose, isMobile = false }) {
 
   const wellnessScore = state?.wellnessScore ?? 84;
   const streakDays = state?.streakDays ?? 6;
+  const userInitials = auth.user?.name?.charAt(0).toUpperCase() || auth.user?.displayName?.charAt(0).toUpperCase() || "Y";
+  const userPhoto = auth.user?.photoURL || auth.user?.image || null;
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   return (
     <aside className={`flex h-full flex-col px-6 py-6 transition-all duration-300
@@ -62,7 +67,8 @@ function SidebarPanel({ onClose, isMobile = false }) {
         ))}
       </nav>
 
-      {/* ── Quick Action: Resume Journey ── */}
+      {/* ── Quick Action: Resume Journey (Temporarily hidden) ── */}
+      {/* 
       {state?.lastSessionId && (
         <button
           onClick={() => {
@@ -74,6 +80,7 @@ function SidebarPanel({ onClose, isMobile = false }) {
           <Play fill="currentColor" size={14} className="text-wellness-glow" /> Resume Journey
         </button>
       )}
+      */}
 
       {/* ── Wellness Stats Card ── */}
       <div className="mt-5 rounded-2xl border border-white/10 bg-wellness-glass p-4 shadow-liftSm backdrop-blur-[24px] transition duration-300 hover:-translate-y-1 hover:shadow-card hover:bg-white/10">
@@ -128,8 +135,12 @@ function SidebarPanel({ onClose, isMobile = false }) {
       {/* ── Bottom Section ── */}
       <div className="mt-6 border-t border-white/10 pt-4">
         <div className="flex items-center gap-3 px-2">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-wellness-glass font-bold text-wellness-glow border border-white/10">
-            {auth.user?.displayName?.[0]?.toUpperCase() || "Y"}
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-wellness-glass font-bold text-wellness-glow border border-white/10 overflow-hidden">
+            {userPhoto ? (
+              <img src={userPhoto} alt="Profile" className="h-full w-full object-cover" />
+            ) : (
+              userInitials
+            )}
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-bold text-white">
@@ -139,15 +150,26 @@ function SidebarPanel({ onClose, isMobile = false }) {
               <TrendingUp size={12} className="text-wellness-glow" /> {streakDays} day streak
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            title="Log out"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/60 transition hover:bg-red-500/20 hover:text-red-400"
-          >
-            <LogOut size={16} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsFeedbackOpen(true)}
+              title="Share Feedback"
+              className="flex items-center gap-1.5 rounded-full border border-wellness-orange/20 bg-wellness-orange/10 px-3 py-1.5 text-xs font-bold text-wellness-orange transition hover:bg-wellness-orange/20"
+            >
+              <Sparkles size={12} /> Feedback
+            </button>
+            <button
+              onClick={handleLogout}
+              title="Log out"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/60 transition hover:bg-red-500/20 hover:text-red-400"
+            >
+              <LogOut size={16} />
+            </button>
+          </div>
         </div>
       </div>
+      
+      <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
     </aside>
   );
 }
@@ -172,7 +194,7 @@ export default function Sidebar({ open, onClose }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.22 }}
-              className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-[9995] bg-black/30 backdrop-blur-sm lg:hidden"
               onClick={onClose}
               aria-hidden="true"
             />
@@ -184,7 +206,7 @@ export default function Sidebar({ open, onClose }) {
               initial="closed"
               animate="open"
               exit="closed"
-              className="fixed inset-0 z-50 lg:hidden w-full h-full"
+              className="fixed inset-0 z-[10000] lg:hidden w-full h-full"
             >
               <SidebarPanel onClose={onClose} isMobile={true} />
             </motion.div>

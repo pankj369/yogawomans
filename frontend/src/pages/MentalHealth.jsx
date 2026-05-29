@@ -22,7 +22,9 @@ import { useDashboard } from "../context/DashboardContext";
 import { useMedia } from "../context/MediaContext";
 
 import { mentalCategories, meditationSessions, healingAudio, breathingCycles, sleepStories, healingRoutines } from "../data/mentalHealthData";
-const mentalVideo = "";
+import mentalVideoFile from "../assets/videos/mentalhealthvideo.mp4";
+
+const mentalVideo = mentalVideoFile;
 
 export default function MentalHealth() {
   const auth = useAuth();
