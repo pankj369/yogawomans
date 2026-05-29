@@ -196,15 +196,16 @@ export default function FeedbackModal({ isOpen, onClose }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: "100%", scale: 0.95 }}
               transition={{ type: "spring", bounce: 0, duration: 0.6 }}
-              className="pointer-events-auto w-full md:w-[90%] md:max-w-[720px] max-h-[90vh] md:max-h-[85vh] overflow-y-auto bg-[#FCFAF7] md:rounded-[32px] rounded-t-[32px] shadow-[0_20px_60px_rgba(200,155,60,0.1)] border border-luxury-surface hide-scrollbar"
+              className="pointer-events-auto relative z-10 w-full md:w-[90%] md:max-w-[720px] max-h-[90vh] md:max-h-[85vh] overflow-y-auto md:rounded-[32px] rounded-t-[32px] shadow-[0_20px_60px_rgba(200,155,60,0.1)] border border-luxury-surface hide-scrollbar"
               style={{ 
+                backgroundColor: "#FCFAF7",
                 backgroundImage: "radial-gradient(circle at top right, rgba(200,155,60,0.03), transparent 40%)" 
               }}
             >
               {/* Header Sticky Handle for Mobile */}
-              <div className="sticky top-0 z-10 bg-[#FCFAF7]/90 backdrop-blur-lg border-b border-luxury-surface/50 px-6 py-5 flex justify-between items-start md:rounded-t-[32px] rounded-t-[32px]">
+              <div className="sticky top-0 z-10 bg-luxury-bg/95 backdrop-blur-lg border-b border-luxury-surface/50 px-6 py-5 flex justify-between items-start md:rounded-t-[32px] rounded-t-[32px]">
                 <div className="flex gap-4 items-start">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-luxury-surface to-[#FCFAF7] border border-white flex items-center justify-center shadow-sm p-1">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-luxury-surface to-luxury-bg border border-white flex items-center justify-center shadow-sm p-1">
                     <img src={fotlogo} alt="Logo" className="w-full h-full object-contain" />
                   </div>
                   <div>
@@ -407,7 +408,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
                   </div>
 
                   {/* Submit Button */}
-                  <div className="pt-2 pb-6 md:pb-0 sticky bottom-0 bg-[#FCFAF7] md:static p-1">
+                  <div className="pt-2 pb-6 md:pb-0 sticky bottom-0 bg-luxury-bg md:static p-1">
                     <button
                       type="submit"
                       disabled={isSubmitting}

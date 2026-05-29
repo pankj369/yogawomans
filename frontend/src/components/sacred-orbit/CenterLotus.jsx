@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import fotlogo from "../../assets/images/surya/suryamain2.png";
 
 export default function CenterLotus() {
   return (
@@ -51,9 +52,13 @@ export default function CenterLotus() {
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           />
 
-          {/* Placeholder for the real image */}
-          <div className="relative z-10 text-center flex items-center justify-center">
-             <span className="text-3xl md:text-5xl opacity-80 group-hover:scale-110 transition-transform duration-500">🧘‍♀️</span>
+          {/* Logo Image */}
+          <div className="absolute inset-0 z-10">
+             <img 
+               src={fotlogo} 
+               alt="YogaWomans" 
+               className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700 ease-out" 
+             />
           </div>
           
         </div>
