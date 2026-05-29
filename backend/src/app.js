@@ -22,6 +22,7 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 import supportRoutes from "./routes/supportRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import feedbackRoutes from "./routes/feedbackRoutes.js";
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import rateLimiter from "./middleware/rateLimiter.js";
@@ -117,6 +118,7 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/blog", blogRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 // Telemetry dashboard reporting endpoint
 app.get("/api/telemetry/report", (req, res) => {

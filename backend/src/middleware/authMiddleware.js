@@ -39,4 +39,26 @@ export const requireAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
+export const optionalAuth = asyncHandler(async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return next();
+  }
+  const idToken = authHeader.split(" ")[1];
+  if (!idToken) return next();
+  
+  try {
+    const decodedToken = await auth.verifyIdToken(idToken);
+    req.user = {
+      uid: decodedToken.uid,
+      email: decodedToken.email,
+      name: decodedToken.name,
+      picture: decodedToken.picture,
+    };
+  } catch (error) {
+    // Ignore error for optional auth
+  }
+  next();
+});
+
 export default requireAuth;
